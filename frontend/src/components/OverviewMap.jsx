@@ -10,7 +10,14 @@ const OverviewMap = () => {
 	];
 
 	return (
-		<MapContainer style={{height: '90vh', width: '90vw'}} center={[30.0, 20.0]} zoom={2} maxZoom={5} minZoom={1}>
+		<MapContainer
+			className='w-[90vw] h-[90vh]'
+			center={[30.0, 20.0]}
+			zoom={2}
+			maxZoom={5}
+			minZoom={1}
+			scrollWheelZoom={false}
+		>
 			<TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
 			<Polyline pathOptions={{color: 'red'}} positions={coordinates} />
 		</MapContainer>

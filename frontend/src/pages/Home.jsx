@@ -1,9 +1,9 @@
-import OverviewMap from './OverviewMap';
-import OverviewTable from './OverviewTable';
+import OverviewMap from '../components/OverviewMap';
+import OverviewTable from '../components/OverviewTable';
 
 function Home() {
 	return (
-		<div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', rowGap: 50}}>
+		<div className='flex flex-col items-center gap-12'>
 			<OverviewMap />
 			<OverviewTable />
 		</div>
