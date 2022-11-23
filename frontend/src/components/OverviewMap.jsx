@@ -1,4 +1,6 @@
-import {MapContainer, TileLayer, Polyline} from 'react-leaflet';
+import {MapContainer, Polyline, GeoJSON} from 'react-leaflet';
+import countries from '../data/custom.geo.json';
+import 'leaflet/dist/leaflet.css';
 
 const OverviewMap = () => {
 	const coordinates = [
@@ -9,16 +11,30 @@ const OverviewMap = () => {
 		[47.14, -1.34],
 	];
 
+	const countryStyle = {
+		fillColor: 'white',
+		fillOpacity: 0.8,
+		color: 'gray',
+		opacity: 0.5,
+		weight: 1,
+	};
+
+	const onEachCountry = (country, layer) => {
+		const countryName = country.properties.name_en;
+		layer.bindPopup(countryName);
+	};
+
 	return (
 		<MapContainer
 			className='w-[90vw] h-[90vh]'
+			style={{backgroundColor: '#b1d2dd'}}
 			center={[30.0, 20.0]}
 			zoom={2}
 			maxZoom={5}
 			minZoom={1}
 			scrollWheelZoom={false}
 		>
-			<TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
+			<GeoJSON data={countries} style={countryStyle} onEachFeature={onEachCountry} />
 			<Polyline pathOptions={{color: 'red'}} positions={coordinates} />
 		</MapContainer>
 	);
