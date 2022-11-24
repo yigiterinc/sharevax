@@ -44,19 +44,25 @@ const OverviewMap = () => {
 
 	const onEachCountry = (country, layer) => {
 		const countryName = country.properties.name_en;
-		layer.bindPopup(countryName);
+		//placeHolders for dropdown info of every country on the map
+		var doseInStock = 1000;
+		var doseUsedPerDay = 100;
+		var infectionRate = 0.3;
+		var recoveryRate = 0.4;
+		var vaccinationRate = 0.3;
+		layer.bindPopup(countryName, doseInStock, doseUsedPerDay, infectionRate, recoveryRate, vaccinationRate);
 		layer.options.fillColor = getColor(Math.random(0, 1));
 	};
 
 	return (
 		<MapContainer
-			className='w-[90vw] h-[90vh] relative'
-			style={{backgroundColor: '#e8f4f6'}}
+			className='w-[60vw] h-[50vh] relative'
+			style={{backgroundColor: '#e8f4f6'}} //let's make it floating to the right?
 			center={[30.0, 20.0]}
 			zoom={2}
 			maxZoom={5}
 			minZoom={1}
-			scrollWheelZoom={false}
+			scrollWheelZoom={true}
 		>
 			<GeoJSON data={countries} style={countryStyle} onEachFeature={onEachCountry} />
 			<Polyline pathOptions={{color: '#136bf7'}} positions={coordinates} />
