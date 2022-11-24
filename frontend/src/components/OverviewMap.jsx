@@ -11,9 +11,24 @@ const OverviewMap = () => {
 		[47.14, -1.34],
 	];
 
+	const colors = ['#fffddd', '#f4dd9f', '#f2b866', '#f38e38', '#f6571d'];
+	const scale = [0, 0.2, 0.4, 0.6, 0.8];
+
+	const getColor = (val) => {
+		let coloe = '';
+		for (let i = 1; i < scale.length; i++) {
+			if (val < scale[i]) {
+				coloe = colors[i - 1];
+				return colors[i - 1];
+			}
+		}
+		coloe = colors[colors.length - 1];
+		console.log(coloe);
+		return colors[colors.length - 1];
+	};
+
 	const countryStyle = {
-		fillColor: 'white',
-		fillOpacity: 0.8,
+		fillOpacity: 1,
 		color: 'gray',
 		opacity: 0.5,
 		weight: 1,
@@ -22,12 +37,13 @@ const OverviewMap = () => {
 	const onEachCountry = (country, layer) => {
 		const countryName = country.properties.name_en;
 		layer.bindPopup(countryName);
+		layer.options.fillColor = getColor(Math.random(0, 1));
 	};
 
 	return (
 		<MapContainer
 			className='w-[90vw] h-[90vh]'
-			style={{backgroundColor: '#b1d2dd'}}
+			style={{backgroundColor: '#e8f4f6'}}
 			center={[30.0, 20.0]}
 			zoom={2}
 			maxZoom={5}
@@ -35,7 +51,7 @@ const OverviewMap = () => {
 			scrollWheelZoom={false}
 		>
 			<GeoJSON data={countries} style={countryStyle} onEachFeature={onEachCountry} />
-			<Polyline pathOptions={{color: 'red'}} positions={coordinates} />
+			<Polyline pathOptions={{color: '#136bf7'}} positions={coordinates} />
 		</MapContainer>
 	);
 };
