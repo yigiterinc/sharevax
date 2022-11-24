@@ -1,3 +1,4 @@
+//Legend for explaining the color & percentage relationship
 const Legend = ({legendItems}) => {
 	return (
 		<div className='flex justify-end w-1/4 absolute bottom-0 left-0'>

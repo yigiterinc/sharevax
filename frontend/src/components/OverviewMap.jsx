@@ -23,15 +23,15 @@ const OverviewMap = () => {
 	];
 
 	const getColor = (val) => {
-		let coloe = '';
+		let color = '';
 		for (let i = 1; i < scale.length; i++) {
 			if (val < scale[i]) {
-				coloe = colors[i - 1];
+				color = colors[i - 1];
 				return colors[i - 1];
 			}
 		}
-		coloe = colors[colors.length - 1];
-		console.log(coloe);
+		color = colors[colors.length - 1];
+		console.log(color);
 		return colors[colors.length - 1];
 	};
 
