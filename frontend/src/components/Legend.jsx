@@ -1,4 +1,4 @@
-//Legend for explaining the color & percentage relationship
+//Legend for explaining the color & percentage relationship, specified in OverviewMap.jsx
 const Legend = ({legendItems}) => {
 	return (
 		<div className='flex justify-end w-1/4 absolute bottom-0 left-0'>
