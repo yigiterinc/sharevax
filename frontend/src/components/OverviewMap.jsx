@@ -56,7 +56,7 @@ const OverviewMap = () => {
 
 	return (
 		<MapContainer
-			className='w-[80vw] h-[60vh] relative'
+			className='w-[90vw] h-[90vh] relative'
 			style={{backgroundColor: '#e8f4f6'}} //let's make it floating to the right?
 			center={[30.0, 20.0]}
 			zoom={2}
