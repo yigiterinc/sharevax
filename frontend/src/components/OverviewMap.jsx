@@ -56,13 +56,13 @@ const OverviewMap = () => {
 
 	return (
 		<MapContainer
-			className='w-[90vw] h-[90vh] relative'
+			className='w-[80vw] h-[90vh] relative'
 			style={{backgroundColor: '#e8f4f6'}} //let's make it floating to the right?
 			center={[30.0, 20.0]}
 			zoom={2}
 			maxZoom={5}
 			minZoom={1}
-			scrollWheelZoom={true}
+			scrollWheelZoom={false}
 		>
 			<GeoJSON data={countries} style={countryStyle} onEachFeature={onEachCountry} />
 			<Polyline pathOptions={{color: '#136bf7'}} positions={coordinates} />
