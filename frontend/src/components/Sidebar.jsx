@@ -20,8 +20,8 @@ export default function Sidebar() {
 	const [open, setOpen] = useState(true);
 
 	return (
-		<div className={`bg-[#0e0e0e] min-h-screen ${open ? 'w-72' : 'w-16'} duration-500 text-gray-100 px-4`}>
-			<div className='py-3 flex gap-16 justify-end'>
+		<div className={`bg-[#0e0e0e] min-h-screen ${open ? 'w-64' : 'w-16'} duration-500 text-gray-100 px-4`}>
+			<div className='py-3 flex gap-20 justify-end'>
 				<div className={`${!open && 'hidden'} font-extrabold text-xl `}>SHAREVAX</div>
 				<HiMenuAlt3 size={26} className='cursor-pointer' onClick={() => setOpen(!open)} />
 			</div>
