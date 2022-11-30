@@ -1,7 +1,9 @@
 import {MapContainer, Polyline, GeoJSON} from 'react-leaflet';
+import ReactDOMServer from 'react-dom/server';
 import countries from '../data/custom.geo.json';
 import 'leaflet/dist/leaflet.css';
 import Legend from './Legend';
+import Popup from './Popup';
 
 const OverviewMap = () => {
 	const coordinates = [
@@ -45,19 +47,29 @@ const OverviewMap = () => {
 	const onEachCountry = (country, layer) => {
 		const countryName = country.properties.name_en;
 		//placeHolders for dropdown info of every country on the map
-		var doseInStock = 1000;
-		var doseUsedPerDay = 100;
-		var infectionRate = 0.3;
-		var recoveryRate = 0.4;
-		var vaccinationRate = 0.3;
-		layer.bindPopup(countryName, doseInStock, doseUsedPerDay, infectionRate, recoveryRate, vaccinationRate);
+		const doseInStock = 1000;
+		const doseUsedPerDay = 100;
+		const recoveryRate = 0.4;
+		const infectionRate = 0.3;
+		const vaccinationRate = 0.5;
+		const popupContent = ReactDOMServer.renderToString(
+			<Popup
+				countryName={countryName}
+				vaccinationRate={vaccinationRate}
+				infectionRate={infectionRate}
+				recoveryRate={recoveryRate}
+				doseInStock={doseInStock}
+				doseUsedPerDay={doseUsedPerDay}
+			/>,
+		);
+		layer.bindPopup(popupContent);
 		layer.options.fillColor = getColor(Math.random(0, 1));
 	};
 
 	return (
 		<MapContainer
 			className='w-[75vw] h-[90vh] relative z-0'
-			style={{backgroundColor: '#e8f4f6'}} //let's make it floating to the right?
+			style={{backgroundColor: '#e8f4f6'}}
 			center={[30.0, 20.0]}
 			zoom={2}
 			maxZoom={5}
