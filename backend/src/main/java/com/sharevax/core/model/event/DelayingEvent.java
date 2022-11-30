@@ -9,7 +9,6 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Builder
 @Table(name = "delaying_event")
 @DiscriminatorColumn(name = "event_type")
 public abstract class DelayingEvent {
