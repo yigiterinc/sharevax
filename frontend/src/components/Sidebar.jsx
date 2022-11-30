@@ -21,7 +21,8 @@ export default function Sidebar() {
 
 	return (
 		<div className={`bg-[#0e0e0e] min-h-screen ${open ? 'w-72' : 'w-16'} duration-500 text-gray-100 px-4`}>
-			<div className='py-3 flex justify-end'>
+			<div className='py-3 flex gap-16 justify-end'>
+				<div className={`${!open && 'hidden'} font-extrabold text-xl `}>SHAREVAX</div>
 				<HiMenuAlt3 size={26} className='cursor-pointer' onClick={() => setOpen(!open)} />
 			</div>
 			<div className='mt-4 flex flex-col gap-4 relative'>
