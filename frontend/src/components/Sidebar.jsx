@@ -10,9 +10,9 @@ import {Link} from 'react-router-dom';
 export default function Sidebar() {
 	const menus = [
 		{name: 'Overview', link: '/', icon: BiWorld},
-		{name: 'Country Info', link: '/', icon: BsFillPinMapFill},
-		{name: 'Order Detail', link: '/', icon: BiDetail},
-		{name: 'Report', link: '/', icon: TbMessageReport},
+		{name: 'Country Info', link: '/country-info', icon: BsFillPinMapFill},
+		{name: 'Order Detail', link: '/order-detail', icon: BiDetail},
+		{name: 'Report', link: '/report', icon: TbMessageReport},
 		{name: 'Donate/Sell Vaccine', link: '/', icon: TbVaccine, margin: true},
 		{name: 'Request Vaccine', link: '/', icon: TbVaccine},
 	];
