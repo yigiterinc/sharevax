@@ -33,10 +33,4 @@ public class DeliveryController {
         return ResponseEntity.ok(deliveryService.getDeliveriesByCountryID(country_id));
     }
 
-    @GetMapping
-    @RequestMapping("/matching}")
-    public ResponseEntity<String> matching() {
-        deliveryService.matching();
-        return ResponseEntity.ok("Matching completed");
-    }
 }
