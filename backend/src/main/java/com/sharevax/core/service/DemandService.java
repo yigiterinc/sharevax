@@ -14,9 +14,9 @@ public class DemandService {
     private final DemandRepository demandRepository;
     private final CountryService countryService;
 
-    public DemandService(DemandRepository demandRepository, CountryService countryService1) {
+    public DemandService(DemandRepository demandRepository, CountryService countryService) {
         this.demandRepository = demandRepository;
-        this.countryService = countryService1;
+        this.countryService = countryService;
     }
 
     public Demand createDemand(CreateDemandDto createDemandDto) {

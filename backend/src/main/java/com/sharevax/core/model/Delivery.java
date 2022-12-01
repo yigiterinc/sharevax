@@ -57,7 +57,7 @@ public class Delivery {
     @OneToOne
     private Demand demand;
 
-    enum DeliveryStatus {
+    public enum DeliveryStatus {
         IN_TIME,
         DELAYED,
         DELIVERED
