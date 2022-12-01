@@ -16,7 +16,7 @@ public abstract class DelayingEvent {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
-    protected Long id;
+    protected Integer id;
 
     // Name of the affected harbor, strait, passage or channel
     @Column(name = "subject")

@@ -18,7 +18,7 @@ public class Demand {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Country country;
 
     @Column(name = "vaccine_type", nullable = false)
@@ -30,6 +30,7 @@ public class Demand {
 
     @Column(name = "urgency", nullable = false)
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private Urgency urgency = Urgency.NORMAL;
 
     enum Urgency {
