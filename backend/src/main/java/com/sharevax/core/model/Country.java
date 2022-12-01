@@ -1,5 +1,6 @@
 package com.sharevax.core.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
@@ -40,6 +41,6 @@ public class Country {
   private BigInteger vaccineProduction;
 
   @OneToMany(mappedBy = "country", cascade = CascadeType.ALL)
-  @JsonManagedReference
+  @JsonBackReference
   private List<Harbor> harbors;
 }

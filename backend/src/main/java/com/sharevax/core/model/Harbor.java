@@ -25,11 +25,11 @@ public class Harbor {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "coordinate", nullable = false)
+    @Column(name = "coordinate", nullable = false, columnDefinition = "geometry(Point,4326)")
     private Point coordinate;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonManagedReference
     private Country country;
 
     @Column(name = "status", nullable = false)
