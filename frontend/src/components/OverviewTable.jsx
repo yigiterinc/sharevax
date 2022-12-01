@@ -1,14 +1,26 @@
-//OverviewTable on Home page
-//import * as React from 'react';
+import * as React from 'react';
+import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
+import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 
-//get json from backend
+const columns = [
+	{id: 'destination', label: 'Destination', minWidth: 10},
+	{id: 'from', label: 'From', minWidth: 21},
+	{id: 'vaccine', label: 'Vaccine', minWidth: 10},
+	{id: 'dose', label: 'Dose', minWidth: 20},
+	{id: 'order_date', label: 'Order Date', minWidth: 21},
+	{id: 'estimated_arrival_date', label: 'Estimated Arrival Date', minWidth: 21},
+	{id: 'current_arrival_date', label: 'Current Arrival Date', minWidth: 21},
+	{id: 'status', label: 'Status', minWidth: 21},
+	{id: 'next_stop', label: 'Next Stop', minWidth: 21},
+	{id: 'urgency', label: 'Urgency', minWidth: 21},
+];
+
 function createData(
 	destination,
 	from,
@@ -36,47 +48,335 @@ function createData(
 }
 
 const rows = [
-	createData('Frozen yoghurt', 159, 6.0, 24, 4.0, 16, 137, 17, 27, 27, 10),
-	createData('Ice cream sandwich', 237, 9.0, 37, 4.3, 262, 16.0, 24, 6.0, 20),
+	createData(
+		'Germany',
+		'Thailand',
+		'A',
+		2000,
+		'2022.4.0',
+		'2022.4.1',
+		'2022.5.1',
+		'2022.5.1',
+		'Shipping',
+		'France',
+		'red',
+	),
+	createData(
+		'China',
+		'USA',
+		'C',
+		5000,
+		'2022.2.1',
+		'2022.2.2',
+		'2022.3.1',
+		'2022.3.1',
+		'Shipping',
+		'Hong Kong',
+		'green',
+	),
+	createData(
+		'Ukase',
+		'Germany',
+		'B',
+		8000,
+		'2022.6.1',
+		'2022.6.2',
+		'2022.6.1',
+		'2022.3.1',
+		'Shipping',
+		'India',
+		'grey',
+	),
+	createData(
+		'Germany',
+		'Thailand',
+		'A',
+		2000,
+		'2022.4.0',
+		'2022.4.1',
+		'2022.5.1',
+		'2022.5.1',
+		'Shipping',
+		'France',
+		'red',
+	),
+	createData(
+		'China',
+		'USA',
+		'C',
+		5000,
+		'2022.2.1',
+		'2022.2.2',
+		'2022.3.1',
+		'2022.3.1',
+		'Shipping',
+		'Hong Kong',
+		'green',
+	),
+	createData(
+		'Ukase',
+		'Germany',
+		'B',
+		8000,
+		'2022.6.1',
+		'2022.6.2',
+		'2022.6.1',
+		'2022.3.1',
+		'Shipping',
+		'India',
+		'grey',
+	),
+	createData(
+		'Germany',
+		'Thailand',
+		'A',
+		2000,
+		'2022.4.0',
+		'2022.4.1',
+		'2022.5.1',
+		'2022.5.1',
+		'Shipping',
+		'France',
+		'red',
+	),
+	createData(
+		'China',
+		'USA',
+		'C',
+		5000,
+		'2022.2.1',
+		'2022.2.2',
+		'2022.3.1',
+		'2022.3.1',
+		'Shipping',
+		'Hong Kong',
+		'green',
+	),
+	createData(
+		'Ukase',
+		'Germany',
+		'B',
+		8000,
+		'2022.6.1',
+		'2022.6.2',
+		'2022.6.1',
+		'2022.3.1',
+		'Shipping',
+		'India',
+		'grey',
+	),
+	createData(
+		'Germany',
+		'Thailand',
+		'A',
+		2000,
+		'2022.4.0',
+		'2022.4.1',
+		'2022.5.1',
+		'2022.5.1',
+		'Shipping',
+		'France',
+		'red',
+	),
+	createData(
+		'China',
+		'USA',
+		'C',
+		5000,
+		'2022.2.1',
+		'2022.2.2',
+		'2022.3.1',
+		'2022.3.1',
+		'Shipping',
+		'Hong Kong',
+		'green',
+	),
+	createData(
+		'Ukase',
+		'Germany',
+		'B',
+		8000,
+		'2022.6.1',
+		'2022.6.2',
+		'2022.6.1',
+		'2022.3.1',
+		'Shipping',
+		'India',
+		'grey',
+	),
+	createData(
+		'Germany',
+		'Thailand',
+		'A',
+		2000,
+		'2022.4.0',
+		'2022.4.1',
+		'2022.5.1',
+		'2022.5.1',
+		'Shipping',
+		'France',
+		'red',
+	),
+	createData(
+		'China',
+		'USA',
+		'C',
+		5000,
+		'2022.2.1',
+		'2022.2.2',
+		'2022.3.1',
+		'2022.3.1',
+		'Shipping',
+		'Hong Kong',
+		'green',
+	),
+	createData(
+		'Ukase',
+		'Germany',
+		'B',
+		8000,
+		'2022.6.1',
+		'2022.6.2',
+		'2022.6.1',
+		'2022.3.1',
+		'Shipping',
+		'India',
+		'grey',
+	),
+	createData(
+		'Germany',
+		'Thailand',
+		'A',
+		2000,
+		'2022.4.0',
+		'2022.4.1',
+		'2022.5.1',
+		'2022.5.1',
+		'Shipping',
+		'France',
+		'red',
+	),
+	createData(
+		'China',
+		'USA',
+		'C',
+		5000,
+		'2022.2.1',
+		'2022.2.2',
+		'2022.3.1',
+		'2022.3.1',
+		'Shipping',
+		'Hong Kong',
+		'green',
+	),
+	createData(
+		'Ukase',
+		'Germany',
+		'B',
+		8000,
+		'2022.6.1',
+		'2022.6.2',
+		'2022.6.1',
+		'2022.3.1',
+		'Shipping',
+		'India',
+		'grey',
+	),
+	createData(
+		'Germany',
+		'Thailand',
+		'A',
+		2000,
+		'2022.4.0',
+		'2022.4.1',
+		'2022.5.1',
+		'2022.5.1',
+		'Shipping',
+		'France',
+		'red',
+	),
+	createData(
+		'China',
+		'USA',
+		'C',
+		5000,
+		'2022.2.1',
+		'2022.2.2',
+		'2022.3.1',
+		'2022.3.1',
+		'Shipping',
+		'Hong Kong',
+		'green',
+	),
+	createData(
+		'Ukase',
+		'Germany',
+		'B',
+		8000,
+		'2022.6.1',
+		'2022.6.2',
+		'2022.6.1',
+		'2022.3.1',
+		'Shipping',
+		'India',
+		'grey',
+	),
 ];
 
-function OverviewTable() {
+export default function OverviewTable() {
+	const [page, setPage] = React.useState(0);
+	const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+	const handleChangePage = (event, newPage) => {
+		setPage(newPage);
+	};
+
+	const handleChangeRowsPerPage = (event) => {
+		setRowsPerPage(+event.target.value);
+		setPage(0);
+	};
+
 	return (
-		<TableContainer component={Paper}>
-			<Table sx={{minWidth: 550}} aria-label='simple table'>
-				<TableHead>
-					<TableRow>
-						<TableCell align='left'>Destination</TableCell>
-						<TableCell align='left'>From</TableCell>
-						<TableCell align='left'>Vaccine</TableCell>
-						<TableCell align='left'>Dose</TableCell>
-						<TableCell align='left'>Order Date</TableCell>
-						<TableCell align='left'>Estimated Arrival Date</TableCell>
-						<TableCell align='left'>Current Arrival Date</TableCell>
-						<TableCell align='left'>Status</TableCell>
-						<TableCell align='left'>Next Stop</TableCell>
-						<TableCell align='left'>Urgency</TableCell>
-					</TableRow>
-				</TableHead>
-				<TableBody>
-					{rows.map((row) => (
-						<TableRow key={row.name}>
-							<TableCell align='center'>{row.destination}</TableCell>
-							<TableCell align='center'>{row.from}</TableCell>
-							<TableCell align='center'>{row.vaccine}</TableCell>
-							<TableCell align='center'>{row.dose}</TableCell>
-							<TableCell align='center'>{row.order_date}</TableCell>
-							<TableCell align='center'>{row.estimated_arrival_date}</TableCell>
-							<TableCell align='center'>{row.current_arrival_date}</TableCell>
-							<TableCell align='center'>{row.status}</TableCell>
-							<TableCell align='center'>{row.next_stop}</TableCell>
-							<TableCell align='center'>{row.urgency}</TableCell>
+		<Paper sx={{width: '100%', overflow: 'hidden'}}>
+			<div>Vaccines Currently Shipping</div>
+			<TableContainer sx={{maxHeight: 260}}>
+				<Table stickyHeader aria-label='sticky table'>
+					<TableHead>
+						<TableRow>
+							{columns.map((column) => (
+								<TableCell key={column.id} align={column.align} style={{minWidth: column.minWidth}}>
+									{column.label}
+								</TableCell>
+							))}
 						</TableRow>
-					))}
-				</TableBody>
-			</Table>
-		</TableContainer>
+					</TableHead>
+					<TableBody>
+						{rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+							return (
+								<TableRow hover role='checkbox' tabIndex={-1} key={row.code}>
+									{columns.map((column) => {
+										const value = row[column.id];
+										return (
+											<TableCell key={column.id} align={column.align}>
+												{column.format && typeof value === 'number' ? column.format(value) : value}
+											</TableCell>
+										);
+									})}
+								</TableRow>
+							);
+						})}
+					</TableBody>
+				</Table>
+			</TableContainer>
+			<TablePagination
+				rowsPerPageOptions={[5, 10, 20]}
+				component='div'
+				count={rows.length}
+				rowsPerPage={rowsPerPage}
+				page={page}
+				onPageChange={handleChangePage}
+				onRowsPerPageChange={handleChangeRowsPerPage}
+			/>
+		</Paper>
 	);
 }
-
-export default OverviewTable;
