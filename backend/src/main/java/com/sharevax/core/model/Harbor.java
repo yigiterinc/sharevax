@@ -2,8 +2,12 @@ package com.sharevax.core.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
+import org.locationtech.jts.geom.LineString;
+import org.hibernate.annotations.Type;
 import org.locationtech.jts.geom.Point;
+
 
 import javax.persistence.*;
 import java.util.List;
@@ -34,12 +38,14 @@ public class Harbor {
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private HarborStatus status;
+    private HarborStatus status = HarborStatus.AVAILABLE;
 
     @OneToMany(mappedBy = "startHarbor")
+    @JsonBackReference
     private List<Delivery> outgoingDeliveries;
 
     @OneToMany(mappedBy = "destinationHarbor")
+    @JsonBackReference
     private List<Delivery> incomingDeliveries;
 
     enum HarborStatus {
