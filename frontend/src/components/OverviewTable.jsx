@@ -139,188 +139,6 @@ const rows = [
 		'France',
 		'red',
 	),
-	createData(
-		'China',
-		'USA',
-		'C',
-		5000,
-		'2022.2.1',
-		'2022.2.2',
-		'2022.3.1',
-		'2022.3.1',
-		'Shipping',
-		'Hong Kong',
-		'green',
-	),
-	createData(
-		'Ukase',
-		'Germany',
-		'B',
-		8000,
-		'2022.6.1',
-		'2022.6.2',
-		'2022.6.1',
-		'2022.3.1',
-		'Shipping',
-		'India',
-		'grey',
-	),
-	createData(
-		'Germany',
-		'Thailand',
-		'A',
-		2000,
-		'2022.4.0',
-		'2022.4.1',
-		'2022.5.1',
-		'2022.5.1',
-		'Shipping',
-		'France',
-		'red',
-	),
-	createData(
-		'China',
-		'USA',
-		'C',
-		5000,
-		'2022.2.1',
-		'2022.2.2',
-		'2022.3.1',
-		'2022.3.1',
-		'Shipping',
-		'Hong Kong',
-		'green',
-	),
-	createData(
-		'Ukase',
-		'Germany',
-		'B',
-		8000,
-		'2022.6.1',
-		'2022.6.2',
-		'2022.6.1',
-		'2022.3.1',
-		'Shipping',
-		'India',
-		'grey',
-	),
-	createData(
-		'Germany',
-		'Thailand',
-		'A',
-		2000,
-		'2022.4.0',
-		'2022.4.1',
-		'2022.5.1',
-		'2022.5.1',
-		'Shipping',
-		'France',
-		'red',
-	),
-	createData(
-		'China',
-		'USA',
-		'C',
-		5000,
-		'2022.2.1',
-		'2022.2.2',
-		'2022.3.1',
-		'2022.3.1',
-		'Shipping',
-		'Hong Kong',
-		'green',
-	),
-	createData(
-		'Ukase',
-		'Germany',
-		'B',
-		8000,
-		'2022.6.1',
-		'2022.6.2',
-		'2022.6.1',
-		'2022.3.1',
-		'Shipping',
-		'India',
-		'grey',
-	),
-	createData(
-		'Germany',
-		'Thailand',
-		'A',
-		2000,
-		'2022.4.0',
-		'2022.4.1',
-		'2022.5.1',
-		'2022.5.1',
-		'Shipping',
-		'France',
-		'red',
-	),
-	createData(
-		'China',
-		'USA',
-		'C',
-		5000,
-		'2022.2.1',
-		'2022.2.2',
-		'2022.3.1',
-		'2022.3.1',
-		'Shipping',
-		'Hong Kong',
-		'green',
-	),
-	createData(
-		'Ukase',
-		'Germany',
-		'B',
-		8000,
-		'2022.6.1',
-		'2022.6.2',
-		'2022.6.1',
-		'2022.3.1',
-		'Shipping',
-		'India',
-		'grey',
-	),
-	createData(
-		'Germany',
-		'Thailand',
-		'A',
-		2000,
-		'2022.4.0',
-		'2022.4.1',
-		'2022.5.1',
-		'2022.5.1',
-		'Shipping',
-		'France',
-		'red',
-	),
-	createData(
-		'China',
-		'USA',
-		'C',
-		5000,
-		'2022.2.1',
-		'2022.2.2',
-		'2022.3.1',
-		'2022.3.1',
-		'Shipping',
-		'Hong Kong',
-		'green',
-	),
-	createData(
-		'Ukase',
-		'Germany',
-		'B',
-		8000,
-		'2022.6.1',
-		'2022.6.2',
-		'2022.6.1',
-		'2022.3.1',
-		'Shipping',
-		'India',
-		'grey',
-	),
 ];
 
 export default function OverviewTable() {
@@ -338,13 +156,18 @@ export default function OverviewTable() {
 
 	return (
 		<Paper sx={{width: '100%', overflow: 'hidden'}}>
-			<div>Vaccines Currently Shipping</div>
+			<div className='text-bg text-white p-2 bg-black font-mono font-bold'>Vaccines Currently Shipping</div>
 			<TableContainer sx={{maxHeight: 260}}>
 				<Table stickyHeader aria-label='sticky table'>
 					<TableHead>
 						<TableRow>
 							{columns.map((column) => (
-								<TableCell key={column.id} align={column.align} style={{minWidth: column.minWidth}}>
+								<TableCell
+									key={column.id}
+									align={column.align}
+									style={{minWidth: column.minWidth}}
+									className='font-bold text-white bg-black border-t border-gray-500'
+								>
 									{column.label}
 								</TableCell>
 							))}
@@ -357,7 +180,7 @@ export default function OverviewTable() {
 									{columns.map((column) => {
 										const value = row[column.id];
 										return (
-											<TableCell key={column.id} align={column.align}>
+											<TableCell key={column.id} align={column.align} className='font-mono'>
 												{column.format && typeof value === 'number' ? column.format(value) : value}
 											</TableCell>
 										);
