@@ -1,6 +1,7 @@
 package com.sharevax.core.service;
 
 import com.sharevax.core.model.Country;
+import com.sharevax.core.model.dto.VaccineStatisticDto;
 import com.sharevax.core.repository.CountryRepository;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,17 @@ public class CountryService {
 
     public List<Country> getAllCountries() {
         return countryRepository.findAll();
+    }
+
+    public void setCountryVaccineInfo(VaccineStatisticDto vaccineOverview){
+        Country country = countryRepository.findById(vaccineOverview.getCountryId()).orElseThrow(()-> new RuntimeException("Country not found"));
+        country.setPopulation(vaccineOverview.getPopulation());
+        country.setVaccinationRate(vaccineOverview.getVaccinationRate());
+        country.setDailyVaccineConsumption(vaccineOverview.getDailyVaccineConsumption());
+        country.setVaccineStock(vaccineOverview.getVaccineStock());
+        country.setVaccineProduction(vaccineOverview.getVaccineProduction());
+        countryRepository.save(country);
+
     }
 
 }

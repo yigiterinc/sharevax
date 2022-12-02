@@ -1,6 +1,5 @@
 package com.sharevax.core.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.locationtech.jts.geom.Point;
