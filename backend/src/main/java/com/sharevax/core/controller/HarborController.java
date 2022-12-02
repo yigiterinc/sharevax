@@ -23,12 +23,17 @@ public class HarborController {
         this.harborRepository = harborRepository;
         this.countryService = countryService;
     }
+//
+//    @GetMapping("/test-serialization")
+//    public ResponseEntity<Point> testSerialization() {
+//        GeometryFactory geometryFactory = new GeometryFactory();
+//        Point point = geometryFactory.createPoint(new Coordinate(1, 2));
+//        return ResponseEntity.ok(point);
+//    }
 
-    @GetMapping("/test-serialization")
-    public ResponseEntity<Point> testSerialization() {
-        GeometryFactory geometryFactory = new GeometryFactory();
-        Point point = geometryFactory.createPoint(new Coordinate(1, 2));
-        return ResponseEntity.ok(point);
+    @GetMapping
+    public ResponseEntity<List<Harbor>> getAllHarbors() {
+        return ResponseEntity.ok(harborRepository.findAll());
     }
 
     @PostMapping
