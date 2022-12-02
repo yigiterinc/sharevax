@@ -28,7 +28,7 @@ public class CountryController {
     }
 
     @PostMapping
-    public ResponseEntity<String> setCountryVaccineInfo(@RequestBody final VaccineStatisticDto vaccineOverview){
+    public ResponseEntity<String> getSupplyById(@RequestBody final VaccineStatisticDto vaccineOverview){
         countryService.setCountryVaccineInfo(vaccineOverview);
         return ResponseEntity.ok("Changed");
     }
