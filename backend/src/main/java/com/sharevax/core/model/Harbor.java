@@ -2,12 +2,8 @@ package com.sharevax.core.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
-import org.locationtech.jts.geom.LineString;
-import org.hibernate.annotations.Type;
 import org.locationtech.jts.geom.Point;
-
 
 import javax.persistence.*;
 import java.util.List;
@@ -48,7 +44,7 @@ public class Harbor {
     @JsonBackReference
     private List<Delivery> incomingDeliveries;
 
-    enum HarborStatus {
+    public enum HarborStatus {
         AVAILABLE,
         CLOSED,
         FULL

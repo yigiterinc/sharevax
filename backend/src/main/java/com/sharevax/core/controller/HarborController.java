@@ -6,7 +6,6 @@ import com.sharevax.core.repository.HarborRepository;
 import com.sharevax.core.service.CountryService;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.Point;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,10 +38,12 @@ public class HarborController {
     @PostMapping
     public Harbor createHarbor(@RequestBody CreateHarborDto createHarborDto) {
         Harbor harbor = Harbor.builder()
+                .status(Harbor.HarborStatus.AVAILABLE)
                 .name(createHarborDto.getName())
                 .country(countryService.getCountryById(createHarborDto.getCountryId()))
                 .coordinate(new GeometryFactory().createPoint(new Coordinate(createHarborDto.getLongitude(), createHarborDto.getLatitude())))
                 .build();
+
 
         return harborRepository.save(harbor);
     }
