@@ -1,8 +1,10 @@
 package com.sharevax.core.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 import java.util.List;
 
 @Builder
@@ -29,14 +31,15 @@ public class Country {
   private double vaccinationRate;
 
   @Column(name = "daily_vaccine_consumption", nullable = false)
-  private int dailyVaccineConsumption;
+  private BigInteger dailyVaccineConsumption;
 
   @Column(name = "vaccine_stock", nullable = false)
   private int vaccineStock;
 
   @Column(name = "daily_vaccine_production", nullable = false)
-  private int vaccineProduction;
+  private BigInteger vaccineProduction;
 
-  @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "country", cascade = CascadeType.ALL)
+  @JsonBackReference
   private List<Harbor> harbors;
 }

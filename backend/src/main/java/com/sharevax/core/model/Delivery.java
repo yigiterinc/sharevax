@@ -1,5 +1,6 @@
 package com.sharevax.core.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.locationtech.jts.geom.LineString;
 
@@ -22,10 +23,12 @@ public class Delivery {
 
     @ManyToOne
     @JoinColumn(name = "start_harbor_id", nullable = false)
+    @JsonManagedReference
     private Harbor startHarbor;
 
     @ManyToOne
     @JoinColumn(name = "destination_harbor_id", nullable = false)
+    @JsonManagedReference
     private Harbor destinationHarbor;
 
     @Column(name = "estimated_arrival_date", nullable = false)

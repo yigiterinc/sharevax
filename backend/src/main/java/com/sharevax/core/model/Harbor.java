@@ -1,5 +1,7 @@
 package com.sharevax.core.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.locationtech.jts.geom.Point;
 
@@ -23,22 +25,26 @@ public class Harbor {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "coordinate", nullable = false)
+    @Column(name = "coordinate", nullable = false, columnDefinition = "geometry(Point,4326)")
     private Point coordinate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
+    @JsonManagedReference
     private Country country;
 
     @Column(name = "status", nullable = false)
-    private HarborStatus status;
+    @Enumerated(EnumType.STRING)
+    private HarborStatus status = HarborStatus.AVAILABLE;
 
-    @OneToMany(mappedBy = "startHarbor", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "startHarbor")
+    @JsonBackReference
     private List<Delivery> outgoingDeliveries;
 
-    @OneToMany(mappedBy = "destinationHarbor", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "destinationHarbor")
+    @JsonBackReference
     private List<Delivery> incomingDeliveries;
 
-    enum HarborStatus {
+    public enum HarborStatus {
         AVAILABLE,
         CLOSED,
         FULL
