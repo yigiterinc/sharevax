@@ -5,7 +5,7 @@ const Legend = ({legendItems}) => {
 			{legendItems.map((item) => (
 				<div
 					key={item.title}
-					className='flex flex-1 items-center justify-center h-8'
+					className='flex flex-1 items-center justify-center h-8 text-[10px]'
 					style={{
 						backgroundColor: item.color,
 					}}

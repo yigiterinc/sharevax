@@ -18,10 +18,10 @@ const OverviewMap = () => {
 	const scale = [0, 0.2, 0.4, 0.6, 0.8];
 	const legendItems = [
 		{title: '< 20%', color: colors[0], textColor: 'black'},
-		{title: '< 40%', color: colors[1], textColor: 'black'},
-		{title: '< 60%', color: colors[2], textColor: 'black'},
-		{title: '< 80%', color: colors[3], textColor: 'black'},
-		{title: '< 100%', color: colors[4], textColor: 'black'},
+		{title: '20%-40%', color: colors[1], textColor: 'black'},
+		{title: '40%-60%', color: colors[2], textColor: 'black'},
+		{title: '60%-80%', color: colors[3], textColor: 'black'},
+		{title: '> 80%', color: colors[4], textColor: 'black'},
 	];
 
 	const getColor = (val) => {
@@ -68,7 +68,7 @@ const OverviewMap = () => {
 
 	return (
 		<MapContainer
-			className='w-[75vw] h-[50vh] relative z-0'
+			className='w-[80vw] h-[65vh] relative z-0'
 			style={{backgroundColor: '#e8f4f6'}}
 			center={[30.0, 20.0]}
 			zoom={2}
