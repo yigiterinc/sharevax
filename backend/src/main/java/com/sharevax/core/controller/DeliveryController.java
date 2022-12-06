@@ -24,4 +24,12 @@ public class DeliveryController {
     public ResponseEntity<List<DeliveryDto>> getAllDeliveries() {
         return ResponseEntity.ok(deliveryService.getAllDeliveries());
     }
+
+    @GetMapping("/active")
+    public ResponseEntity<List<DeliveryDto>> getActiveDeliveries() {
+        /**
+         * Can be used for the map
+         */
+        return ResponseEntity.ok(deliveryService.getActiveDeliveries());
+    }
 }

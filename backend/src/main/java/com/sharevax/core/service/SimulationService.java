@@ -205,6 +205,8 @@ public class SimulationService {
         for (Demand demand : demands) {
             double minDistance = Double.MAX_VALUE;
             Supply closestSupply = null;
+
+            // For each demand we find the closest supply
             for (Supply supply : supplies) {
                 double distance = simulationFacade.findShortestDistanceBetweenDemandAndSupply(demand, supply);
                 if (distance < minDistance) {
@@ -213,7 +215,9 @@ public class SimulationService {
                 }
             }
 
-            distanceScores.put(demand, new ImmutablePair<>(1 / minDistance, closestSupply));
+            var distanceScore = calculateDistanceScore(minDistance);
+
+            distanceScores.put(demand, new ImmutablePair<>(distanceScore, closestSupply));
         }
 
         // Normalize the distance scores to be between 0 and 1, 1 being the best and closest pair
@@ -227,9 +231,7 @@ public class SimulationService {
         return distanceScores;
     }
 
-    private double calculateDistanceScore(Supply supply, Demand demand) {
-        var shortestDistanceBetweenHarbors = simulationFacade.findShortestDistanceBetweenDemandAndSupply(demand, supply);
-
+    private double calculateDistanceScore(double shortestDistanceBetweenHarbors) {
         // Score is the inverse of the distance
         return 1 / shortestDistanceBetweenHarbors;
     }

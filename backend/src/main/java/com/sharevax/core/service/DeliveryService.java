@@ -45,4 +45,10 @@ public class DeliveryService {
         var deliveryDtos = deliveries.stream().map(DeliveryDto::from).toList();
         return deliveryDtos;
     }
+
+    public List<DeliveryDto> getActiveDeliveries() {
+        var deliveries =  deliveryRepository.findActiveDeliveries();
+        var deliveryDtos = deliveries.stream().map(DeliveryDto::from).toList();
+        return deliveryDtos;
+    }
 }
