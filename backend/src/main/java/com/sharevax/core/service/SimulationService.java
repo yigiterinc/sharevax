@@ -165,6 +165,7 @@ public class SimulationService {
         HashMap<Demand, Double> demandToUrgencyScores = new HashMap<>();
         // Normalize each score factor
         double maxGivenUrgencyScore = givenDemandUrgencies.values().stream().mapToDouble(Integer::doubleValue).max().getAsDouble();
+
         double maxVaccinationRate = demandToVaccinationRates.values().stream().mapToDouble(Double::doubleValue).max().getAsDouble();
         double maxDailyVaccineConsumptionToStock = demandToDailyVaccineConsumptionToStock.values().stream().mapToDouble(Double::doubleValue).max().getAsDouble();
 
@@ -184,7 +185,8 @@ public class SimulationService {
                                          Double dailyVaccineConsumptionToStock, double maxDailyVaccineConsumptionToStock) {
          
         return givenUrgency / maxGivenUrgency * GIVEN_URGENCY_FACTOR +
-                vaccinationRate / maxVaccinationRate * VACCINATION_RATE_FACTOR +
+                // lower the vaccination rate, higher the score should be
+                (maxVaccinationRate - vaccinationRate) / maxVaccinationRate * VACCINATION_RATE_FACTOR +
                 dailyVaccineConsumptionToStock / maxDailyVaccineConsumptionToStock * DAILY_VAX_CONSUMPTION_TO_STOCK_FACTOR;
     }
 

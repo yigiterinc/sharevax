@@ -79,7 +79,14 @@ public class RouteService {
         Point harbor1Coordinates = harbor.getCoordinate();
         Point harbor2Coordinates = harbor2.getCoordinate();
 
-        Feature route = getRoute(harbor1Coordinates, harbor2Coordinates);
+        Feature route;
+        try {
+            route = getRoute(harbor1Coordinates, harbor2Coordinates);
+        } catch (Exception e) {
+            System.out.println("Error finding route between " + harbor.getName() + " and " + harbor2.getName());
+            return Double.MAX_VALUE;
+        }
+
 
         return getDistanceFromRoute(route);
     }

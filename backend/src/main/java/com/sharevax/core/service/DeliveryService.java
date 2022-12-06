@@ -31,6 +31,7 @@ public class DeliveryService {
                 .estimatedArrivalDate(estimatedArrivalDate)
                 .supply(supply)
                 .createdAt(new Date())
+                .deliveryStatus(Delivery.DeliveryStatus.IN_TIME)
                 .demand(demand)
                 .build();
 
