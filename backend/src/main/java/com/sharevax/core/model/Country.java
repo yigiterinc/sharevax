@@ -25,7 +25,7 @@ public class Country {
   private String name;
 
   @Column(name = "population", nullable = false)
-  private int population;
+  private BigInteger population;
 
   @Column(name = "vaccination_rate", nullable = false)
   private double vaccinationRate;
@@ -34,10 +34,10 @@ public class Country {
   private BigInteger dailyVaccineConsumption;
 
   @Column(name = "vaccine_stock", nullable = false)
-  private int vaccineStock;
+  private BigInteger vaccineStock;
 
   @Column(name = "daily_vaccine_production", nullable = false)
-  private BigInteger vaccineProduction;
+  private BigInteger dailyVaccineProduction;
 
   @OneToMany(mappedBy = "country", cascade = CascadeType.ALL)
   @JsonBackReference

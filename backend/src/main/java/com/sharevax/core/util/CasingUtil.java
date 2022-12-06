@@ -13,8 +13,6 @@ public class CasingUtil {
                 .map(v -> v.substring(0, 1).toUpperCase() + v.substring(1).toLowerCase())
                 .collect(Collectors.joining());
 
-        String dromedaryCamel = bactrianCamel.toLowerCase().charAt(0) + bactrianCamel.substring(1);
-
-        return dromedaryCamel;
+        return bactrianCamel;
     }
 }

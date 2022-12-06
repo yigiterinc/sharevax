@@ -1,5 +1,6 @@
 package com.sharevax.core.service;
 
+import com.sharevax.core.model.Country;
 import com.sharevax.core.model.Supply;
 import com.sharevax.core.model.VaccineType;
 import com.sharevax.core.model.dto.CreateSupplyDto;
@@ -48,5 +49,16 @@ public class SupplyService {
 
     public Supply getSupplyById(Integer id) {
         return supplyRepository.findById(id).orElseThrow(() -> new RuntimeException("Supply not found with provided id"));
+    }
+
+    public List<Country> getRequestingCountries() {
+        var allRequests =  supplyRepository.findAll();
+
+        var countries = allRequests.stream()
+                .map(Supply::getCountry)
+                .distinct()
+                .toList();
+
+        return countries;
     }
 }

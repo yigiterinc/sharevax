@@ -1,5 +1,6 @@
 package com.sharevax.core.service;
 
+import com.sharevax.core.model.Country;
 import com.sharevax.core.model.Demand;
 import com.sharevax.core.model.Demand.Urgency;
 import com.sharevax.core.model.VaccineType;
@@ -37,5 +38,16 @@ public class DemandService {
 
     public List<Demand> getAllDemands() {
         return demandRepository.findAll();
+    }
+
+    public List<Country> getProvidingCountries() {
+        var existingDemands = demandRepository.findAll();
+
+        var countries = existingDemands.stream()
+                .map(Demand::getCountry)
+                .distinct()
+                .toList();
+
+        return countries;
     }
 }
