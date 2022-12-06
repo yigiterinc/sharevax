@@ -50,4 +50,8 @@ public class DemandService {
 
         return countries;
     }
+
+    public List<Demand> findUnmatchedDemands() {
+        return demandRepository.findUnmatchedDemands();
+    }
 }

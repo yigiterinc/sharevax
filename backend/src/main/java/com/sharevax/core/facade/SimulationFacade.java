@@ -56,4 +56,12 @@ public class SimulationFacade {
 
         return deliveryService.createDelivery(startHarbor, destinationHarbor, estimatedArrivalDate, supply, demand);
     }
+
+    public List<Demand> getUnmatchedDemands() {
+        return demandService.findUnmatchedDemands();
+    }
+
+    public List<Supply> getUnmatchedSupplies() {
+        return supplyService.findUnmatchedSupplies();
+    }
 }

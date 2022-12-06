@@ -40,13 +40,14 @@ public class SimulationService {
 
     public void simulateDay() {
         DAY_COUNTER++;
+        triggerEvents();    // TODO: implement this
+        updateShipLocations();  //TODO: implement this
+
         updateVaccineStocks();
         updateVaccinationRates();
 
         matchSupplyAndDemand();
 
-        // Do match
-        // Check for events that should be triggered
         System.out.println("Day: " + DAY_COUNTER);
     }
 
@@ -55,8 +56,12 @@ public class SimulationService {
         // Get current set of demands
         // Match them intelligently
 
-        var supplies = simulationFacade.getAllSupplies();
-        var demands = simulationFacade.getAllDemands();
+        var supplies = simulationFacade.getUnmatchedSupplies();
+        var demands = simulationFacade.getUnmatchedDemands();
+
+        if (supplies.isEmpty() || demands.isEmpty()) {
+            return;
+        }
 
         Map<Demand.Urgency, Integer> enumToUrgencyScore = new HashMap<>(){{
                 put(Demand.Urgency.NORMAL, 1);
@@ -95,8 +100,8 @@ public class SimulationService {
 
             // Create the Delivery
             Delivery delivery = simulationFacade.createDelivery(
-                    supply.getCountry().getHarbors().get(0), // TODO find closest harbor
-                    demand.getCountry().getHarbors().get(0), // TODO find closest harbor
+                    supply.getCountry().getHarbors().get(0), // TODO use closest harbor
+                    demand.getCountry().getHarbors().get(0), // TODO use closest harbor
                     // 5 days later
                     new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 5), // TODO calculate est. date based on distance
                     supply,
@@ -255,7 +260,15 @@ public class SimulationService {
     }
 
     private void triggerEvents() {
+        // TODO
         // Check for events that should be triggered
+    }
+
+    private void updateShipLocations() {
+        // TODO
+        // Update delivery routes every day
+        // Update fields routeHistory, futureRoute and remainingDaysToNextHarbor
+        // Also set updatedAt field of delivery after updating.
     }
 
     public int getDay() {

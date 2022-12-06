@@ -4,10 +4,12 @@ import com.sharevax.core.model.Delivery;
 import com.sharevax.core.model.Demand;
 import com.sharevax.core.model.Harbor;
 import com.sharevax.core.model.Supply;
+import com.sharevax.core.model.dto.DeliveryDto;
 import com.sharevax.core.repository.DeliveryRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class DeliveryService {
@@ -36,5 +38,11 @@ public class DeliveryService {
                 .build();
 
         return deliveryRepository.save(delivery);
+    }
+
+    public List<DeliveryDto> getAllDeliveries() {
+        var deliveries =  deliveryRepository.findAll();
+        var deliveryDtos = deliveries.stream().map(DeliveryDto::from).toList();
+        return deliveryDtos;
     }
 }

@@ -61,4 +61,8 @@ public class SupplyService {
 
         return countries;
     }
+
+    public List<Supply> findUnmatchedSupplies() {
+        return supplyRepository.findUnmatchedSupplies();
+    }
 }
