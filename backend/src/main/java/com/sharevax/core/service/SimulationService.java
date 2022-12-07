@@ -96,19 +96,18 @@ public class SimulationService {
             var supply = matchedBestPairs.get(demand);
             if (supply != null) {
                 System.out.println("Matched " + demand + " with " + supply);
+
+                // Create the Delivery
+                Delivery delivery = simulationFacade.createDelivery(
+                        supply.getCountry().getHarbors().get(0), // TODO use closest harbor
+                        demand.getCountry().getHarbors().get(0), // TODO use closest harbor
+                        // 5 days later
+                        new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 5), // TODO calculate est. date based on distance
+                        supply,
+                        demand
+                );
+                System.out.println("Created delivery: " + delivery);
             }
-
-            // Create the Delivery
-            Delivery delivery = simulationFacade.createDelivery(
-                    supply.getCountry().getHarbors().get(0), // TODO use closest harbor
-                    demand.getCountry().getHarbors().get(0), // TODO use closest harbor
-                    // 5 days later
-                    new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 5), // TODO calculate est. date based on distance
-                    supply,
-                    demand
-            );
-
-            System.out.println("Created delivery: " + delivery);
         }
     }
 
@@ -260,6 +259,8 @@ public class SimulationService {
             country.setVaccinationRate(updatedVaccinationRate);
         }
     }
+
+
 
     private void triggerEvents() {
         // TODO

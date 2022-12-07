@@ -18,7 +18,7 @@ public class SimulationController {
         this.simulationService = simulationService;
     }
 
-    @Operation(summary = "Represents a day has passed. For simplified implementation")
+    @Operation(summary = "Represents a day has passed: Add day_country and do matching")
     @PatchMapping("/increment-day")
     public void incrementDay() {
         simulationService.simulateDay();
@@ -30,10 +30,4 @@ public class SimulationController {
         return ResponseEntity.ok(simulationService.getDay());
     }
 
-    @Operation(summary = "Do matching")
-    @GetMapping("/matching")
-    public ResponseEntity<String> match() {
-        simulationService.matchSupplyAndDemand();
-        return ResponseEntity.ok("matched");
-    }
 }
