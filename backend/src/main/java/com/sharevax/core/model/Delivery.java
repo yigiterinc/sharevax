@@ -13,6 +13,7 @@ import java.util.Date;
 @Setter
 @Builder
 @Entity
+@ToString
 @Table(name = "delivery")
 public class Delivery {
 
@@ -31,7 +32,7 @@ public class Delivery {
     @JsonManagedReference
     private Harbor destinationHarbor;
 
-    @Column(name = "estimated_arrival_date", nullable = false)
+    @Column(name = "estimated_arrival_date")
     private Date estimatedArrivalDate;
 
     @Column(name = "delivery_created_date", nullable = false)
@@ -42,13 +43,13 @@ public class Delivery {
 
     @Column(name = "delivery_status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private DeliveryStatus deliveryStatus;
+    private DeliveryStatus deliveryStatus = DeliveryStatus.IN_TIME;
 
-    @Column(name = "days_to_next_harbor", nullable = false)
+    @Column(name = "days_to_next_harbor")
     private int remainingDaysToNextHarbor;
 
     // store route history in coordinates
-    @Column(name = "route_history", nullable = false)
+    @Column(name = "route_history")
     private LineString routeHistory;
 
     @Column(name = "future_route")
@@ -60,7 +61,7 @@ public class Delivery {
     @OneToOne
     private Demand demand;
 
-    enum DeliveryStatus {
+    public enum DeliveryStatus {
         IN_TIME,
         DELAYED,
         DELIVERED
