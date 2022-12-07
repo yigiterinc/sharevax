@@ -4,6 +4,7 @@ import com.sharevax.core.model.Harbor;
 import com.sharevax.core.model.dto.CreateHarborDto;
 import com.sharevax.core.repository.HarborRepository;
 import com.sharevax.core.service.CountryService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.http.ResponseEntity;
@@ -30,11 +31,13 @@ public class HarborController {
 //        return ResponseEntity.ok(point);
 //    }
 
+    @Operation(summary = "Get a list of all harbors")
     @GetMapping
     public ResponseEntity<List<Harbor>> getAllHarbors() {
         return ResponseEntity.ok(harborRepository.findAll());
     }
 
+    @Operation(summary = "Create a harbor")
     @PostMapping
     public Harbor createHarbor(@RequestBody CreateHarborDto createHarborDto) {
         Harbor harbor = Harbor.builder()
