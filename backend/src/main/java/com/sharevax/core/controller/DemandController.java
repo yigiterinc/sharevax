@@ -25,7 +25,7 @@ public class DemandController {
         return ResponseEntity.ok(demandService.getAllDemands());
     }
 
-    @Operation(summary = "Get a info from the demand which id is {id}")
+    @Operation(summary = "Get info from the demand which id is {id}")
     @GetMapping("/{id}")
     public ResponseEntity<Demand> getDemandById(@PathVariable Integer id) {
         return ResponseEntity.ok(demandService.getDemandById(id));

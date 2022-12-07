@@ -24,9 +24,8 @@ public class SupplyController {
         return ResponseEntity.ok(supplyService.getAllSupplies());
     }
 
-    @Operation(summary = "Get a info from supply with {id}")
-    @GetMapping
-    @RequestMapping("/{id}")
+    @Operation(summary = "Get info from supply with {id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Supply> getSupplyById(@PathVariable Integer id) {
         return ResponseEntity.ok(supplyService.getSupplyById(id));
     }
