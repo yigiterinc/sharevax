@@ -29,4 +29,11 @@ public class SimulationController {
     public ResponseEntity<Integer> getDay() {
         return ResponseEntity.ok(simulationService.getDay());
     }
+
+    @Operation(summary = "Do matching")
+    @GetMapping("/matching")
+    public ResponseEntity<String> match() {
+        simulationService.matchSupplyAndDemand();
+        return ResponseEntity.ok("matched");
+    }
 }

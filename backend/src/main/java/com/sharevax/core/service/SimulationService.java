@@ -51,7 +51,7 @@ public class SimulationService {
         System.out.println("Day: " + DAY_COUNTER);
     }
 
-    private void matchSupplyAndDemand() {
+    public void matchSupplyAndDemand() {
         // Get current set of supplies
         // Get current set of demands
         // Match them intelligently
