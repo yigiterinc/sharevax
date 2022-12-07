@@ -1,10 +1,8 @@
 package com.sharevax.core.service;
 
 import com.sharevax.core.facade.SimulationFacade;
-import com.sharevax.core.model.Country;
-import com.sharevax.core.model.Delivery;
-import com.sharevax.core.model.Demand;
-import com.sharevax.core.model.Supply;
+import com.sharevax.core.model.*;
+import com.sharevax.core.repository.SupplyRepository;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +31,12 @@ public class SimulationService {
 
     // Daily vaccine consumption / stock ratio to determine if the country is in need of vaccines, increase urgency
     private static final double DAILY_VAX_CONSUMPTION_TO_STOCK_FACTOR = 1;
+    private final SupplyRepository supplyRepository;
 
-    public SimulationService(SimulationFacade simulationFacade) {
+    public SimulationService(SimulationFacade simulationFacade,
+                             SupplyRepository supplyRepository) {
         this.simulationFacade = simulationFacade;
+        this.supplyRepository = supplyRepository;
     }
 
     public void simulateDay() {
@@ -96,7 +97,6 @@ public class SimulationService {
             var supply = matchedBestPairs.get(demand);
             if (supply != null) {
                 System.out.println("Matched " + demand + " with " + supply);
-
                 // Create the Delivery
                 Delivery delivery = simulationFacade.createDelivery(
                         supply.getCountry().getHarbors().get(0), // TODO use closest harbor
@@ -267,11 +267,17 @@ public class SimulationService {
         // Check for events that should be triggered
     }
 
+    /** TODO
+     * update the route for all the deliveries, according to the current harbor situation
+     */
     private void updateShipLocations() {
         // TODO
         // Update delivery routes every day
         // Update fields routeHistory, futureRoute and remainingDaysToNextHarbor
         // Also set updatedAt field of delivery after updating.
+
+
+
     }
 
     public int getDay() {

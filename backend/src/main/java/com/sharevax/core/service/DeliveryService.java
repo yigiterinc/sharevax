@@ -6,6 +6,7 @@ import com.sharevax.core.model.Harbor;
 import com.sharevax.core.model.Supply;
 import com.sharevax.core.model.dto.DeliveryDto;
 import com.sharevax.core.repository.DeliveryRepository;
+import org.locationtech.jts.geom.LineString;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -25,7 +26,7 @@ public class DeliveryService {
     }
 
     public Delivery createDelivery(Harbor startHarbor, Harbor destinationHarbor, Date estimatedArrivalDate,
-                               Supply supply, Demand demand) {
+                                   Supply supply, Demand demand, LineString routeHistory, LineString futureRoute) {
 
         Delivery delivery = Delivery.builder()
                 .startHarbor(startHarbor)
@@ -35,6 +36,8 @@ public class DeliveryService {
                 .createdAt(new Date())
                 .deliveryStatus(Delivery.DeliveryStatus.IN_TIME)
                 .demand(demand)
+                .routeHistory(routeHistory)
+                .futureRoute(futureRoute)
                 .build();
 
         return deliveryRepository.save(delivery);

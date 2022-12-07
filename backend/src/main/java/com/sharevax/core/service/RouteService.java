@@ -8,8 +8,7 @@ import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
 import eu.europa.ec.eurostat.jgiscotools.util.GeoDistanceUtil;
 import eu.europa.ec.eurostat.searoute.SeaRouting;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.locationtech.jts.geom.MultiLineString;
-import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.*;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -70,7 +69,6 @@ public class RouteService {
                 }
             }
         }
-
         return minDistance;
     }
 
@@ -87,11 +85,13 @@ public class RouteService {
             return Double.MAX_VALUE;
         }
 
-
         return getDistanceFromRoute(route);
     }
-
-
+    public LineString getShortestRoute(Harbor harbor1, Harbor harbor2){
+        Coordinate[] coordinates = getRoute(harbor1.getCoordinate(),harbor2.getCoordinate()).getGeometry().getCoordinates();
+        LineString lineString = new GeometryFactory().createLineString(coordinates);
+        return lineString;
+    }
     private Feature getRoute(Point start, Point end) {
         double long1 = start.getX();
         double lat1 = start.getY();

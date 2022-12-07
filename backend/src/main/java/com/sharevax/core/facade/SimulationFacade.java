@@ -2,6 +2,9 @@ package com.sharevax.core.facade;
 
 import com.sharevax.core.model.*;
 import com.sharevax.core.service.*;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.LineString;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -53,8 +56,13 @@ public class SimulationFacade {
     public Delivery createDelivery(Harbor startHarbor, Harbor destinationHarbor,
                                    Date estimatedArrivalDate,
                                    Supply supply, Demand demand) {
+        LineString futureRoute = routeService.getShortestRoute(startHarbor,destinationHarbor);
 
-        return deliveryService.createDelivery(startHarbor, destinationHarbor, estimatedArrivalDate, supply, demand);
+        Coordinate startHarborCordinate = new Coordinate(startHarbor.getCoordinate().getX(), startHarbor.getCoordinate().getY());
+        Coordinate[] routeHistoryCoordinates = new Coordinate[] {startHarborCordinate, startHarborCordinate}; // number of points in LineString must be 0 or >= 2
+        LineString routeHistory = new GeometryFactory().createLineString(routeHistoryCoordinates);
+
+        return deliveryService.createDelivery(startHarbor, destinationHarbor, estimatedArrivalDate, supply, demand, routeHistory,futureRoute);
     }
 
     public List<Demand> getUnmatchedDemands() {
