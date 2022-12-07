@@ -2,10 +2,13 @@ package com.sharevax.core.controller;
 
 import com.sharevax.core.model.Country;
 import com.sharevax.core.model.dto.HomeSummaryDto;
-import com.sharevax.core.repository.CountryRepository;
 import com.sharevax.core.service.CountryService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -18,11 +21,13 @@ public class CountryController {
         this.countryService = countryService;
     }
 
+    @Operation(summary = "Get information from all countries")
     @GetMapping
     public ResponseEntity<List<Country>> getAllCountries() {
         return ResponseEntity.ok(countryService.getAllCountries());
     }
 
+    @Operation(summary = "Get information from the country which name is {countryName}")
     @GetMapping("{countryName}/summary")
     public ResponseEntity<HomeSummaryDto> getSummary(@PathVariable String countryName) {
         return ResponseEntity.ok(countryService.getHomeCountrySummary(countryName));
