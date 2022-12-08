@@ -1,11 +1,32 @@
 import {MapContainer, Polyline, GeoJSON} from 'react-leaflet';
+import {useEffect, useState} from 'react';
 import ReactDOMServer from 'react-dom/server';
 import countries from '../data/custom.geo.json';
 import 'leaflet/dist/leaflet.css';
 import Legend from './Legend';
 import Popup from './Popup';
+import {fetchCountries} from '../services/services';
 
 const OverviewMap = () => {
+	const [countriesData, setCountriesData] = useState([]);
+	const [loading, setLoading] = useState(true);
+
+	useEffect(() => {
+		fetch();
+	}, []);
+
+	const fetch = async () => {
+		const result = await fetchCountries();
+		setCountriesData(result.data);
+		setLoading(false);
+	};
+
+	useEffect(() => {
+		if (!loading) {
+			console.log('countries: ', countriesData);
+		}
+	}, [countriesData]);
+
 	const coordinates = [
 		[40.43, -74.0],
 		[40, -70],
@@ -45,41 +66,52 @@ const OverviewMap = () => {
 	};
 
 	const onEachCountry = (country, layer) => {
-		const countryName = country.properties.name_en;
-		//placeHolders for dropdown info of every country on the map
-		const doseInStock = 1000;
-		const doseUsedPerDay = 100;
-		const recoveryRate = 0.4;
-		const infectionRate = 0.3;
-		const vaccinationRate = 0.5;
-		const popupContent = ReactDOMServer.renderToString(
-			<Popup
-				countryName={countryName}
-				vaccinationRate={vaccinationRate}
-				infectionRate={infectionRate}
-				recoveryRate={recoveryRate}
-				doseInStock={doseInStock}
-				doseUsedPerDay={doseUsedPerDay}
-			/>,
-		);
-		layer.bindPopup(popupContent);
-		layer.options.fillColor = getColor(Math.random(0, 1));
+		if (countriesData.find((c) => c.name === country.properties.name || c.name === country.properties.adm0_a3)) {
+			console.log('country: ', country.properties.name);
+			const countryName = country.properties.name;
+			//placeHolders for dropdown info of every country on the map
+			const doseInStock = 1000;
+			const doseUsedPerDay = 100;
+			const recoveryRate = 0.4;
+			const infectionRate = 0.3;
+			const vaccinationRate = 0.5;
+			const popupContent = ReactDOMServer.renderToString(
+				<Popup
+					countryName={countryName}
+					vaccinationRate={vaccinationRate}
+					infectionRate={infectionRate}
+					recoveryRate={recoveryRate}
+					doseInStock={doseInStock}
+					doseUsedPerDay={doseUsedPerDay}
+				/>,
+			);
+			layer.bindPopup(popupContent);
+			layer.options.fillColor = getColor(Math.random(0, 1));
+		} else {
+			const countryName = country.properties.name;
+			layer.bindPopup(countryName);
+			layer.options.fillColor = 'white';
+		}
 	};
 
 	return (
-		<MapContainer
-			className='w-[80vw] h-[65vh] relative z-0'
-			style={{backgroundColor: '#e8f4f6'}}
-			center={[30.0, 20.0]}
-			zoom={2}
-			maxZoom={5}
-			minZoom={1}
-			scrollWheelZoom={false}
-		>
-			<GeoJSON data={countries} style={countryStyle} onEachFeature={onEachCountry} />
-			<Polyline pathOptions={{color: '#136bf7'}} positions={coordinates} />
-			<Legend legendItems={legendItems} />
-		</MapContainer>
+		<>
+			{!loading && (
+				<MapContainer
+					className='w-[80vw] h-[65vh] relative z-0'
+					style={{backgroundColor: '#e8f4f6'}}
+					center={[30.0, 20.0]}
+					zoom={2}
+					maxZoom={5}
+					minZoom={1}
+					scrollWheelZoom={false}
+				>
+					<GeoJSON data={countries} style={countryStyle} onEachFeature={onEachCountry} />
+					<Polyline pathOptions={{color: '#136bf7'}} positions={coordinates} />
+					<Legend legendItems={legendItems} />
+				</MapContainer>
+			)}
+		</>
 	);
 };
 
