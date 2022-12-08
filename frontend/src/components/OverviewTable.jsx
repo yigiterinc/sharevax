@@ -1,4 +1,4 @@
-import * as React from 'react';
+import {useEffect, useState} from 'react';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -7,18 +7,18 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-
+import {fetchActiveDeliveries} from '../services/services';
 const columns = [
-	{id: 'destination', label: 'Destination', minWidth: 10},
-	{id: 'from', label: 'From', minWidth: 21},
-	{id: 'vaccine', label: 'Vaccine', minWidth: 10},
-	{id: 'dose', label: 'Dose', minWidth: 20},
-	{id: 'order_date', label: 'Order Date', minWidth: 21},
-	{id: 'estimated_arrival_date', label: 'Estimated Arrival Date', minWidth: 21},
-	{id: 'current_arrival_date', label: 'Current Arrival Date', minWidth: 21},
-	{id: 'status', label: 'Status', minWidth: 21},
-	{id: 'next_stop', label: 'Next Stop', minWidth: 21},
+	{id: 'destinationHarbor', label: 'Destination', minWidth: 10},
+	{id: 'startHarbor', label: 'From', minWidth: 21},
+	{id: 'vaccineType', label: 'Vaccine', minWidth: 10},
+	{id: 'quantity', label: 'Dose', minWidth: 20},
+	{id: 'createdAt', label: 'Order Date', minWidth: 21},
+	{id: 'estimatedArrivalDate', label: 'Estimated Arrival Date', minWidth: 21},
+	{id: 'remainingDaysToNextHarbor', label: 'Current Arrival Date', minWidth: 21},
+	{id: 'deliveryStatus', label: 'Status', minWidth: 21},
 	{id: 'urgency', label: 'Urgency', minWidth: 21},
+	{id: 'updatedAt', label: 'Updated At', minWidth: 21},
 ];
 
 function createData(
@@ -142,9 +142,33 @@ const rows = [
 ];
 
 export default function OverviewTable() {
-	const [page, setPage] = React.useState(0);
-	const [rowsPerPage, setRowsPerPage] = React.useState(10);
+	const [page, setPage] = useState(0);
+	const [rowsPerPage, setRowsPerPage] = useState(10);
+	const [activeDeliveriesData, setActiveDeliveriesData] = useState([]);
 
+	useEffect(() => {
+		fetchActiveDeliveriesData();
+	}, []);
+
+	const fetchActiveDeliveriesData = async () => {
+		const result = await fetchActiveDeliveries();
+		setActiveDeliveriesData(result.data);
+	};
+
+	const rowData = [
+		{
+			destinationHarbor: activeDeliveriesData.destinationHarbor.countryName,
+			startHarbor: activeDeliveriesData.startHarbor.countryName,
+			vaccineType: activeDeliveriesData.vaccineType,
+			quantity: activeDeliveriesData.quantity,
+			createdAt: activeDeliveriesData.createdAt,
+			estimatedArrivalDate: activeDeliveriesData.estimatedArrivalDate,
+			remainingDaysToNextHarbor: activeDeliveriesData.remainingDaysToNextHarbor,
+			deliveryStatus: activeDeliveriesData.deliveryStatus,
+			urgency: activeDeliveriesData.urgency,
+			updatedAt: activeDeliveriesData.updatedAt,
+		},
+	];
 	const handleChangePage = (event, newPage) => {
 		setPage(newPage);
 	};
@@ -174,7 +198,7 @@ export default function OverviewTable() {
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+						{rowData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
 							return (
 								<TableRow hover role='checkbox' tabIndex={-1} key={row.code}>
 									{columns.map((column) => {
