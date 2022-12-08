@@ -39,6 +39,7 @@ public class DeliveryService {
                 .routeHistory(routeHistory)
                 .futureRoute(futureRoute)
                 .remainingDaysToNextHarbor(remainingDaysToNextHarbor)
+                .updatedAt(new Date())
                 .build();
 
         return deliveryRepository.save(delivery);
