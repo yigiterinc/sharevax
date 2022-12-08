@@ -6,6 +6,7 @@ import com.sharevax.core.model.Harbor;
 import com.sharevax.core.model.Supply;
 import com.sharevax.core.model.dto.DeliveryDto;
 import com.sharevax.core.repository.DeliveryRepository;
+import com.sharevax.core.repository.HarborRepository;
 import org.locationtech.jts.geom.LineString;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +17,12 @@ import java.util.List;
 public class DeliveryService {
 
     private final DeliveryRepository deliveryRepository;
+    private final HarborRepository harborRepository;
 
-    public DeliveryService(DeliveryRepository deliveryRepository) {
+    public DeliveryService(DeliveryRepository deliveryRepository,
+                           HarborRepository harborRepository) {
         this.deliveryRepository = deliveryRepository;
+        this.harborRepository = harborRepository;
     }
 
     public void createDelivery(Delivery delivery) {
@@ -56,4 +60,19 @@ public class DeliveryService {
         var deliveryDtos = deliveries.stream().map(DeliveryDto::from).toList();
         return deliveryDtos;
     }
+
+    public Delivery getDelivery(Integer deliveryId) {
+        return deliveryRepository.findById(deliveryId).orElseThrow(() -> new RuntimeException("Delivery not found"));
+    }
+
+    public List<DeliveryDto> getDeliveriesByCountry(Integer countryId) {
+        List<Integer> harborsByCountry = harborRepository.findHarborIDByCountryId(countryId);
+        var deliveries =  deliveryRepository.findAll();
+        var deliveryDtos = deliveries.stream().filter(
+                    delivery -> harborsByCountry.contains(delivery.getStartHarbor().getId()) ||
+                            harborsByCountry.contains(delivery.getDestinationHarbor().getId()))
+                .map(DeliveryDto::from).toList();
+        return deliveryDtos;
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.sharevax.core.controller;
 
+import com.sharevax.core.model.Delivery;
 import com.sharevax.core.model.dto.DeliveryDto;
 import com.sharevax.core.service.DeliveryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,5 +34,17 @@ public class DeliveryController {
          * Can be used for the map
          */
         return ResponseEntity.ok(deliveryService.getActiveDeliveries());
+    }
+
+    @Operation(summary = "Get a list of deliveries related to the country")
+    @GetMapping("/country/{countryId}")
+    public ResponseEntity<List<DeliveryDto>> getDeliveriesByCountry(Integer countryId) {
+        return ResponseEntity.ok(deliveryService.getDeliveriesByCountry(countryId));
+    }
+
+    @Operation(summary = "Get info from the delivery")
+    @GetMapping("/detail/{deliveryId}")
+    public ResponseEntity<Delivery> getDelivery(Integer deliveryId) {
+        return ResponseEntity.ok(deliveryService.getDelivery(deliveryId));
     }
 }

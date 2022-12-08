@@ -6,10 +6,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
+import java.util.Optional;
 @Repository
 public interface DeliveryRepository extends JpaRepository<Delivery, Integer> {
 
     @Query("SELECT d FROM Delivery d WHERE d.deliveryStatus <> 'DELIVERED'")
     List<Delivery> findActiveDeliveries();
+
+    Optional<Delivery> findById(Integer id);
+
 }
