@@ -8,6 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import {fetchActiveDeliveries} from '../services/services';
+
 const columns = [
 	{id: 'destinationHarbor', label: 'Destination', minWidth: 10},
 	{id: 'startHarbor', label: 'From', minWidth: 21},
@@ -145,6 +146,7 @@ export default function OverviewTable() {
 	const [page, setPage] = useState(0);
 	const [rowsPerPage, setRowsPerPage] = useState(10);
 	const [activeDeliveriesData, setActiveDeliveriesData] = useState([]);
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		fetchActiveDeliveriesData();
@@ -153,6 +155,7 @@ export default function OverviewTable() {
 	const fetchActiveDeliveriesData = async () => {
 		const result = await fetchActiveDeliveries();
 		setActiveDeliveriesData(result.data);
+		setLoading(false);
 	};
 
 	const rowData = [
@@ -169,6 +172,7 @@ export default function OverviewTable() {
 			updatedAt: activeDeliveriesData.updatedAt,
 		},
 	];
+
 	const handleChangePage = (event, newPage) => {
 		setPage(newPage);
 	};
@@ -178,24 +182,28 @@ export default function OverviewTable() {
 		setPage(0);
 	};
 
+	console.log(activeDeliveriesData);
+
 	return (
 		<Paper sx={{width: '100%', overflow: 'hidden'}}>
 			<div className='text-bg text-white p-2 bg-black font-mono font-bold'>Vaccines Currently Shipping</div>
 			<TableContainer sx={{maxHeight: 260}}>
 				<Table stickyHeader aria-label='sticky table'>
 					<TableHead>
-						<TableRow>
-							{columns.map((column) => (
-								<TableCell
-									key={column.id}
-									align={column.align}
-									style={{minWidth: column.minWidth}}
-									className='font-bold text-white bg-black border-t border-gray-500'
-								>
-									{column.label}
-								</TableCell>
-							))}
-						</TableRow>
+						{!loading && (
+							<TableRow>
+								{columns.map((column) => (
+									<TableCell
+										key={column.id}
+										align={column.align}
+										style={{minWidth: column.minWidth}}
+										className='font-bold text-white bg-black border-t border-gray-500'
+									>
+										{column.label}
+									</TableCell>
+								))}
+							</TableRow>
+						)}
 					</TableHead>
 					<TableBody>
 						{rowData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {

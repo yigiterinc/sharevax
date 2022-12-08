@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {COUNTRIES, SUPPLIES, HARBORS, DELIVERIES_ACTIVE} from './endpoints';
+import {COUNTRIES, SUPPLIES, HARBORS, ACTIVE_DELIVERIES} from './endpoints';
 
 export const fetchCountries = async function () {
 	const url = COUNTRIES;
@@ -17,6 +17,6 @@ export const fetchHarbors = async function () {
 };
 
 export const fetchActiveDeliveries = async function () {
-	const url = DELIVERIES_ACTIVE;
+	const url = ACTIVE_DELIVERIES;
 	return await axios.get(url);
 };

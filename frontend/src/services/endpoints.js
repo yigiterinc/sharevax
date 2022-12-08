@@ -4,7 +4,7 @@ export const SUPPLIES = `${BASE_URL}/supplies`;
 export const HARBORS = `${BASE_URL}/harbors`;
 export const COUNTRY_SUMMARY = (countryName) => `${BASE_URL}/countries/${countryName}/summary`;
 export const DELIVERIES = `${BASE_URL}/deliveries`;
-export const DELIVERIES_ACTIVE = `${BASE_URL}/deliveries/active`;
+export const ACTIVE_DELIVERIES = `${BASE_URL}/deliveries/active`;
 export const CREATE_SUPPLY = `${BASE_URL}/supplies`;
 export const CREATE_DEMAND = `${BASE_URL}/demands`;
 export const PROGRESS_SIMULATION = `${BASE_URL}/simulation/increment-day`;
