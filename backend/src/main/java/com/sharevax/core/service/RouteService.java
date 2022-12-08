@@ -17,7 +17,7 @@ import java.util.List;
 @Service
 public class RouteService {
 
-    private final int SPEED_FACTOR = 100;
+    private final int SPEED_FACTOR = 1000;
     private final CountryService countryService;
     private final SeaRouting seaRouting;
 
