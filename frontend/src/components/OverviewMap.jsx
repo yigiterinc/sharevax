@@ -67,24 +67,20 @@ const OverviewMap = () => {
 
 	const onEachCountry = (country, layer) => {
 		if (countriesData.find((c) => c.name === country.properties.name || c.name === country.properties.adm0_a3)) {
-			console.log('country: ', country.properties.name);
-			const countryName = country.properties.name;
-			//placeHolders for dropdown info of every country on the map
-			const doseInStock = 1000;
-			const doseUsedPerDay = 100;
-			const recoveryRate = 0.4;
-			const infectionRate = 0.3;
-			const vaccinationRate = 0.5;
+			const currentCountry = countriesData.find(
+				(c) => c.name === country.properties.name || c.name === country.properties.adm0_a3,
+			);
+
 			const popupContent = ReactDOMServer.renderToString(
 				<Popup
-					countryName={countryName}
-					vaccinationRate={vaccinationRate}
-					infectionRate={infectionRate}
-					recoveryRate={recoveryRate}
-					doseInStock={doseInStock}
-					doseUsedPerDay={doseUsedPerDay}
+					countryName={currentCountry.name}
+					vaccinationRate={currentCountry.vaccinationRate}
+					vaccineConsumption={currentCountry.dailyVaccineConsumption}
+					vaccineProduction={currentCountry.dailyVaccineProduction}
+					vaccineStock={currentCountry.vaccineStock}
 				/>,
 			);
+
 			layer.bindPopup(popupContent);
 			layer.options.fillColor = getColor(Math.random(0, 1));
 		} else {

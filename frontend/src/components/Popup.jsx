@@ -1,4 +1,4 @@
-const Popup = ({countryName, vaccinationRate, infectionRate, recoveryRate, doseInStock, doseUsedPerDay}) => {
+const Popup = ({countryName, vaccinationRate, vaccineConsumption, vaccineProduction, vaccineStock}) => {
 	return (
 		<div>
 			<div className='font-semibold'>
@@ -8,16 +8,13 @@ const Popup = ({countryName, vaccinationRate, infectionRate, recoveryRate, doseI
 				Vaccination rate: <span className='font-normal'>{vaccinationRate}</span>
 			</div>
 			<div className='font-semibold'>
-				Infection rate: <span className='font-normal'>{infectionRate}</span>
+				Daily vaccine consumption: <span className='font-normal'>{vaccineConsumption}</span>
 			</div>
 			<div className='font-semibold'>
-				Recovery rate: <span className='font-normal'>{recoveryRate}</span>
+				Daily vaccine production: <span className='font-normal'>{vaccineProduction}</span>
 			</div>
 			<div className='font-semibold'>
-				Dose in stock: <span className='font-normal'>{doseInStock}</span>
-			</div>
-			<div className='font-semibold'>
-				Dose used per day: <span className='font-normal'>{doseUsedPerDay}</span>
+				Vaccine stock: <span className='font-normal'>{vaccineStock}</span>
 			</div>
 		</div>
 	);
