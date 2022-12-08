@@ -8,10 +8,7 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class SimulationFacade {
@@ -72,7 +69,7 @@ public class SimulationFacade {
 
         // calculate the estimatedArrivalDate
         int days = routeService.getTotalDeliveryDays(startHarbor,destinationHarbor);  // calculate the delivery time bewteen two harbor
-        Date estimatedArrivalDate = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * days);
+        Date estimatedArrivalDate = getEstimatedDate(days);
 
         int remainingDaysToNextHarbor = routeService.getDaysToNextStop(routeHistory,futureRoute);
         return deliveryService.createDelivery(startHarbor, destinationHarbor, estimatedArrivalDate, supply, demand, routeHistory,futureRoute,remainingDaysToNextHarbor);
@@ -80,6 +77,13 @@ public class SimulationFacade {
 
     public List<Demand> getUnmatchedDemands() {
         return demandService.findUnmatchedDemands();
+    }
+
+    private Date getEstimatedDate(int duration){
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date());
+        calendar.add(calendar.DATE, duration);
+        return calendar.getTime();
     }
 
     /**
@@ -118,16 +122,18 @@ public class SimulationFacade {
                         dayCounter = routeService.getDaysToNextStop(routeHistory,futureRoute);
                         delivery.setFutureRoute(futureRoute);
 
-                    }
-
-                    // check if delayed
-                    int wholeDuration = routeService.getTotalDeliveryDays(routeHistory,futureRoute);
-                    Date newEstimatedArrivalDate = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * wholeDuration);
-                    if(delivery.getEstimatedArrivalDate().compareTo(newEstimatedArrivalDate)<0){
-                        delivery.setDeliveryStatus(Delivery.DeliveryStatus.DELAYED);
-                    }
-                    else{
-                        delivery.setDeliveryStatus(Delivery.DeliveryStatus.IN_TIME);
+                        // check if delayed
+                        int wholeDuration = routeService.getRemainingDeliveryDays(routeHistory,futureRoute);
+                        Date newEstimatedArrivalDate = getEstimatedDate(wholeDuration);
+                        long from = delivery.getEstimatedArrivalDate().getTime();
+                        long to = newEstimatedArrivalDate.getTime();
+                        int dayDiff = (int) ((to - from) / (1000 * 60 * 60 * 24));
+                        if(dayDiff>1){
+                            delivery.setDeliveryStatus(Delivery.DeliveryStatus.DELAYED);
+                        }
+                        else{
+                            delivery.setDeliveryStatus(Delivery.DeliveryStatus.IN_TIME);
+                        }
                     }
 
                     // save the updated route history
@@ -142,10 +148,31 @@ public class SimulationFacade {
             delivery.setUpdatedAt(new Date());
             deliveryRepository.save(delivery);
         }
-
-
-
     }
+
+//    private ImmutablePair<LineString,LineString> adaptRoute(LineString routeHistory, LineString futureRoute){
+//        Coordinate arriveAT =  futureRoute.getCoordinateN(0);
+//        Point destintion = futureRoute.getEndPoint();
+//
+//        // calculate the updated route history
+//        List<Coordinate> routeHistoryList = new ArrayList<Coordinate>();
+//        routeHistoryList.addAll(Arrays.asList(routeHistory.getCoordinates()));
+//
+//        // If two stops are too close together, just fast forward directly to the farther point
+//        int dayCounter = 0;
+//        do{
+//            routeHistoryList.add(arriveAT);
+//            // calculate the future route
+//            futureRoute = routeService.getLineStringFromPoints(routeHistory.getEndPoint(),destintion);
+//            dayCounter = routeService.getDaysToNextStop(routeHistory,futureRoute);
+//            arriveAT = futureRoute.getCoordinateN(0);
+//        } while(dayCounter<=0 );
+//        routeHistory = new GeometryFactory().createLineString(routeHistoryList.toArray(new Coordinate[routeHistoryList.size()]));
+//        ImmutablePair<LineString,LineString> history_future_route_pair = new ImmutablePair<>(routeHistory,futureRoute);
+//
+//        return history_future_route_pair;
+//    }
+
     public List<Supply> getUnmatchedSupplies() {
         return supplyService.findUnmatchedSupplies();
     }
