@@ -17,6 +17,7 @@ import java.util.List;
 @Service
 public class RouteService {
 
+    private final int SPEED_FACTOR = 100;
     private final CountryService countryService;
     private final SeaRouting seaRouting;
 
@@ -87,11 +88,54 @@ public class RouteService {
 
         return getDistanceFromRoute(route);
     }
-    public LineString getShortestRoute(Harbor harbor1, Harbor harbor2){
-        Coordinate[] coordinates = getRoute(harbor1.getCoordinate(),harbor2.getCoordinate()).getGeometry().getCoordinates();
+
+    /**
+     * TODO v2 block-situation
+     * @param harbor1 start Harbor
+     * @param harbor2 destination Harbor
+     * @return LineString
+     */
+    public LineString getLineString(Harbor harbor1, Harbor harbor2){
+
+        // turn the Route into LineString
+        Feature route = getRoute(harbor1.getCoordinate(),harbor2.getCoordinate());
+        Coordinate[] coordinates = route.getGeometry().getCoordinates();
+        LineString lineString = new GeometryFactory().createLineString(coordinates);
+
+        return lineString;
+    }
+
+    public LineString getLineStringFromPoints(Point p1, Point p2){
+        // turn the Route into LineString
+        Feature route = getRoute(p1,p2);
+        Coordinate[] coordinates = route.getGeometry().getCoordinates();
         LineString lineString = new GeometryFactory().createLineString(coordinates);
         return lineString;
     }
+
+    public int getDaysToNextStop(LineString routeHistory,LineString futureRoute){
+        Point last = routeHistory.getEndPoint();
+        Point next = futureRoute.getPointN(0);
+        double distance = getDistanceFromRoute(getRoute(last,next));
+        int days = (int)distance/SPEED_FACTOR;
+        return days;
+    }
+
+    public int getTotalDeliveryDays(Harbor harbor, Harbor harbor2){
+        double distance = getDistanceBetweenHarbors(harbor,harbor2);
+        int days = (int)distance/SPEED_FACTOR;
+        System.out.println("Total Days:"+ days +" Distance:"+distance);
+        return days;
+    }
+
+    public int getTotalDeliveryDays(LineString routeHistory,LineString futureRoute){
+        Point last = routeHistory.getEndPoint();
+        Point destination = futureRoute.getEndPoint();
+        double distance = getDistanceFromRoute(getRoute(last,destination));
+        int days = (int)distance/SPEED_FACTOR;
+        return days;
+    }
+
     private Feature getRoute(Point start, Point end) {
         double long1 = start.getX();
         double lat1 = start.getY();

@@ -26,7 +26,7 @@ public class DeliveryService {
     }
 
     public Delivery createDelivery(Harbor startHarbor, Harbor destinationHarbor, Date estimatedArrivalDate,
-                                   Supply supply, Demand demand, LineString routeHistory, LineString futureRoute) {
+                                   Supply supply, Demand demand, LineString routeHistory, LineString futureRoute,int remainingDaysToNextHarbor) {
 
         Delivery delivery = Delivery.builder()
                 .startHarbor(startHarbor)
@@ -38,6 +38,7 @@ public class DeliveryService {
                 .demand(demand)
                 .routeHistory(routeHistory)
                 .futureRoute(futureRoute)
+                .remainingDaysToNextHarbor(remainingDaysToNextHarbor)
                 .build();
 
         return deliveryRepository.save(delivery);

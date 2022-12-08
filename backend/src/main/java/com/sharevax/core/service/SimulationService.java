@@ -1,12 +1,14 @@
 package com.sharevax.core.service;
 
 import com.sharevax.core.facade.SimulationFacade;
-import com.sharevax.core.model.*;
+import com.sharevax.core.model.Country;
+import com.sharevax.core.model.Delivery;
+import com.sharevax.core.model.Demand;
+import com.sharevax.core.model.Supply;
 import com.sharevax.core.repository.SupplyRepository;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,14 +44,14 @@ public class SimulationService {
     public void simulateDay() {
         DAY_COUNTER++;
         triggerEvents();    // TODO: implement this
-        updateShipLocations();  //TODO: implement this
+        simulationFacade.updateShipLocations();
 
         updateVaccineStocks();
         updateVaccinationRates();
 
         matchSupplyAndDemand();
 
-        System.out.println("Day: " + DAY_COUNTER);
+        //System.out.println("Day: " + DAY_COUNTER);
     }
 
     public void matchSupplyAndDemand() {
@@ -101,8 +103,6 @@ public class SimulationService {
                 Delivery delivery = simulationFacade.createDelivery(
                         supply.getCountry().getHarbors().get(0), // TODO use closest harbor
                         demand.getCountry().getHarbors().get(0), // TODO use closest harbor
-                        // 5 days later
-                        new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 5), // TODO calculate est. date based on distance
                         supply,
                         demand
                 );
@@ -265,19 +265,6 @@ public class SimulationService {
     private void triggerEvents() {
         // TODO
         // Check for events that should be triggered
-    }
-
-    /** TODO
-     * update the route for all the deliveries, according to the current harbor situation
-     */
-    private void updateShipLocations() {
-        // TODO
-        // Update delivery routes every day
-        // Update fields routeHistory, futureRoute and remainingDaysToNextHarbor
-        // Also set updatedAt field of delivery after updating.
-
-
-
     }
 
     public int getDay() {
