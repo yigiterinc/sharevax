@@ -66,9 +66,9 @@ const OverviewMap = () => {
 		<>
 			{!loading && (
 				<MapContainer
-					className='w-[80vw] h-[65vh] relative z-0'
+					className='w-full h-[65vh] relative z-0'
 					style={{backgroundColor: '#e8f4f6'}}
-					center={[30.0, 20.0]}
+					center={[30.0, 0.0]}
 					zoom={2}
 					maxZoom={5}
 					minZoom={1}
