@@ -3,7 +3,7 @@ import Supply from '../components/Supply';
 
 function OfferVaccine() {
 	return (
-		<div className='flex flex-col items-center gap-12 m-6 grow'>
+		<div className='flex flex-col-1 items-center gap-12 m-6 grow relative justify-center'>
 			<Demand />
 			<Supply />
 		</div>
