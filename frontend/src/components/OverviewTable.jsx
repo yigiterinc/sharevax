@@ -9,7 +9,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import {fetchActiveDeliveries} from '../services/services';
 
-const columns = [
+const tableHeader = [
 	{id: 'destinationHarbor', label: 'Destination', minWidth: 10},
 	{id: 'startHarbor', label: 'From', minWidth: 21},
 	{id: 'vaccineType', label: 'Vaccine', minWidth: 10},
@@ -20,126 +20,6 @@ const columns = [
 	{id: 'deliveryStatus', label: 'Status', minWidth: 21},
 	{id: 'urgency', label: 'Urgency', minWidth: 21},
 	{id: 'updatedAt', label: 'Updated At', minWidth: 21},
-];
-
-function createData(
-	destination,
-	from,
-	vaccine,
-	dose,
-	order_date,
-	estimated_arrival_date,
-	current_arrival_date,
-	status,
-	next_stop,
-	urgency,
-) {
-	return {
-		destination,
-		from,
-		vaccine,
-		dose,
-		order_date,
-		estimated_arrival_date,
-		current_arrival_date,
-		status,
-		next_stop,
-		urgency,
-	};
-}
-
-const rows = [
-	createData(
-		'Germany',
-		'Thailand',
-		'A',
-		2000,
-		'2022.4.0',
-		'2022.4.1',
-		'2022.5.1',
-		'2022.5.1',
-		'Shipping',
-		'France',
-		'red',
-	),
-	createData(
-		'China',
-		'USA',
-		'C',
-		5000,
-		'2022.2.1',
-		'2022.2.2',
-		'2022.3.1',
-		'2022.3.1',
-		'Shipping',
-		'Hong Kong',
-		'green',
-	),
-	createData(
-		'Ukase',
-		'Germany',
-		'B',
-		8000,
-		'2022.6.1',
-		'2022.6.2',
-		'2022.6.1',
-		'2022.3.1',
-		'Shipping',
-		'India',
-		'grey',
-	),
-	createData(
-		'Germany',
-		'Thailand',
-		'A',
-		2000,
-		'2022.4.0',
-		'2022.4.1',
-		'2022.5.1',
-		'2022.5.1',
-		'Shipping',
-		'France',
-		'red',
-	),
-	createData(
-		'China',
-		'USA',
-		'C',
-		5000,
-		'2022.2.1',
-		'2022.2.2',
-		'2022.3.1',
-		'2022.3.1',
-		'Shipping',
-		'Hong Kong',
-		'green',
-	),
-	createData(
-		'Ukase',
-		'Germany',
-		'B',
-		8000,
-		'2022.6.1',
-		'2022.6.2',
-		'2022.6.1',
-		'2022.3.1',
-		'Shipping',
-		'India',
-		'grey',
-	),
-	createData(
-		'Germany',
-		'Thailand',
-		'A',
-		2000,
-		'2022.4.0',
-		'2022.4.1',
-		'2022.5.1',
-		'2022.5.1',
-		'Shipping',
-		'France',
-		'red',
-	),
 ];
 
 export default function OverviewTable() {
@@ -157,19 +37,6 @@ export default function OverviewTable() {
 		setActiveDeliveriesData(result.data);
 		setLoading(false);
 	};
-
-	const rowData = [
-		{id: 'destinationHarbor', label: activeDeliveriesData.destinationHarbor.countryName},
-		{id: 'startHarbor', label: activeDeliveriesData.startHarbor.countryName},
-		{id: 'vaccineType', label: activeDeliveriesData.vaccineType},
-		{id: 'quantity', label: activeDeliveriesData.quantity},
-		{id: 'createdAt', label: activeDeliveriesData.createdAt},
-		{id: 'estimatedArrivalDate', label: activeDeliveriesData.estimatedArrivalDate},
-		{id: 'remainingDaysToNextHarbor', label: activeDeliveriesData.remainingDaysToNextHarbor},
-		{id: 'deliveryStatus', label: activeDeliveriesData.deliveryStatus},
-		{id: 'urgency', label: activeDeliveriesData.urgency},
-		{id: 'updatedAt', label: activeDeliveriesData.updatedAt},
-	];
 
 	const handleChangePage = (event, newPage) => {
 		setPage(newPage);
@@ -190,7 +57,7 @@ export default function OverviewTable() {
 					<TableHead>
 						{!loading && (
 							<TableRow>
-								{columns.map((column) => (
+								{tableHeader.map((column) => (
 									<TableCell
 										key={column.id}
 										align={column.align}
@@ -204,27 +71,22 @@ export default function OverviewTable() {
 						)}
 					</TableHead>
 					<TableBody>
-						{rowData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-							return (
-								<TableRow hover role='checkbox' tabIndex={-1} key={row.code}>
-									{rowData.map((column) => {
-										const value = row[column.id];
-										return (
-											<TableCell key={column.id} align={column.align} className='font-mono'>
-												{column.format && typeof value === 'number' ? column.format(value) : value}
-											</TableCell>
-										);
-									})}
-								</TableRow>
-							);
-						})}
+						{!loading && (
+							<TableRow hover role='checkbox'>
+								{activeDeliveriesData.map((row) => {
+									<TableCell key={row.id} className='font-mono bg-slate-400'>
+										{row.id}
+									</TableCell>;
+								})}
+							</TableRow>
+						)}
 					</TableBody>
 				</Table>
 			</TableContainer>
 			<TablePagination
 				rowsPerPageOptions={[5, 10, 20]}
 				component='div'
-				count={rows.length}
+				count={activeDeliveriesData.length}
 				rowsPerPage={rowsPerPage}
 				page={page}
 				onPageChange={handleChangePage}
