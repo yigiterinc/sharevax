@@ -159,18 +159,16 @@ export default function OverviewTable() {
 	};
 
 	const rowData = [
-		{
-			destinationHarbor: activeDeliveriesData.destinationHarbor.countryName,
-			startHarbor: activeDeliveriesData.startHarbor.countryName,
-			vaccineType: activeDeliveriesData.vaccineType,
-			quantity: activeDeliveriesData.quantity,
-			createdAt: activeDeliveriesData.createdAt,
-			estimatedArrivalDate: activeDeliveriesData.estimatedArrivalDate,
-			remainingDaysToNextHarbor: activeDeliveriesData.remainingDaysToNextHarbor,
-			deliveryStatus: activeDeliveriesData.deliveryStatus,
-			urgency: activeDeliveriesData.urgency,
-			updatedAt: activeDeliveriesData.updatedAt,
-		},
+		{id: 'destinationHarbor', label: activeDeliveriesData.destinationHarbor.countryName},
+		{id: 'startHarbor', label: activeDeliveriesData.startHarbor.countryName},
+		{id: 'vaccineType', label: activeDeliveriesData.vaccineType},
+		{id: 'quantity', label: activeDeliveriesData.quantity},
+		{id: 'createdAt', label: activeDeliveriesData.createdAt},
+		{id: 'estimatedArrivalDate', label: activeDeliveriesData.estimatedArrivalDate},
+		{id: 'remainingDaysToNextHarbor', label: activeDeliveriesData.remainingDaysToNextHarbor},
+		{id: 'deliveryStatus', label: activeDeliveriesData.deliveryStatus},
+		{id: 'urgency', label: activeDeliveriesData.urgency},
+		{id: 'updatedAt', label: activeDeliveriesData.updatedAt},
 	];
 
 	const handleChangePage = (event, newPage) => {
@@ -209,7 +207,7 @@ export default function OverviewTable() {
 						{rowData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
 							return (
 								<TableRow hover role='checkbox' tabIndex={-1} key={row.code}>
-									{columns.map((column) => {
+									{rowData.map((column) => {
 										const value = row[column.id];
 										return (
 											<TableCell key={column.id} align={column.align} className='font-mono'>
