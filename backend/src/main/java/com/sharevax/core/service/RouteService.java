@@ -91,6 +91,32 @@ public class RouteService {
         return getDistanceFromRoute(route);
     }
 
+    // move multiple points based on ship's velocity
+    public ImmutablePair<LineString,LineString> adaptRoute(LineString routeHistory, LineString futureRoute){
+        Point startPoint =  futureRoute.getStartPoint();
+        Point destintion = futureRoute.getEndPoint();
+
+        // create the updated route history
+        List<Coordinate> routeHistoryList = new ArrayList<Coordinate>();
+        routeHistoryList.addAll(Arrays.asList(routeHistory.getCoordinates()));;
+
+        int stopCounter = 0;
+        int duration = 0;
+        // Move forward directly to the next point according to speed
+        do{
+            routeHistoryList.add(futureRoute.getPointN(stopCounter).getCoordinate());
+            stopCounter++;
+            // calculate if this distance is the distance the boat will travel in a day
+            double distance = getDistanceFromRoute(getRoute(startPoint,futureRoute.getPointN(stopCounter)));
+            duration = (int)distance/SPEED_FACTOR;
+        } while(duration<=0 || !futureRoute.isRing());
+        futureRoute = getLineStringFromPoints(futureRoute.getPointN(stopCounter),destintion);
+        routeHistory = new GeometryFactory().createLineString(routeHistoryList.toArray(new Coordinate[routeHistoryList.size()]));
+        ImmutablePair<LineString,LineString> history_future_route_pair = new ImmutablePair<>(routeHistory,futureRoute);
+
+        return history_future_route_pair;
+    }
+
     /**
      * TODO v2 block-situation
      * @param harbor1 start Harbor
