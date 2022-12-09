@@ -46,7 +46,7 @@ public class DeliveryController {
 
     @Operation(summary = "Get info from the delivery")
     @GetMapping("/detail/{deliveryId}")
-    public ResponseEntity<Delivery> getDelivery(Integer deliveryId) {
+    public ResponseEntity<DeliveryDto> getDelivery(Integer deliveryId) {
         return ResponseEntity.ok(deliveryService.getDelivery(deliveryId));
     }
 }

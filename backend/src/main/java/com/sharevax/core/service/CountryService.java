@@ -44,7 +44,7 @@ public class CountryService {
         countryRepository.save(country);
     }
 
-    public Country getVaccineStatisticDto(String countryName) {
+    public Country getCountryInfo(String countryName) {
         String nameToCamelCase = CasingUtil.toCamelCase(countryName);
         Country country = countryRepository.findByName(nameToCamelCase).orElseThrow(() -> new RuntimeException("Country not found"));
         return country;

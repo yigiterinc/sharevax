@@ -49,4 +49,19 @@ public class DeliveryDto {
                 .futureRoute(delivery.getFutureRoute())
                 .build();
     }
+
+        public String getRouteHistoryString(){
+        if(this.routeHistory.isEmpty()){
+            return "";
+        }
+        return this.routeHistory.toString();
+    }
+
+    public String getFutureRouteString(){
+        if(this.futureRoute.isEmpty()){
+            return "";
+        }
+        return this.futureRoute.toString();
+    }
+
 }

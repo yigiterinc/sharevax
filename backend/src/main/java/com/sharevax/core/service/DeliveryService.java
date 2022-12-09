@@ -62,8 +62,9 @@ public class DeliveryService {
         return deliveryDtos;
     }
 
-    public Delivery getDelivery(Integer deliveryId) {
-        return deliveryRepository.findById(deliveryId).orElseThrow(() -> new RuntimeException("Delivery not found"));
+    public DeliveryDto getDelivery(Integer deliveryId) {
+        Delivery d = deliveryRepository.findById(deliveryId).orElseThrow(() -> new RuntimeException("Delivery not found"));
+        return DeliveryDto.from(d);
     }
 
     public List<DeliveryDto> getDeliveriesByCountry(Integer countryId) {

@@ -2,6 +2,7 @@ package com.sharevax.core.controller;
 
 import com.sharevax.core.model.Country;
 import com.sharevax.core.model.dto.HomeSummaryDto;
+import com.sharevax.core.model.dto.VaccineStatisticDto;
 import com.sharevax.core.service.CountryService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +26,17 @@ public class CountryController {
         return ResponseEntity.ok(countryService.getAllCountries());
     }
 
-    @Operation(summary = "Get information from the country which name is {countryName}")
+    //TODO
+    @Operation(summary = "Get worldwide information")
     @GetMapping("{countryName}/summary")
     public ResponseEntity<HomeSummaryDto> getSummary(@PathVariable String countryName) {
         return ResponseEntity.ok(countryService.getHomeCountrySummary(countryName));
+    }
+
+    @Operation(summary = "Get information from the country which name is {countryName}")
+    @GetMapping("{countryName}/info")
+    public ResponseEntity<Country> getCountryInfo(@PathVariable String countryName) {
+        return ResponseEntity.ok(countryService.getCountryInfo(countryName));
     }
 
 

@@ -120,8 +120,12 @@ public class SimulationFacade {
                     }
                     else{
                         // calculate the future route
-                        futureRoute = routeService.getLineStringFromPoints(routeHistory.getEndPoint(),delivery.getDestinationHarbor().getCoordinate());
+                        //futureRoute = routeService.getLineStringFromPoints(routeHistory.getEndPoint(),delivery.getDestinationHarbor().getCoordinate());
+                        ImmutablePair<LineString,LineString> routePair = routeService.adaptRoute(routeHistory,futureRoute);
+                        routeHistory = routePair.getLeft();
+                        futureRoute = routePair.getRight();
                         dayCounter = routeService.getDaysToNextStop(routeHistory,futureRoute);
+                        delivery.setRouteHistory(routeHistory);
                         delivery.setFutureRoute(futureRoute);
 
                         // calculate the updated delivery date
