@@ -3,6 +3,7 @@ import OverviewMap from '../components/OverviewMap';
 import OverviewTable from '../components/OverviewTable';
 import CountryDropdown from '../components/CountryDropdown';
 import NextDayButton from '../components/NextDayButton';
+import WorldSummary from '../components/WorldSummary';
 
 function Home() {
 	return (
@@ -11,7 +12,11 @@ function Home() {
 				<NextDayButton />
 				<CountryDropdown />
 			</div>
-			<OverviewMap />
+			<div className='flex flex-row w-full'>
+				<OverviewMap className='w-9/10' />
+				<WorldSummary className='w-1/10' />
+			</div>
+
 			<OverviewTable />
 		</div>
 	);
