@@ -10,8 +10,8 @@ import TableRow from '@mui/material/TableRow';
 import {fetchActiveDeliveries} from '../services/services';
 
 const tableHeader = [
-	{id: 'destinationHarbor', label: 'Destination', minWidth: 10},
-	{id: 'startHarbor', label: 'From', minWidth: 21},
+	{id: 'destinationHarbor1', label: 'Destination', minWidth: 10},
+	{id: 'startHarbor1', label: 'From', minWidth: 21},
 	{id: 'vaccineType', label: 'Vaccine', minWidth: 10},
 	{id: 'quantity', label: 'Dose', minWidth: 20},
 	{id: 'createdAt', label: 'Order Date', minWidth: 21},
@@ -19,7 +19,6 @@ const tableHeader = [
 	{id: 'remainingDaysToNextHarbor', label: 'Current Arrival Date', minWidth: 21},
 	{id: 'deliveryStatus', label: 'Status', minWidth: 21},
 	{id: 'urgency', label: 'Urgency', minWidth: 21},
-	{id: 'updatedAt', label: 'Updated At', minWidth: 21},
 ];
 
 export default function OverviewTable() {
@@ -47,7 +46,11 @@ export default function OverviewTable() {
 		setPage(0);
 	};
 
-	console.log(activeDeliveriesData);
+	console.log('New json\n', activeDeliveriesData);
+
+	// for (let i = 1; i < activeDeliveriesData.length(); i++) {
+	// 	rowData.push(activeDeliveriesData[i]);
+	// }
 
 	return (
 		<Paper sx={{width: '100%', overflow: 'hidden'}}>
@@ -70,16 +73,22 @@ export default function OverviewTable() {
 							</TableRow>
 						)}
 					</TableHead>
+
 					<TableBody>
-						{!loading && (
-							<TableRow hover role='checkbox'>
-								{activeDeliveriesData.map((row) => {
-									<TableCell key={row.id} className='font-mono bg-slate-400'>
-										{row.id}
-									</TableCell>;
-								})}
-							</TableRow>
-						)}
+						{activeDeliveriesData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+							return (
+								<TableRow hover role='checkbox' tabIndex={-1} key={row.code}>
+									{tableHeader.map((column) => {
+										const value = row[column.id];
+										return (
+											<TableCell key={column.id} align={column.align} className='font-mono'>
+												{column.format && typeof value === 'number' ? column.format(value) : value}
+											</TableCell>
+										);
+									})}
+								</TableRow>
+							);
+						})}
 					</TableBody>
 				</Table>
 			</TableContainer>
