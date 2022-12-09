@@ -34,8 +34,9 @@ export default function Demand() {
 	return (
 		<div>
 			<form onSubmit={handleSubmit}>
-				<Grid container alignItems='left' justify='center' direction='column' className='my-3'>
-					<Grid item>
+				<Grid container alignItems='left' justify='center' direction='column' className='my-6'>
+					<Grid className='text-main-100 font-bold text-xl'>Demand</Grid>
+					<Grid item className='mb-6'>
 						<TextField
 							id='country-input'
 							name='country'
@@ -46,7 +47,7 @@ export default function Demand() {
 						/>
 					</Grid>
 
-					<Grid item>
+					<Grid item className='mb-6'>
 						<FormControl>
 							<FormLabel className='mt-3'>Vaccine Type</FormLabel>
 							<RadioGroup
@@ -100,7 +101,7 @@ export default function Demand() {
 						</FormControl>
 					</Grid>
 
-					<Grid item>
+					<Grid item className='mb-6'>
 						<TextField
 							id='quantity-input'
 							name='quantity'
@@ -111,7 +112,7 @@ export default function Demand() {
 						/>
 					</Grid>
 
-					<Grid item>
+					<Grid item className='mb-6'>
 						<FormControl>
 							<FormLabel className='mt-3'>Urgency</FormLabel>
 							<RadioGroup
@@ -128,7 +129,7 @@ export default function Demand() {
 						</FormControl>
 					</Grid>
 
-					<Button variant='contained' color='black' type='submit'>
+					<Button variant='contained' type='submit' className='bg-main-100 text-white'>
 						Submit
 					</Button>
 				</Grid>

@@ -33,8 +33,9 @@ export default function Supply() {
 	return (
 		<div>
 			<form onSubmit={handleSubmit}>
-				<Grid container alignItems='left' justify='center' direction='column' className='my-3'>
-					<Grid item>
+				<Grid container alignItems='left' justify='center' direction='column' className='my-6'>
+					<Grid className='text-main-100 font-bold text-xl'>Supply</Grid>
+					<Grid item className='mb-6'>
 						<TextField
 							id='country-input'
 							name='country'
@@ -45,7 +46,7 @@ export default function Supply() {
 						/>
 					</Grid>
 
-					<Grid item>
+					<Grid item className='mb-6'>
 						<FormControl>
 							<FormLabel className='mt-3'>Vaccine Type</FormLabel>
 							<RadioGroup
@@ -99,7 +100,7 @@ export default function Supply() {
 						</FormControl>
 					</Grid>
 
-					<Grid item>
+					<Grid item className='mb-6'>
 						<TextField
 							id='quantity-input'
 							name='quantity'
@@ -110,7 +111,7 @@ export default function Supply() {
 						/>
 					</Grid>
 
-					<Grid item>
+					<Grid item className='mb-6'>
 						<TextField
 							id='unitPrice-input'
 							name='unitPrice'
@@ -121,7 +122,7 @@ export default function Supply() {
 						/>
 					</Grid>
 
-					<Button variant='contained' color='black' type='submit'>
+					<Button variant='contained' type='submit' className='bg-main-100 text-white'>
 						Submit
 					</Button>
 				</Grid>
