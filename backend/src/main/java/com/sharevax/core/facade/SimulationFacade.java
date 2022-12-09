@@ -160,31 +160,6 @@ public class SimulationFacade {
         }
     }
 
-    // if two point in future route is to close, jump to the next point
-    // But it is possible that all the points are very close together
-    private ImmutablePair<LineString,LineString> adaptRoute(LineString routeHistory, LineString futureRoute){
-        Coordinate arriveAT =  futureRoute.getCoordinateN(0);
-        Point destintion = futureRoute.getEndPoint();
-
-        // calculate the updated route history
-        List<Coordinate> routeHistoryList = new ArrayList<Coordinate>();
-        routeHistoryList.addAll(Arrays.asList(routeHistory.getCoordinates()));
-
-        // If two stops are too close together, just fast forward directly to the farther point
-        int dayCounter = 0;
-        do{
-            routeHistoryList.add(arriveAT);
-            // calculate the future route
-            futureRoute = routeService.getLineStringFromPoints(routeHistory.getEndPoint(),destintion);
-            dayCounter = routeService.getDaysToNextStop(routeHistory,futureRoute);
-            arriveAT = futureRoute.getCoordinateN(0);
-        } while(dayCounter<=0 || !futureRoute.isRing());
-        routeHistory = new GeometryFactory().createLineString(routeHistoryList.toArray(new Coordinate[routeHistoryList.size()]));
-        ImmutablePair<LineString,LineString> history_future_route_pair = new ImmutablePair<>(routeHistory,futureRoute);
-
-        return history_future_route_pair;
-    }
-
     public List<Supply> getUnmatchedSupplies() {
         return supplyService.findUnmatchedSupplies();
     }

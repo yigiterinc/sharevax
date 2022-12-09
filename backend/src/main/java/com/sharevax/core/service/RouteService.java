@@ -109,7 +109,7 @@ public class RouteService {
             // calculate if this distance is the distance the boat will travel in a day
             double distance = getDistanceFromRoute(getRoute(startPoint,futureRoute.getPointN(stopCounter)));
             duration = (int)distance/SPEED_FACTOR;
-        } while(duration<=0 || !futureRoute.isRing());
+        } while(duration<=0 || stopCounter<futureRoute.getNumGeometries());
         futureRoute = getLineStringFromPoints(futureRoute.getPointN(stopCounter),destintion);
         routeHistory = new GeometryFactory().createLineString(routeHistoryList.toArray(new Coordinate[routeHistoryList.size()]));
         ImmutablePair<LineString,LineString> history_future_route_pair = new ImmutablePair<>(routeHistory,futureRoute);
