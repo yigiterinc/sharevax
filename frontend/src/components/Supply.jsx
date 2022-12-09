@@ -8,9 +8,10 @@ import Radio from '@material-ui/core/Radio';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import RadioGroup from '@material-ui/core/RadioGroup';
+import {CREATE_SUPPLY} from '../services/endpoints';
 
 const defaultValues = {
-	country: '',
+	countryId: '',
 	vaccineType: '',
 	quantity: '',
 	unitPrice: '',
@@ -28,8 +29,23 @@ export default function Supply() {
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
+		formValues.countryId = parseInt(formValues.countryId);
+		formValues.quantity = parseInt(formValues.quantity);
+		formValues.unitPrice = parseInt(formValues.unitPrice);
 		console.log(formValues);
+
+		fetch(CREATE_SUPPLY, {
+			method: 'POST',
+			body: JSON.stringify(formValues),
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})
+			.then((response) => response.json())
+			.then((response) => console.log('Success:', JSON.stringify(response)))
+			.catch((error) => console.error('Error:', error));
 	};
+
 	return (
 		<div>
 			<form onSubmit={handleSubmit}>
@@ -38,10 +54,10 @@ export default function Supply() {
 					<Grid item className='mb-6'>
 						<TextField
 							id='country-input'
-							name='country'
+							name='countryId'
 							label='Country'
 							type='text'
-							value={formValues.country}
+							value={formValues.countryId}
 							onChange={handleInputChange}
 						/>
 					</Grid>
