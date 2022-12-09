@@ -29,15 +29,9 @@ export default function Demand() {
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
-		console.log(formValues);
-		console.log({
-			countryId: 1,
-			vaccineType: 'BIONTECH',
-			quantity: 110,
-			urgency: 'NORMAL',
-		});
 		formValues.countryId = parseInt(formValues.countryId);
 		formValues.quantity = parseInt(formValues.quantity);
+		console.log(formValues);
 
 		fetch(CREATE_DEMAND, {
 			method: 'POST',
