@@ -35,7 +35,7 @@ export default function Sidebar() {
 						key={i}
 						className={` ${
 							menu?.margin && 'mt-5'
-						} group flex items-center text-sm  gap-3.5 font-medium p-2 hover:bg-gray-800 rounded-md`}
+						} group flex items-center text-sm  gap-3.5 font-medium p-2 hover:bg-main-300 rounded-md`}
 					>
 						<div>{createElement(menu?.icon, {size: '20'})}</div>
 						<h2
