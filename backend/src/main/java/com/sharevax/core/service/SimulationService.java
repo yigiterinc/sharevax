@@ -9,6 +9,10 @@ import com.sharevax.core.repository.SupplyRepository;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +20,7 @@ import java.util.Map;
 @Service
 public class SimulationService {
 
-    private static int DAY_COUNTER = 1;
+    private static int DAY_COUNTER = 0;
 
     private final SimulationFacade simulationFacade;
 
@@ -44,14 +48,13 @@ public class SimulationService {
     public void simulateDay() {
         DAY_COUNTER++;
         triggerEvents();    // TODO: implement this
-        simulationFacade.updateShipLocations();
+        simulationFacade.updateShipLocations(getDay());
 
         updateVaccineStocks();
         updateVaccinationRates();
 
         matchSupplyAndDemand();
 
-        //System.out.println("Day: " + DAY_COUNTER);
     }
 
     public void matchSupplyAndDemand() {
@@ -104,7 +107,8 @@ public class SimulationService {
                         supply.getCountry().getHarbors().get(0), // TODO use closest harbor
                         demand.getCountry().getHarbors().get(0), // TODO use closest harbor
                         supply,
-                        demand
+                        demand,
+                        getDay()
                 );
                 System.out.println("Created delivery: " + delivery);
             }
@@ -267,7 +271,25 @@ public class SimulationService {
         // Check for events that should be triggered
     }
 
-    public int getDay() {
-        return DAY_COUNTER;
+    /**
+     *
+     * @return simulated current date according to the offset DAY_COUNTER
+     */
+    public Date getDay() {
+
+        // get real date
+        LocalDateTime realTodayDate = LocalDateTime.now();
+
+        // simulated date according to the offset DAY_COUNTER
+        LocalDateTime simulatedTodayDate = realTodayDate.plusDays(DAY_COUNTER);
+
+        // convert LocalDateTime to Date
+        ZoneId zoneId = ZoneId.systemDefault();
+        ZonedDateTime zonedDateTime = simulatedTodayDate.atZone(zoneId);
+        Date date = Date.from(zonedDateTime.toInstant());
+
+        System.out.println("Today is" + date);
+
+        return date;
     }
 }

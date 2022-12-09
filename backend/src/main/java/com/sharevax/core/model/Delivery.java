@@ -35,6 +35,9 @@ public class Delivery {
     @Column(name = "estimated_arrival_date")
     private Date estimatedArrivalDate;
 
+    @Column(name = "current_arrival_date")
+    private Date currentArrivalDate;
+
     @Column(name = "delivery_created_date", nullable = false)
     private Date createdAt;
 

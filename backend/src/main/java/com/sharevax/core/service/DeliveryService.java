@@ -30,20 +30,21 @@ public class DeliveryService {
     }
 
     public Delivery createDelivery(Harbor startHarbor, Harbor destinationHarbor, Date estimatedArrivalDate,
-                                   Supply supply, Demand demand, LineString routeHistory, LineString futureRoute,int remainingDaysToNextHarbor) {
+                                   Supply supply, Demand demand, LineString routeHistory, LineString futureRoute,int remainingDaysToNextHarbor,Date simulatedTodayDate) {
 
         Delivery delivery = Delivery.builder()
                 .startHarbor(startHarbor)
                 .destinationHarbor(destinationHarbor)
                 .estimatedArrivalDate(estimatedArrivalDate)
+                .currentArrivalDate(estimatedArrivalDate)
                 .supply(supply)
-                .createdAt(new Date())
+                .createdAt(simulatedTodayDate)
                 .deliveryStatus(Delivery.DeliveryStatus.IN_TIME)
                 .demand(demand)
                 .routeHistory(routeHistory)
                 .futureRoute(futureRoute)
                 .remainingDaysToNextHarbor(remainingDaysToNextHarbor)
-                .updatedAt(new Date())
+                .updatedAt(simulatedTodayDate)
                 .build();
 
         return deliveryRepository.save(delivery);
