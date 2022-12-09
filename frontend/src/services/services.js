@@ -1,17 +1,18 @@
 import axios from 'axios';
-import {COUNTRIES, SUPPLIES, HARBORS} from './endpoints';
+import {COUNTRIES, SUPPLIES, HARBORS, PROGRESS_SIMULATION} from './endpoints';
 
 export const fetchCountries = async function () {
-	const url = COUNTRIES;
-	return await axios.get(url);
+	return await axios.get(COUNTRIES);
 };
 
 export const fetchSupplies = async function () {
-	const url = SUPPLIES;
-	return await axios.get(url);
+	return await axios.get(SUPPLIES);
 };
 
 export const fetchHarbors = async function () {
-	const url = HARBORS;
-	return await axios.get(url);
+	return await axios.get(HARBORS);
+};
+
+export const progressSimulation = async function () {
+	return await axios.patch(PROGRESS_SIMULATION);
 };

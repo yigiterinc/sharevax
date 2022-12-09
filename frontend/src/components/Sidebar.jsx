@@ -13,15 +13,14 @@ export default function Sidebar() {
 		{name: 'Country Info', link: '/country-info', icon: BsFillPinMapFill},
 		{name: 'Order Detail', link: '/order-detail', icon: BiDetail},
 		{name: 'Report', link: '/report', icon: TbMessageReport},
-		{name: 'Donate/Sell Vaccine', link: '/', icon: TbVaccine, margin: true},
-		{name: 'Request Vaccine', link: '/', icon: TbVaccine},
+		{name: 'Offer Vaccine', link: '/offer-vaccine', icon: TbVaccine, margin: true},
 	];
 
 	const [open, setOpen] = useState(true);
 
 	return (
 		<div
-			className={`bg-[#0e0e0e] min-h-screen ${
+			className={`bg-main-100 min-h-screen ${
 				open ? 'w-64' : 'w-16'
 			} duration-500 text-gray-100 px-4 sticky top-0 h-screen`}
 		>
@@ -36,7 +35,7 @@ export default function Sidebar() {
 						key={i}
 						className={` ${
 							menu?.margin && 'mt-5'
-						} group flex items-center text-sm  gap-3.5 font-medium p-2 hover:bg-gray-800 rounded-md`}
+						} group flex items-center text-sm  gap-3.5 font-medium p-2 hover:bg-main-300 rounded-md`}
 					>
 						<div>{createElement(menu?.icon, {size: '20'})}</div>
 						<h2
