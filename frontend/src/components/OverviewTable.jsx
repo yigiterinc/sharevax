@@ -10,13 +10,12 @@ import TableRow from '@mui/material/TableRow';
 import {fetchActiveDeliveries} from '../services/services';
 
 const tableHeader = [
-	{id: 'destinationHarbor1', label: 'Destination', minWidth: 10},
-	{id: 'startHarbor1', label: 'From', minWidth: 21},
+	{id: 'destinationHarbor', label: 'Destination', minWidth: 10},
+	{id: 'startHarbor', label: 'From', minWidth: 21},
 	{id: 'vaccineType', label: 'Vaccine', minWidth: 10},
 	{id: 'quantity', label: 'Dose', minWidth: 20},
 	{id: 'createdAt', label: 'Order Date', minWidth: 21},
 	{id: 'estimatedArrivalDate', label: 'Estimated Arrival Date', minWidth: 21},
-	{id: 'remainingDaysToNextHarbor', label: 'Current Arrival Date', minWidth: 21},
 	{id: 'deliveryStatus', label: 'Status', minWidth: 21},
 	{id: 'urgency', label: 'Urgency', minWidth: 21},
 ];
@@ -48,9 +47,28 @@ export default function OverviewTable() {
 
 	console.log('New json\n', activeDeliveriesData);
 
-	// for (let i = 1; i < activeDeliveriesData.length(); i++) {
-	// 	rowData.push(activeDeliveriesData[i]);
-	// }
+	function formatDate(d) {
+		return d.substring(0, 10);
+	}
+
+	function formateStatus(s) {
+		if (s == 'IN_TIME') {
+			return <div className='text-green-500'>In Time</div>;
+		} else if (s == 'DELAYED') {
+			return <div className='text-orange-500'>Delayed</div>;
+		} else if (s == 'DELIVERED') {
+			return <div className='text-gray-500'>Delivered</div>;
+		}
+	}
+	function formateUrgency(u) {
+		if (u == 'NORMAL') {
+			return '🟢';
+		} else if (u == 'URGENT') {
+			return '🟠';
+		} else if (u == 'CRITICAL') {
+			return '🔴';
+		}
+	}
 
 	return (
 		<Paper sx={{width: '100%', overflow: 'hidden'}}>
@@ -77,6 +95,24 @@ export default function OverviewTable() {
 					<TableBody>
 						{activeDeliveriesData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
 							return (
+								<>
+									<TableRow key={row.deliveryId}>
+										<TableCell align='center'>{row.destinationHarbor.countryName}</TableCell>
+										<TableCell align='center'>{row.startHarbor.countryName}</TableCell>
+										<TableCell align='center'>{row.vaccineType}</TableCell>
+										<TableCell align='center'>{row.quantity}</TableCell>
+										<TableCell align='center'>{formatDate(row.createdAt)}</TableCell>
+										<TableCell align='center'>{formatDate(row.estimatedArrivalDate)}</TableCell>
+										<TableCell align='center'>{formateStatus(row.deliveryStatus)}</TableCell>
+										<TableCell align='center'>{formateUrgency(row.urgency)}</TableCell>
+									</TableRow>
+								</>
+							);
+						})}
+					</TableBody>
+					{/* <TableBody>
+						{activeDeliveriesData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+							return (
 								<TableRow hover role='checkbox' tabIndex={-1} key={row.code}>
 									{tableHeader.map((column) => {
 										const value = row[column.id];
@@ -89,7 +125,7 @@ export default function OverviewTable() {
 								</TableRow>
 							);
 						})}
-					</TableBody>
+					</TableBody> */}
 				</Table>
 			</TableContainer>
 			<TablePagination
