@@ -20,7 +20,7 @@ export default function Sidebar() {
 
 	return (
 		<div
-			className={`bg-[#0e0e0e] min-h-screen ${
+			className={`bg-[#00a7db] min-h-screen ${
 				open ? 'w-64' : 'w-16'
 			} duration-500 text-gray-100 px-4 sticky top-0 h-screen`}
 		>
