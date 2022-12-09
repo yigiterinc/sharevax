@@ -156,7 +156,7 @@ export default function OverviewTable() {
 
 	return (
 		<Paper sx={{width: '100%', overflow: 'hidden'}}>
-			<div className='text-bg text-white p-2 bg-black font-mono font-bold'>Vaccines Currently Shipping</div>
+			<div className='text-bg text-white p-2 bg-main-100 font-mono font-bold'>Vaccines Currently Shipping</div>
 			<TableContainer sx={{maxHeight: 260}}>
 				<Table stickyHeader aria-label='sticky table'>
 					<TableHead>
@@ -166,7 +166,7 @@ export default function OverviewTable() {
 									key={column.id}
 									align={column.align}
 									style={{minWidth: column.minWidth}}
-									className='font-bold text-white bg-black border-t border-gray-500'
+									className='font-bold text-white bg-main-100 border-t'
 								>
 									{column.label}
 								</TableCell>
