@@ -8,9 +8,10 @@ import FormLabel from '@material-ui/core/FormLabel';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
 import Button from '@material-ui/core/Button';
+import {CREATE_DEMAND} from '../services/endpoints';
 
 const defaultValues = {
-	country: '',
+	countryId: '',
 	vaccineType: '',
 	quantity: '',
 	urgency: '',
@@ -29,6 +30,25 @@ export default function Demand() {
 	const handleSubmit = (event) => {
 		event.preventDefault();
 		console.log(formValues);
+		console.log({
+			countryId: 1,
+			vaccineType: 'BIONTECH',
+			quantity: 110,
+			urgency: 'NORMAL',
+		});
+		formValues.countryId = parseInt(formValues.countryId);
+		formValues.quantity = parseInt(formValues.quantity);
+
+		fetch(CREATE_DEMAND, {
+			method: 'POST',
+			body: JSON.stringify(formValues),
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})
+			.then((response) => response.json())
+			.then((response) => console.log('Success:', JSON.stringify(response)))
+			.catch((error) => console.error('Error:', error));
 	};
 
 	return (
@@ -39,10 +59,10 @@ export default function Demand() {
 					<Grid item className='mb-6'>
 						<TextField
 							id='country-input'
-							name='country'
+							name='countryId'
 							label='Country'
 							type='text'
-							value={formValues.country}
+							value={formValues.countryId}
 							onChange={handleInputChange}
 						/>
 					</Grid>
@@ -122,9 +142,9 @@ export default function Demand() {
 								column
 								className='my-2'
 							>
-								<FormControlLabel key='NORMAL' value='normal' control={<Radio size='small' />} label='Normal' />
-								<FormControlLabel key='URGENT' value='urgent' control={<Radio size='small' />} label='Urgent' />
-								<FormControlLabel key='CRITICAL' value='critical' control={<Radio size='small' />} label='Critical' />
+								<FormControlLabel key='NORMAL' value='NORMAL' control={<Radio size='small' />} label='Normal' />
+								<FormControlLabel key='URGENT' value='URGENT' control={<Radio size='small' />} label='Urgent' />
+								<FormControlLabel key='CRITICAL' value='CRITICAL' control={<Radio size='small' />} label='Critical' />
 							</RadioGroup>
 						</FormControl>
 					</Grid>
