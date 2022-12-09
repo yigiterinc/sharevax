@@ -1,5 +1,17 @@
 import {setGlobalState, useGlobalState} from '../state';
 
+const countries = [
+	{name: 'China', value: 'China'},
+	{name: 'Japan', value: 'Japan'},
+	{name: 'India', value: 'India'},
+	{name: 'United Kingdom', value: 'United Kingdom'},
+	{name: 'Portugal', value: 'Portugal'},
+	{name: 'USA', value: 'USA'},
+	{name: 'Brazil', value: 'Brazil'},
+	{name: 'South Africa', value: 'South Africa'},
+	{name: 'Nigeria', value: 'Nigeria'},
+];
+
 function CountryDropdown() {
 	const [country] = useGlobalState('country');
 	const handleCountryChange = (e) => {
@@ -17,15 +29,11 @@ function CountryDropdown() {
 				<option value='' selected>
 					Choose a country
 				</option>
-				<option value='China'>China</option>
-				<option value='Japan'>Japan</option>
-				<option value='India'>India</option>
-				<option value='United Kingdom'>United Kingdom</option>
-				<option value='Portugal'>Portugal</option>
-				<option value='USA'>USA</option>
-				<option value='Brazil'>Brazil</option>
-				<option value='South Africa'>South Africa</option>
-				<option value='Nigeria'>Nigeria</option>
+				{countries.map((country) => (
+					<option key={country.value} value={country.value}>
+						{country.name}
+					</option>
+				))}
 			</select>
 		</div>
 	);
