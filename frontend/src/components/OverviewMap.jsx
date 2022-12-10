@@ -5,21 +5,30 @@ import countries from '../data/custom.geo.json';
 import 'leaflet/dist/leaflet.css';
 import Legend from './Legend';
 import Popup from './Popup';
-import {fetchCountries} from '../services/services';
+import {fetchCountries, fetchActiveDeliveries} from '../services/services';
 import {getColor, legendItems} from '../utils/utils';
 
 const OverviewMap = () => {
 	const [countriesData, setCountriesData] = useState([]);
-	const [loading, setLoading] = useState(true);
+	const [activeDeliveriesData, setActiveDeliveriesData] = useState([]);
+	const [countriesLoading, setCountriesLoading] = useState(true);
+	const [activeDeliveriesLoading, setActiveDeliveriesLoading] = useState(true);
 
 	useEffect(() => {
 		fetchCountryData();
+		fetchActiveDeliveriesData();
 	}, []);
 
 	const fetchCountryData = async () => {
 		const result = await fetchCountries();
 		setCountriesData(result.data);
-		setLoading(false);
+		setCountriesLoading(false);
+	};
+
+	const fetchActiveDeliveriesData = async () => {
+		const result = await fetchActiveDeliveries();
+		setActiveDeliveriesData(result.data);
+		setActiveDeliveriesLoading(false);
 	};
 
 	const coordinates = [
@@ -64,7 +73,7 @@ const OverviewMap = () => {
 
 	return (
 		<>
-			{!loading && (
+			{!countriesLoading && (
 				<MapContainer
 					className='w-full h-[65vh] relative z-0'
 					style={{backgroundColor: '#e8f4f6'}}
