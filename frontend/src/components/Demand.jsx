@@ -9,6 +9,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
 import Button from '@material-ui/core/Button';
 import {CREATE_DEMAND} from '../services/endpoints';
+import {useGlobalState} from '../state/index';
 
 const defaultValues = {
 	countryId: '',
@@ -17,7 +18,29 @@ const defaultValues = {
 	urgency: '',
 };
 
+const countries = [
+	{name: 'China', id: 1, value: 'China'},
+	{name: 'Japan', id: 2, value: 'Japan'},
+	{name: 'India', id: 3, value: 'India'},
+	{name: 'United Kingdom', id: 4, value: 'United Kingdom'},
+	{name: 'Portugal', id: 5, value: 'Portugal'},
+	{name: 'USA', id: 6, value: 'USA'},
+	{name: 'Brazil', id: 7, value: 'Brazil'},
+	{name: 'South Africa', id: 8, value: 'South Africa'},
+	{name: 'Nigeria', id: 9, value: 'Nigeria'},
+];
+function mapCountryId(country) {
+	for (let i = 0; i < countries.length; i++) {
+		if (countries[i].name == country) {
+			return countries[i].id;
+		}
+	}
+	return console.log('Error: CountryId not found');
+}
+
 export default function Demand() {
+	const [country] = useGlobalState('country');
+
 	const [formValues, setFormValues] = useState(defaultValues);
 	const handleInputChange = (e) => {
 		const {name, value} = e.target;
@@ -31,7 +54,9 @@ export default function Demand() {
 		event.preventDefault();
 		formValues.countryId = parseInt(formValues.countryId);
 		formValues.quantity = parseInt(formValues.quantity);
-		console.log(formValues);
+		console.log('forValues:', formValues);
+		console.log('country', country);
+		console.log(mapCountryId(country));
 
 		fetch(CREATE_DEMAND, {
 			method: 'POST',
@@ -51,14 +76,15 @@ export default function Demand() {
 				<Grid container alignItems='left' justify='center' direction='column' className='my-6'>
 					<Grid className='text-main-100 font-bold text-xl'>Demand</Grid>
 					<Grid item className='mb-6'>
-						<TextField
+						<div className='font-bold'>Current Country</div>
+						<FormLabel
 							id='country-input'
 							name='countryId'
 							label='Country'
-							type='text'
-							value={formValues.countryId}
+							value={(formValues.countryId = mapCountryId(country))}
 							onChange={handleInputChange}
 						/>
+						<div>{country}</div>
 					</Grid>
 
 					<Grid item className='mb-6'>
