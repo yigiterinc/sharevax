@@ -1,3 +1,5 @@
+import {seperateNumberWithCommas} from '../utils/utils';
+
 const Popup = ({countryName, vaccinationRate, vaccineConsumption, vaccineProduction, vaccineStock}) => {
 	return (
 		<div>
@@ -8,13 +10,13 @@ const Popup = ({countryName, vaccinationRate, vaccineConsumption, vaccineProduct
 				Vaccination rate: <span className='font-normal'>{vaccinationRate.toFixed(2)}</span>
 			</div>
 			<div className='font-semibold'>
-				Daily vaccine consumption: <span className='font-normal'>{vaccineConsumption}</span>
+				Daily vaccine consumption: <span className='font-normal'>{seperateNumberWithCommas(vaccineConsumption)}</span>
 			</div>
 			<div className='font-semibold'>
-				Daily vaccine production: <span className='font-normal'>{vaccineProduction}</span>
+				Daily vaccine production: <span className='font-normal'>{seperateNumberWithCommas(vaccineProduction)}</span>
 			</div>
 			<div className='font-semibold'>
-				Vaccine stock: <span className='font-normal'>{vaccineStock}</span>
+				Vaccine stock: <span className='font-normal'>{seperateNumberWithCommas(vaccineStock)}</span>
 			</div>
 		</div>
 	);
