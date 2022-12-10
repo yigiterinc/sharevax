@@ -6,18 +6,30 @@ import 'leaflet/dist/leaflet.css';
 import Legend from './Legend';
 import Popup from './Popup';
 import {fetchCountries, fetchActiveDeliveries} from '../services/services';
-import {getColor, legendItems} from '../utils/utils';
+import {getColor, legendItems, swapLatLng} from '../utils/utils';
 
 const OverviewMap = () => {
 	const [countriesData, setCountriesData] = useState([]);
 	const [activeDeliveriesData, setActiveDeliveriesData] = useState([]);
 	const [countriesLoading, setCountriesLoading] = useState(true);
 	const [activeDeliveriesLoading, setActiveDeliveriesLoading] = useState(true);
+	const [deliveryCoordinates, setDeliveryCoordinates] = useState([]);
 
 	useEffect(() => {
 		fetchCountryData();
 		fetchActiveDeliveriesData();
 	}, []);
+
+	useEffect(() => {
+		if (!activeDeliveriesLoading) {
+			activeDeliveriesData.forEach((delivery) => {
+				const coordinates = [];
+				coordinates.push(swapLatLng(delivery.startHarbor.coordinate.coordinates));
+				coordinates.push(swapLatLng(delivery.destinationHarbor.coordinate.coordinates));
+				setDeliveryCoordinates((prev) => [...prev, coordinates]);
+			});
+		}
+	}, [activeDeliveriesLoading]);
 
 	const fetchCountryData = async () => {
 		const result = await fetchCountries();
@@ -30,14 +42,6 @@ const OverviewMap = () => {
 		setActiveDeliveriesData(result.data);
 		setActiveDeliveriesLoading(false);
 	};
-
-	const coordinates = [
-		[40.43, -74.0],
-		[40, -70],
-		[39, -60],
-		[40, -50],
-		[47.14, -1.34],
-	];
 
 	const countryStyle = {
 		fillOpacity: 1,
@@ -84,7 +88,10 @@ const OverviewMap = () => {
 					scrollWheelZoom={false}
 				>
 					<GeoJSON data={countries} style={countryStyle} onEachFeature={onEachCountry} />
-					<Polyline pathOptions={{color: '#136bf7'}} positions={coordinates} />
+					{!activeDeliveriesLoading &&
+						deliveryCoordinates.map((coordinates, index) => (
+							<Polyline key={index} pathOptions={{color: '#006686'}} positions={coordinates} />
+						))}
 					<Legend legendItems={legendItems} />
 				</MapContainer>
 			)}
