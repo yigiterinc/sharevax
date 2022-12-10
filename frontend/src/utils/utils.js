@@ -51,3 +51,8 @@ export const separateNumberWithCommas = (val) => {
 	// return result with - sign if negative
 	return sign < 0 ? '-' + result : result;
 };
+
+export const swapLatLng = (coordinates) => {
+	coordinates[0] = coordinates.splice(1, 1, coordinates[0])[0];
+	return coordinates;
+};
