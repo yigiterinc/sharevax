@@ -55,7 +55,9 @@ export default function WorldSummary() {
 			<div className='mx-5 mt-3 grid grid-col-1 gap-2'>
 				<div className='grid grid-rows-2 grid-flow-col bg-cyan-500/100 rounded-lg mb-6 p-3'>
 					<div className='font-bold text-white'>Current Transport</div>
-					<div className='font-bold mt-5 text-white'>{activeDeliveriesData.length}</div>
+					<div className='font-bold mt-5 text-white'>
+						{activeDeliveriesData.length.toLocaleString(undefined, {minimumFractionDigits: 0})}
+					</div>
 					<div className='row-span-2'>
 						<GiShipBow size={70} color={'white'} />
 					</div>
