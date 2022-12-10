@@ -5,7 +5,7 @@ const Popup = ({countryName, vaccinationRate, vaccineConsumption, vaccineProduct
 				Country: <span className='font-normal'>{countryName}</span>
 			</div>
 			<div className='font-semibold'>
-				Vaccination rate: <span className='font-normal'>{vaccinationRate}</span>
+				Vaccination rate: <span className='font-normal'>{vaccinationRate.toFixed(2)}</span>
 			</div>
 			<div className='font-semibold'>
 				Daily vaccine consumption: <span className='font-normal'>{vaccineConsumption}</span>
