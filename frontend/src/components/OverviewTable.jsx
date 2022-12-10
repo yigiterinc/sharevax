@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
-//import TableBody from '@mui/material/TableBody';
+import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
@@ -47,28 +47,28 @@ export default function OverviewTable() {
 
 	console.log('New json\n', activeDeliveriesData);
 
-	// function formatDate(d) {
-	// 	return d.substring(0, 10);
-	// }
+	function formatDate(d) {
+		return d.substring(0, 10);
+	}
 
-	// function formateStatus(s) {
-	// 	if (s == 'IN_TIME') {
-	// 		return <div className='text-green-500'>In Time</div>;
-	// 	} else if (s == 'DELAYED') {
-	// 		return <div className='text-orange-500'>Delayed</div>;
-	// 	} else if (s == 'DELIVERED') {
-	// 		return <div className='text-gray-500'>Delivered</div>;
-	// 	}
-	// }
-	// function formateUrgency(u) {
-	// 	if (u == 'NORMAL') {
-	// 		return '🟢';
-	// 	} else if (u == 'URGENT') {
-	// 		return '🟠';
-	// 	} else if (u == 'CRITICAL') {
-	// 		return '🔴';
-	// 	}
-	// }
+	function formateStatus(s) {
+		if (s == 'IN_TIME') {
+			return <div className='text-green-500'>In Time</div>;
+		} else if (s == 'DELAYED') {
+			return <div className='text-orange-500'>Delayed</div>;
+		} else if (s == 'DELIVERED') {
+			return <div className='text-gray-500'>Delivered</div>;
+		}
+	}
+	function formateUrgency(u) {
+		if (u == 'NORMAL') {
+			return '🟢';
+		} else if (u == 'URGENT') {
+			return '🟠';
+		} else if (u == 'CRITICAL') {
+			return '🔴';
+		}
+	}
 
 	return (
 		<Paper sx={{width: '100%', overflow: 'hidden'}}>
@@ -92,7 +92,7 @@ export default function OverviewTable() {
 						)}
 					</TableHead>
 
-					{/* <TableBody>
+					<TableBody>
 						{activeDeliveriesData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
 							return (
 								<>
@@ -109,7 +109,7 @@ export default function OverviewTable() {
 								</>
 							);
 						})}
-					</TableBody> */}
+					</TableBody>
 				</Table>
 			</TableContainer>
 			<TablePagination
