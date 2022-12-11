@@ -1,6 +1,6 @@
 import {separateNumberWithCommas} from '../utils/utils';
 
-const Popup = ({countryName, vaccinationRate, vaccineConsumption, vaccineProduction, vaccineStock}) => {
+const CountryPopup = ({countryName, vaccinationRate, vaccineConsumption, vaccineProduction, vaccineStock}) => {
 	return (
 		<div>
 			<div className='font-semibold'>
@@ -22,4 +22,4 @@ const Popup = ({countryName, vaccinationRate, vaccineConsumption, vaccineProduct
 	);
 };
 
-export default Popup;
+export default CountryPopup;

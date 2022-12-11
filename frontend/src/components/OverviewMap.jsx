@@ -1,12 +1,21 @@
-import {MapContainer, Polyline, GeoJSON} from 'react-leaflet';
+import {MapContainer, Polyline, GeoJSON, Marker, Popup} from 'react-leaflet';
+import L from 'leaflet';
 import {useEffect, useState} from 'react';
 import ReactDOMServer from 'react-dom/server';
 import countries from '../data/custom.geo.json';
 import 'leaflet/dist/leaflet.css';
 import Legend from './Legend';
-import Popup from './Popup';
+import CountryPopup from './CountryPopup';
 import {fetchCountries, fetchActiveDeliveries} from '../services/services';
 import {getColor, legendItems, swapLatLng} from '../utils/utils';
+import ship from '../assets/ship.png';
+
+const getIcon = (iconSize) => {
+	return L.icon({
+		iconUrl: ship,
+		iconSize: [iconSize],
+	});
+};
 
 const OverviewMap = () => {
 	const [countriesData, setCountriesData] = useState([]);
@@ -57,7 +66,7 @@ const OverviewMap = () => {
 			);
 
 			const popupContent = ReactDOMServer.renderToString(
-				<Popup
+				<CountryPopup
 					countryName={currentCountry.name}
 					vaccinationRate={currentCountry.vaccinationRate}
 					vaccineConsumption={currentCountry.dailyVaccineConsumption}
@@ -90,7 +99,14 @@ const OverviewMap = () => {
 					<GeoJSON data={countries} style={countryStyle} onEachFeature={onEachCountry} />
 					{!activeDeliveriesLoading &&
 						deliveryCoordinates.map((coordinates, index) => (
-							<Polyline key={index} pathOptions={{color: '#006686'}} positions={coordinates} />
+							<>
+								<Polyline key={index} pathOptions={{color: '#006686'}} positions={coordinates} />
+								<Marker position={coordinates[0]} icon={getIcon(26)}>
+									<Popup>
+										Coordinates: ({coordinates[0][0]}, {coordinates[0][1]})
+									</Popup>
+								</Marker>
+							</>
 						))}
 					<Legend legendItems={legendItems} />
 				</MapContainer>
