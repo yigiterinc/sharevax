@@ -99,7 +99,7 @@ public class DeliveryService {
     private Date getEstimatedArrivalDate(int deliveryDays, Date today) {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(today);
-        calendar.add(calendar.DATE, deliveryDays);
+        calendar.add(calendar.DATE, deliveryDays + 1);
         return calendar.getTime();
     }
 

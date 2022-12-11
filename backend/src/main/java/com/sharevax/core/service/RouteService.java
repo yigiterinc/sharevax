@@ -107,13 +107,15 @@ public class RouteService {
             futureRouteList = new CoordinateList();
         }
         else{
+
+            Coordinate start = futureRouteList.get(0);
             while (duration < 1) {
 
                 Coordinate arriveAt = futureRouteList.get(0);
                 routeHistoryList.add(arriveAt);
                 futureRouteList.remove(0);
 
-                duration += getDeliveryDays(getPoint(arriveAt), getPoint(futureRouteList.get(0)));
+                duration = getDeliveryDays(getPoint(start), getPoint(futureRouteList.get(0)));
                 if (futureRouteList.size() == 1) {
                     // The last stop must be taken on a separately.
                     // Extreme case:

@@ -294,8 +294,6 @@ public class SimulationService {
         ZonedDateTime zonedDateTime = simulatedTodayDate.atZone(zoneId);
         Date date = Date.from(zonedDateTime.toInstant());
 
-        System.out.println("Today is " + date);
-
         return date;
     }
 
@@ -339,6 +337,13 @@ public class SimulationService {
     }
 
     private boolean isDelayed(Date estimatedArrivalDate) {
-        return estimatedArrivalDate.compareTo(getCurrentDate()) < 0;
+
+        long today = getCurrentDate().getTime();
+        long estimatedArrivalDateTime = estimatedArrivalDate.getTime();
+        int dayDiff = (int) ((today - estimatedArrivalDateTime) / (1000 * 60 * 60 * 24));
+        if (dayDiff > 1) {
+            return true;
+        }
+        return false;
     }
 }
