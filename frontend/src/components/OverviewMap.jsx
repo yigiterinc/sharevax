@@ -9,6 +9,7 @@ import CountryPopup from './CountryPopup';
 import {fetchCountries, fetchActiveDeliveries} from '../services/services';
 import {getColor, legendItems, swapLatLng} from '../utils/utils';
 import ship from '../assets/ship.png';
+import '../styles/Map.css';
 
 const getIcon = (iconSize) => {
 	return L.icon({
@@ -88,7 +89,7 @@ const OverviewMap = () => {
 		<>
 			{!countriesLoading && (
 				<MapContainer
-					className='w-full h-[65vh] relative z-0'
+					className='overview-map-container w-full h-[65vh] relative z-0'
 					style={{backgroundColor: '#e8f4f6'}}
 					center={[30.0, 0.0]}
 					zoom={2}
