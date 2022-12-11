@@ -6,7 +6,11 @@ import com.sharevax.core.model.Harbor;
 import com.sharevax.core.model.Supply;
 import com.sharevax.core.model.dto.DeliveryDto;
 import com.sharevax.core.repository.DeliveryRepository;
-import com.sharevax.core.repository.HarborRepository;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
 import org.springframework.stereotype.Service;
 
@@ -17,34 +21,42 @@ import java.util.List;
 public class DeliveryService {
 
     private final DeliveryRepository deliveryRepository;
-    private final HarborRepository harborRepository;
+    private final RouteService routeService;
 
-    public DeliveryService(DeliveryRepository deliveryRepository,
-                           HarborRepository harborRepository) {
+    public DeliveryService(DeliveryRepository deliveryRepository, RouteService routeService) {
         this.deliveryRepository = deliveryRepository;
-        this.harborRepository = harborRepository;
+        this.routeService = routeService;
     }
 
     public void createDelivery(Delivery delivery) {
         deliveryRepository.save(delivery);
     }
 
-    public Delivery createDelivery(Harbor startHarbor, Harbor destinationHarbor, Date estimatedArrivalDate,
-                                   Supply supply, Demand demand, LineString routeHistory, LineString futureRoute,int remainingDaysToNextHarbor,Date simulatedTodayDate) {
+    public Delivery createDelivery(Harbor startHarbor, Harbor destinationHarbor,
+                                   Supply supply, Demand demand, Date createdAt) {
+
+
+        LineString futureRoute = routeService.getLineString(startHarbor, destinationHarbor);
+        LineString routeHistory = routeService.getLineString(startHarbor, startHarbor);
+
+        // calculate the estimatedArrivalDate
+        int duration = routeService.getDeliveryDays(startHarbor, destinationHarbor);
+        Date estimatedArrivalDate = getEstimatedArrivalDate(duration, createdAt);
+
+        int remainingDaysToNextHarbor = routeService.getDaysToNextStop(routeHistory, futureRoute);
 
         Delivery delivery = Delivery.builder()
                 .startHarbor(startHarbor)
                 .destinationHarbor(destinationHarbor)
                 .estimatedArrivalDate(estimatedArrivalDate)
-                .currentArrivalDate(estimatedArrivalDate)
                 .supply(supply)
-                .createdAt(simulatedTodayDate)
+                .createdAt(createdAt)
                 .deliveryStatus(Delivery.DeliveryStatus.IN_TIME)
                 .demand(demand)
                 .routeHistory(routeHistory)
                 .futureRoute(futureRoute)
                 .remainingDaysToNextHarbor(remainingDaysToNextHarbor)
-                .updatedAt(simulatedTodayDate)
+                .updatedAt(createdAt)
                 .build();
 
         return deliveryRepository.save(delivery);
@@ -68,13 +80,27 @@ public class DeliveryService {
     }
 
     public List<DeliveryDto> getDeliveriesByCountry(Integer countryId) {
-        List<Integer> harborsByCountry = harborRepository.findHarborIDByCountryId(countryId);
+
         var deliveries =  deliveryRepository.findAll();
-        var deliveryDtos = deliveries.stream().filter(
-                    delivery -> harborsByCountry.contains(delivery.getStartHarbor().getId()) ||
-                            harborsByCountry.contains(delivery.getDestinationHarbor().getId()))
-                .map(DeliveryDto::from).toList();
+
+        var deliveryDtos = deliveries
+            .stream()
+            .filter(delivery -> isRelated(countryId, delivery))
+            .map(DeliveryDto::from).toList();
+
         return deliveryDtos;
+    }
+
+    private boolean isRelated(Integer countryId, Delivery delivery) {
+        return delivery.getSupply().getId() == countryId ||
+            delivery.getDemand().getId() == countryId;
+    }
+
+    private Date getEstimatedArrivalDate(int deliveryDays, Date today) {
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(today);
+        calendar.add(calendar.DATE, deliveryDays);
+        return calendar.getTime();
     }
 
 }

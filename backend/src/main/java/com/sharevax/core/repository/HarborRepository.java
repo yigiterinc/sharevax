@@ -9,6 +9,5 @@ import java.util.List;
 
 @Repository
 public interface HarborRepository extends JpaRepository<Harbor, Integer> {
-    @Query("SELECT h.id FROM Harbor h where h.country.id=:countryID")
-    List<Integer> findHarborIDByCountryId(Integer countryID);
+
 }

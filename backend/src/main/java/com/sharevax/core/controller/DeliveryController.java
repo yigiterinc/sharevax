@@ -38,13 +38,13 @@ public class DeliveryController {
         return ResponseEntity.ok(deliveryService.getActiveDeliveries());
     }
 
-    @Operation(summary = "Get a list of deliveries related to the country")
+    @Operation(summary = "Get a list of deliveries related to the country with {countryId}")
     @GetMapping("/country/{countryId}")
     public ResponseEntity<List<DeliveryDto>> getDeliveriesByCountry(Integer countryId) {
         return ResponseEntity.ok(deliveryService.getDeliveriesByCountry(countryId));
     }
 
-    @Operation(summary = "Get info from the delivery")
+    @Operation(summary = "Get the delivery with {deliveryId}")
     @GetMapping("/detail/{deliveryId}")
     public ResponseEntity<DeliveryDto> getDelivery(Integer deliveryId) {
         return ResponseEntity.ok(deliveryService.getDelivery(deliveryId));

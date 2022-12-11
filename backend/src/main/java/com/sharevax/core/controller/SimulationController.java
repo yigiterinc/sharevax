@@ -18,16 +18,16 @@ public class SimulationController {
         this.simulationService = simulationService;
     }
 
-    @Operation(summary = "Represents a day has passed: Add day_country and do matching")
+    @Operation(summary = "Represents a day has passed")
     @PatchMapping("/increment-day")
     public void incrementDay() {
         simulationService.simulateDay();
     }
 
-    @Operation(summary = "Current Date")
+    @Operation(summary = "Get simulated current Date")
     @GetMapping("/current-day")
     public ResponseEntity<Date> getDay() {
-        return ResponseEntity.ok(simulationService.getDay());
+        return ResponseEntity.ok(simulationService.getCurrentDate());
     }
 
 }

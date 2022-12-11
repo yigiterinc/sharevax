@@ -23,7 +23,6 @@ public class DeliveryDto {
     String urgency;
     String vaccineType;
     Date estimatedArrivalDate;
-    Date currentArrivalDate;
 
     // Optional fields
     Date updatedAt;
@@ -42,26 +41,11 @@ public class DeliveryDto {
                 .urgency(delivery.getDemand().getUrgency().toString())
                 .vaccineType(delivery.getSupply().getVaccineType().toString())
                 .estimatedArrivalDate(delivery.getEstimatedArrivalDate())
-                .currentArrivalDate(delivery.getCurrentArrivalDate())
                 .updatedAt(delivery.getUpdatedAt())
                 .remainingDaysToNextHarbor(delivery.getRemainingDaysToNextHarbor())
                 .routeHistory(delivery.getRouteHistory())
                 .futureRoute(delivery.getFutureRoute())
                 .build();
-    }
-
-        public String getRouteHistoryString(){
-        if(this.routeHistory.isEmpty()){
-            return "";
-        }
-        return this.routeHistory.toString();
-    }
-
-    public String getFutureRouteString(){
-        if(this.futureRoute.isEmpty()){
-            return "";
-        }
-        return this.futureRoute.toString();
     }
 
 }
