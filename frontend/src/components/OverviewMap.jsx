@@ -18,7 +18,7 @@ const getIcon = (iconSize) => {
 	});
 };
 
-const OverviewMap = () => {
+const OverviewMap = ({onNextDay, setOnNextDay}) => {
 	const [countriesData, setCountriesData] = useState([]);
 	const [activeDeliveriesData, setActiveDeliveriesData] = useState([]);
 	const [countriesLoading, setCountriesLoading] = useState(true);
@@ -40,6 +40,15 @@ const OverviewMap = () => {
 			});
 		}
 	}, [activeDeliveriesLoading]);
+
+	useEffect(() => {
+		if (onNextDay) {
+			console.log('Next day');
+			setActiveDeliveriesLoading(true);
+			fetchActiveDeliveriesData();
+			setOnNextDay(false);
+		}
+	}, [onNextDay]);
 
 	const fetchCountryData = async () => {
 		const result = await fetchCountries();
