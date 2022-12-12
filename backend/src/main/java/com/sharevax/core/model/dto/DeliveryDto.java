@@ -1,7 +1,9 @@
 package com.sharevax.core.model.dto;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.sharevax.core.model.Delivery;
+import com.sharevax.core.model.route.LineStringSerializer;
 import lombok.*;
 import org.locationtech.jts.geom.LineString;
 
@@ -27,7 +29,11 @@ public class DeliveryDto {
     // Optional fields
     Date updatedAt;
     Integer remainingDaysToNextHarbor;
+
+    @JsonSerialize(using = LineStringSerializer.class)
     LineString routeHistory;
+
+    @JsonSerialize(using = LineStringSerializer.class)
     LineString futureRoute;
 
     public static DeliveryDto from(Delivery delivery) {

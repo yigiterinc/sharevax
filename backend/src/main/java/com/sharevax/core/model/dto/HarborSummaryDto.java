@@ -1,6 +1,8 @@
 package com.sharevax.core.model.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.sharevax.core.model.Harbor;
+import com.sharevax.core.model.route.PointSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +16,10 @@ import org.locationtech.jts.geom.Point;
 public class HarborSummaryDto {
 
     String name;
+
+    @JsonSerialize(using = PointSerializer.class)
     Point coordinate;
+
     String countryName;
 
     public static HarborSummaryDto from(Harbor harbor) {
