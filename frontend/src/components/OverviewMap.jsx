@@ -1,34 +1,66 @@
-import {MapContainer, Polyline, GeoJSON} from 'react-leaflet';
+import {MapContainer, Polyline, GeoJSON, Marker, Popup} from 'react-leaflet';
+import L from 'leaflet';
 import {useEffect, useState} from 'react';
 import ReactDOMServer from 'react-dom/server';
 import countries from '../data/custom.geo.json';
 import 'leaflet/dist/leaflet.css';
 import Legend from './Legend';
-import Popup from './Popup';
-import {fetchCountries} from '../services/services';
-import {getColor, legendItems} from '../utils/utils';
+import CountryPopup from './CountryPopup';
+import {fetchCountries, fetchActiveDeliveries} from '../services/services';
+import {getColor, legendItems, swapLatLng} from '../utils/utils';
+import ship from '../assets/ship.png';
+import '../styles/Map.css';
 
-const OverviewMap = () => {
+const getIcon = (iconSize) => {
+	return L.icon({
+		iconUrl: ship,
+		iconSize: [iconSize],
+	});
+};
+
+const OverviewMap = ({onNextDay, setOnNextDay}) => {
 	const [countriesData, setCountriesData] = useState([]);
-	const [loading, setLoading] = useState(true);
+	const [activeDeliveriesData, setActiveDeliveriesData] = useState([]);
+	const [countriesLoading, setCountriesLoading] = useState(true);
+	const [activeDeliveriesLoading, setActiveDeliveriesLoading] = useState(true);
+	const [deliveryCoordinates, setDeliveryCoordinates] = useState([]);
 
 	useEffect(() => {
 		fetchCountryData();
+		fetchActiveDeliveriesData();
 	}, []);
+
+	useEffect(() => {
+		if (!activeDeliveriesLoading) {
+			activeDeliveriesData.forEach((delivery) => {
+				const coordinates = [];
+				coordinates.push(swapLatLng(delivery.startHarbor.coordinate.coordinates));
+				coordinates.push(swapLatLng(delivery.destinationHarbor.coordinate.coordinates));
+				setDeliveryCoordinates((prev) => [...prev, coordinates]);
+			});
+		}
+	}, [activeDeliveriesLoading]);
+
+	useEffect(() => {
+		if (onNextDay) {
+			console.log('Next day');
+			setActiveDeliveriesLoading(true);
+			fetchActiveDeliveriesData();
+			setOnNextDay(false);
+		}
+	}, [onNextDay]);
 
 	const fetchCountryData = async () => {
 		const result = await fetchCountries();
 		setCountriesData(result.data);
-		setLoading(false);
+		setCountriesLoading(false);
 	};
 
-	const coordinates = [
-		[40.43, -74.0],
-		[40, -70],
-		[39, -60],
-		[40, -50],
-		[47.14, -1.34],
-	];
+	const fetchActiveDeliveriesData = async () => {
+		const result = await fetchActiveDeliveries();
+		setActiveDeliveriesData(result.data);
+		setActiveDeliveriesLoading(false);
+	};
 
 	const countryStyle = {
 		fillOpacity: 1,
@@ -44,7 +76,7 @@ const OverviewMap = () => {
 			);
 
 			const popupContent = ReactDOMServer.renderToString(
-				<Popup
+				<CountryPopup
 					countryName={currentCountry.name}
 					vaccinationRate={currentCountry.vaccinationRate}
 					vaccineConsumption={currentCountry.dailyVaccineConsumption}
@@ -64,9 +96,9 @@ const OverviewMap = () => {
 
 	return (
 		<>
-			{!loading && (
+			{!countriesLoading && (
 				<MapContainer
-					className='w-full h-[65vh] relative z-0'
+					className='overview-map-container w-full h-[65vh] relative z-0'
 					style={{backgroundColor: '#e8f4f6'}}
 					center={[30.0, 0.0]}
 					zoom={2}
@@ -75,7 +107,17 @@ const OverviewMap = () => {
 					scrollWheelZoom={false}
 				>
 					<GeoJSON data={countries} style={countryStyle} onEachFeature={onEachCountry} />
-					<Polyline pathOptions={{color: '#136bf7'}} positions={coordinates} />
+					{!activeDeliveriesLoading &&
+						deliveryCoordinates.map((coordinates, index) => (
+							<>
+								<Polyline key={index} pathOptions={{color: '#006686'}} positions={coordinates} />
+								<Marker position={coordinates[0]} icon={getIcon(26)}>
+									<Popup>
+										Coordinates: ({coordinates[0][0]}, {coordinates[0][1]})
+									</Popup>
+								</Marker>
+							</>
+						))}
 					<Legend legendItems={legendItems} />
 				</MapContainer>
 			)}
