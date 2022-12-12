@@ -1,11 +1,16 @@
 package com.sharevax.core.facade;
 
 import com.sharevax.core.model.*;
+import com.sharevax.core.model.route.RoutePlan;
+import com.sharevax.core.repository.DeliveryRepository;
 import com.sharevax.core.service.*;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.LineString;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class SimulationFacade {
@@ -14,16 +19,19 @@ public class SimulationFacade {
     private final CountryService countryService;
     private final DeliveryService deliveryService;
     private final RouteService routeService;
+    private final DeliveryRepository deliveryRepository;
 
     public SimulationFacade(SupplyService supplyService, DemandService demandService,
                             CountryService countryService, RouteService routeService,
-                            DeliveryService deliveryService) {
+                            DeliveryService deliveryService,
+                            DeliveryRepository deliveryRepository) {
 
         this.supplyService = supplyService;
         this.demandService = demandService;
         this.countryService = countryService;
         this.routeService = routeService;
         this.deliveryService = deliveryService;
+        this.deliveryRepository = deliveryRepository;
     }
 
     public List<Supply> getAllSupplies() {
@@ -51,14 +59,24 @@ public class SimulationFacade {
     }
 
     public Delivery createDelivery(Harbor startHarbor, Harbor destinationHarbor,
-                                   Date estimatedArrivalDate,
-                                   Supply supply, Demand demand) {
-
-        return deliveryService.createDelivery(startHarbor, destinationHarbor, estimatedArrivalDate, supply, demand);
+                                   Supply supply, Demand demand, Date createdAt) {
+        return deliveryService.createDelivery(startHarbor, destinationHarbor, supply, demand, createdAt);
     }
 
     public List<Demand> getUnmatchedDemands() {
         return demandService.findUnmatchedDemands();
+    }
+
+    public List<Delivery> findActiveDeliveries() {
+        return deliveryRepository.findActiveDeliveries();
+    }
+
+    public RoutePlan adaptRoute(LineString routeHistory, LineString futureRoute) {
+        return routeService.adaptRoute(routeHistory, futureRoute);
+    }
+
+    public void saveDelivery(Delivery delivery) {
+        deliveryRepository.save(delivery);
     }
 
     public List<Supply> getUnmatchedSupplies() {

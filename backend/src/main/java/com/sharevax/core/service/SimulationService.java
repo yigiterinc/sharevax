@@ -3,11 +3,23 @@ package com.sharevax.core.service;
 import com.sharevax.core.facade.SimulationFacade;
 import com.sharevax.core.model.Country;
 import com.sharevax.core.model.Delivery;
+import com.sharevax.core.model.Delivery.DeliveryStatus;
 import com.sharevax.core.model.Demand;
 import com.sharevax.core.model.Supply;
+import com.sharevax.core.model.route.RoutePlan;
+import com.sharevax.core.repository.SupplyRepository;
+import java.util.ArrayList;
+import java.util.Arrays;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +28,7 @@ import java.util.Map;
 @Service
 public class SimulationService {
 
-    private static int DAY_COUNTER = 1;
+    private static int DAY_COUNTER = 0;
 
     private final SimulationFacade simulationFacade;
 
@@ -33,25 +45,27 @@ public class SimulationService {
 
     // Daily vaccine consumption / stock ratio to determine if the country is in need of vaccines, increase urgency
     private static final double DAILY_VAX_CONSUMPTION_TO_STOCK_FACTOR = 1;
+    private final SupplyRepository supplyRepository;
 
-    public SimulationService(SimulationFacade simulationFacade) {
+    public SimulationService(SimulationFacade simulationFacade,
+                             SupplyRepository supplyRepository) {
         this.simulationFacade = simulationFacade;
+        this.supplyRepository = supplyRepository;
     }
 
     public void simulateDay() {
         DAY_COUNTER++;
         triggerEvents();    // TODO: implement this
-        updateShipLocations();  //TODO: implement this
+        updateShipLocations();
 
         updateVaccineStocks();
         updateVaccinationRates();
 
         matchSupplyAndDemand();
 
-        System.out.println("Day: " + DAY_COUNTER);
     }
 
-    private void matchSupplyAndDemand() {
+    public void matchSupplyAndDemand() {
         // Get current set of supplies
         // Get current set of demands
         // Match them intelligently
@@ -96,19 +110,16 @@ public class SimulationService {
             var supply = matchedBestPairs.get(demand);
             if (supply != null) {
                 System.out.println("Matched " + demand + " with " + supply);
+                // Create the Delivery
+                Delivery delivery = simulationFacade.createDelivery(
+                        supply.getCountry().getHarbors().get(0), // TODO use closest harbor
+                        demand.getCountry().getHarbors().get(0), // TODO use closest harbor
+                        supply,
+                        demand,
+                        getCurrentDate()
+                );
+                System.out.println("Created delivery: " + delivery);
             }
-
-            // Create the Delivery
-            Delivery delivery = simulationFacade.createDelivery(
-                    supply.getCountry().getHarbors().get(0), // TODO use closest harbor
-                    demand.getCountry().getHarbors().get(0), // TODO use closest harbor
-                    // 5 days later
-                    new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 5), // TODO calculate est. date based on distance
-                    supply,
-                    demand
-            );
-
-            System.out.println("Created delivery: " + delivery);
         }
     }
 
@@ -266,14 +277,73 @@ public class SimulationService {
         // Check for events that should be triggered
     }
 
-    private void updateShipLocations() {
-        // TODO
-        // Update delivery routes every day
-        // Update fields routeHistory, futureRoute and remainingDaysToNextHarbor
-        // Also set updatedAt field of delivery after updating.
+    /**
+     *
+     * @return simulated current date according to the offset DAY_COUNTER
+     */
+    public Date getCurrentDate() {
+
+        // get real date
+        LocalDateTime realTodayDate = LocalDateTime.now();
+
+        // simulated date according to the offset DAY_COUNTER
+        LocalDateTime simulatedTodayDate = realTodayDate.plusDays(DAY_COUNTER);
+
+        // convert LocalDateTime to Date
+        ZoneId zoneId = ZoneId.systemDefault();
+        ZonedDateTime zonedDateTime = simulatedTodayDate.atZone(zoneId);
+        Date date = Date.from(zonedDateTime.toInstant());
+
+        return date;
     }
 
-    public int getDay() {
-        return DAY_COUNTER;
+
+    private void updateShipLocations() {
+
+        List<Delivery> deliveries = simulationFacade.findActiveDeliveries();
+
+        for (Delivery delivery : deliveries) {
+
+            int dayCounter = delivery.getRemainingDaysToNextHarbor();
+            dayCounter--;
+
+            if (isDelayed(delivery.getEstimatedArrivalDate())) {
+                delivery.setDeliveryStatus(DeliveryStatus.DELAYED);
+            }
+
+            // update the route for the transport that has arrived at next Point
+            if (dayCounter <= 0) {
+
+                LineString routeHistory = delivery.getRouteHistory();
+                LineString futureRoute = delivery.getFutureRoute();
+
+                RoutePlan routePlan = simulationFacade.adaptRoute(routeHistory, futureRoute);
+                routeHistory = routePlan.getRouteHistory();
+                futureRoute = routePlan.getFutureRoute();
+                dayCounter = routePlan.getDuration();
+
+                if (futureRoute.isEmpty()) { // arrive at the destination
+                    delivery.setDeliveryStatus(Delivery.DeliveryStatus.DELIVERED);
+                }
+                delivery.setRouteHistory(routeHistory);
+                delivery.setFutureRoute(futureRoute);
+            }
+
+            delivery.setRemainingDaysToNextHarbor(dayCounter);
+            delivery.setUpdatedAt(getCurrentDate());
+
+            simulationFacade.saveDelivery(delivery);
+        }
+    }
+
+    private boolean isDelayed(Date estimatedArrivalDate) {
+
+        long today = getCurrentDate().getTime();
+        long estimatedArrivalDateTime = estimatedArrivalDate.getTime();
+        int dayDiff = (int) ((today - estimatedArrivalDateTime) / (1000 * 60 * 60 * 24));
+        if (dayDiff > 1) {
+            return true;
+        }
+        return false;
     }
 }

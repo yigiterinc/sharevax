@@ -25,9 +25,11 @@ public class CountryController {
         return ResponseEntity.ok(countryService.getAllCountries());
     }
 
-    @Operation(summary = "Get information from the country which name is {countryName}")
+    //TODO
+    @Operation(summary = "Get worldwide information")
     @GetMapping("{countryName}/summary")
     public ResponseEntity<HomeSummaryDto> getSummary(@PathVariable String countryName) {
         return ResponseEntity.ok(countryService.getHomeCountrySummary(countryName));
     }
+
 }
