@@ -11,7 +11,11 @@ public class PointSerializer extends JsonSerializer<Point> {
 	@Override
 	public void serialize(Point point, JsonGenerator jsonGenerator,
 		SerializerProvider serializerProvider) throws IOException {
-		double[] p = {point.getX(), point.getY()};
-		jsonGenerator.writeArray(p, 0, 2);
+
+		if (point != null) {
+			double[] p = {point.getX(), point.getY()};
+			jsonGenerator.writeArray(p, 0, 2);
+		}
+
 	}
 }

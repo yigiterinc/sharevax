@@ -15,15 +15,16 @@ public class LineStringSerializer extends JsonSerializer<LineString> {
 	public void serialize(LineString lineString, JsonGenerator jsonGenerator,
 		SerializerProvider serializerProvider) throws IOException {
 
-		jsonGenerator.writeStartArray();
+		if (lineString != null) {
+			jsonGenerator.writeStartArray();
 
-		Coordinate[] coordinates = lineString.getCoordinates();
-		for (Coordinate coordinate : coordinates) {
-			double[] p = {coordinate.getX(), coordinate.getY()};
-			jsonGenerator.writeArray(p, 0, 2);
+			Coordinate[] coordinates = lineString.getCoordinates();
+			for (Coordinate coordinate : coordinates) {
+				double[] p = {coordinate.getX(), coordinate.getY()};
+				jsonGenerator.writeArray(p, 0, 2);
+			}
+			jsonGenerator.writeEndArray();
 		}
-
-		jsonGenerator.writeEndArray();
 
 	}
 }
