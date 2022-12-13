@@ -54,7 +54,9 @@ const OverviewMap = ({onNextDay, setOnNextDay}) => {
 
 	useEffect(() => {
 		if (onNextDay) {
-			console.log('Next day');
+			setShipCoordinates([]);
+			setRouteHistoryCoordinates([]);
+			setFutureRouteCoordinates([]);
 			setActiveDeliveriesLoading(true);
 			fetchActiveDeliveriesData();
 			setOnNextDay(false);
