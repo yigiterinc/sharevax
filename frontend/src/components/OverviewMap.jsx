@@ -113,7 +113,7 @@ const OverviewMap = ({onNextDay, setOnNextDay}) => {
 					<GeoJSON data={countries} style={countryStyle} onEachFeature={onEachCountry} />
 					{!activeDeliveriesLoading &&
 						deliveryCoordinates.map((coordinates, index) => (
-							<Polyline key={index} pathOptions={{color: '#006686'}} positions={coordinates} />
+							<Polyline key={index} pathOptions={{color: '#6283D5'}} positions={coordinates} />
 						))}
 					{!activeDeliveriesLoading &&
 						shipCoordinates.map((coordinate, index) => (
