@@ -24,6 +24,7 @@ const OverviewMap = ({onNextDay, setOnNextDay}) => {
 	const [countriesLoading, setCountriesLoading] = useState(true);
 	const [activeDeliveriesLoading, setActiveDeliveriesLoading] = useState(true);
 	const [deliveryCoordinates, setDeliveryCoordinates] = useState([]);
+	const [shipCoordinates, setShipCoordinates] = useState([]);
 
 	useEffect(() => {
 		fetchCountryData();
@@ -33,10 +34,13 @@ const OverviewMap = ({onNextDay, setOnNextDay}) => {
 	useEffect(() => {
 		if (!activeDeliveriesLoading) {
 			activeDeliveriesData.forEach((delivery) => {
-				const coordinates = [];
-				coordinates.push(swapLatLng(delivery.startHarbor.coordinate.coordinates));
-				coordinates.push(swapLatLng(delivery.destinationHarbor.coordinate.coordinates));
-				setDeliveryCoordinates((prev) => [...prev, coordinates]);
+				const fullRoute = delivery.routeHistory.concat(delivery.futureRoute);
+				fullRoute.forEach((coordinate) => {
+					swapLatLng(coordinate);
+				});
+				setDeliveryCoordinates((prev) => [...prev, fullRoute]);
+				const shipLocation = delivery.routeHistory[delivery.routeHistory.length - 1];
+				setShipCoordinates((prev) => [...prev, shipLocation]);
 			});
 		}
 	}, [activeDeliveriesLoading]);
@@ -109,14 +113,15 @@ const OverviewMap = ({onNextDay, setOnNextDay}) => {
 					<GeoJSON data={countries} style={countryStyle} onEachFeature={onEachCountry} />
 					{!activeDeliveriesLoading &&
 						deliveryCoordinates.map((coordinates, index) => (
-							<>
-								<Polyline key={index} pathOptions={{color: '#006686'}} positions={coordinates} />
-								<Marker position={coordinates[0]} icon={getIcon(26)}>
-									<Popup>
-										Coordinates: ({coordinates[0][0]}, {coordinates[0][1]})
-									</Popup>
-								</Marker>
-							</>
+							<Polyline key={index} pathOptions={{color: '#006686'}} positions={coordinates} />
+						))}
+					{!activeDeliveriesLoading &&
+						shipCoordinates.map((coordinate, index) => (
+							<Marker key={index} position={coordinate} icon={getIcon(26)}>
+								<Popup>
+									Coordinates: ({coordinate[0]}, {coordinate[1]})
+								</Popup>
+							</Marker>
 						))}
 					<Legend legendItems={legendItems} />
 				</MapContainer>
