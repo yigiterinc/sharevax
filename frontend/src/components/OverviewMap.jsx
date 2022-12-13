@@ -23,8 +23,9 @@ const OverviewMap = ({onNextDay, setOnNextDay}) => {
 	const [activeDeliveriesData, setActiveDeliveriesData] = useState([]);
 	const [countriesLoading, setCountriesLoading] = useState(true);
 	const [activeDeliveriesLoading, setActiveDeliveriesLoading] = useState(true);
-	const [deliveryCoordinates, setDeliveryCoordinates] = useState([]);
 	const [shipCoordinates, setShipCoordinates] = useState([]);
+	const [routeHistoryCoordinates, setRouteHistoryCoordinates] = useState([]);
+	const [futureRouteCoordinates, setFutureRouteCoordinates] = useState([]);
 
 	useEffect(() => {
 		fetchCountryData();
@@ -34,12 +35,18 @@ const OverviewMap = ({onNextDay, setOnNextDay}) => {
 	useEffect(() => {
 		if (!activeDeliveriesLoading) {
 			activeDeliveriesData.forEach((delivery) => {
-				const fullRoute = delivery.routeHistory.concat(delivery.futureRoute);
-				fullRoute.forEach((coordinate) => {
+				const routeHistory = delivery.routeHistory;
+				const futureRoute = delivery.futureRoute;
+				const shipLocation = delivery.routeHistory[delivery.routeHistory.length - 1];
+
+				routeHistory.forEach((coordinate) => {
 					swapLatLng(coordinate);
 				});
-				setDeliveryCoordinates((prev) => [...prev, fullRoute]);
-				const shipLocation = delivery.routeHistory[delivery.routeHistory.length - 1];
+				futureRoute.forEach((coordinate) => {
+					swapLatLng(coordinate);
+				});
+				setRouteHistoryCoordinates((prev) => [...prev, routeHistory]);
+				setFutureRouteCoordinates((prev) => [...prev, futureRoute]);
 				setShipCoordinates((prev) => [...prev, shipLocation]);
 			});
 		}
@@ -112,8 +119,12 @@ const OverviewMap = ({onNextDay, setOnNextDay}) => {
 				>
 					<GeoJSON data={countries} style={countryStyle} onEachFeature={onEachCountry} />
 					{!activeDeliveriesLoading &&
-						deliveryCoordinates.map((coordinates, index) => (
+						routeHistoryCoordinates.map((coordinates, index) => (
 							<Polyline key={index} pathOptions={{color: '#6283D5'}} positions={coordinates} />
+						))}
+					{!activeDeliveriesLoading &&
+						futureRouteCoordinates.map((coordinates, index) => (
+							<Polyline key={index} pathOptions={{color: '#6283D5', dashArray: '5 8'}} positions={coordinates} />
 						))}
 					{!activeDeliveriesLoading &&
 						shipCoordinates.map((coordinate, index) => (
