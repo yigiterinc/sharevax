@@ -6,6 +6,7 @@ import {HiMenuAlt3} from 'react-icons/hi';
 import {BiWorld, BiDetail} from 'react-icons/bi';
 import {TbVaccine, TbMessageReport} from 'react-icons/tb';
 import {Link} from 'react-router-dom';
+import {useGlobalState} from '../state';
 
 export default function Sidebar() {
 	const menus = [
@@ -17,6 +18,7 @@ export default function Sidebar() {
 	];
 
 	const [open, setOpen] = useState(true);
+	const [country] = useGlobalState('country');
 
 	return (
 		<div
@@ -55,6 +57,9 @@ export default function Sidebar() {
 						</h2>
 					</Link>
 				))}
+			</div>
+			<div className='flex items-center gap-2 absolute bottom-5 px-2'>
+				<div className='text-base'>{country}</div>
 			</div>
 		</div>
 	);
