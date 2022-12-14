@@ -59,9 +59,16 @@ export default function Sidebar() {
 					</Link>
 				))}
 			</div>
-			<div className='flex items-center gap-2 absolute bottom-5 px-2'>
+			<div className='flex items-center gap-2 absolute bottom-5 px-2 cursor-default'>
 				<div className='text-2xl'>{flag}</div>
-				{open && <div className='text-base'>{country}</div>}
+				<h2
+					style={{
+						transitionDelay: '300ms',
+					}}
+					className={`whitespace-pre duration-500 ${!open && 'opacity-0 translate-x-28 overflow-hidden'}`}
+				>
+					{country}
+				</h2>
 			</div>
 		</div>
 	);
