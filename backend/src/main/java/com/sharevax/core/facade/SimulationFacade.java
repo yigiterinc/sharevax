@@ -19,19 +19,16 @@ public class SimulationFacade {
     private final CountryService countryService;
     private final DeliveryService deliveryService;
     private final RouteService routeService;
-    private final DeliveryRepository deliveryRepository;
 
     public SimulationFacade(SupplyService supplyService, DemandService demandService,
                             CountryService countryService, RouteService routeService,
-                            DeliveryService deliveryService,
-                            DeliveryRepository deliveryRepository) {
+                            DeliveryService deliveryService) {
 
         this.supplyService = supplyService;
         this.demandService = demandService;
         this.countryService = countryService;
         this.routeService = routeService;
         this.deliveryService = deliveryService;
-        this.deliveryRepository = deliveryRepository;
     }
 
     public List<Supply> getAllSupplies() {
@@ -67,16 +64,17 @@ public class SimulationFacade {
         return demandService.findUnmatchedDemands();
     }
 
-    public List<Delivery> findActiveDeliveries() {
-        return deliveryRepository.findActiveDeliveries();
-    }
 
     public RoutePlan adaptRoute(LineString routeHistory, LineString futureRoute) {
         return routeService.adaptRoute(routeHistory, futureRoute);
     }
 
+    public List<Delivery> findActiveDeliveries() {
+        return deliveryService.findActiveDeliveries();
+    }
+
     public void saveDelivery(Delivery delivery) {
-        deliveryRepository.save(delivery);
+        deliveryService.save(delivery);
     }
 
     public List<Supply> getUnmatchedSupplies() {

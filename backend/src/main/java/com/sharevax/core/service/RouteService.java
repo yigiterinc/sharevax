@@ -101,12 +101,11 @@ public class RouteService {
 
         int duration = 0;
 
-        if(futureRoute.isRing()){       // arrive at the destination
+        if (futureRoute.isRing()) {    // arrive at the destination
             Coordinate arriveAt = futureRouteList.get(0);
             routeHistoryList.add(arriveAt);
             futureRouteList = new CoordinateList();
-        }
-        else{
+        } else {
 
             Coordinate start = futureRouteList.get(0);
             while (duration < 1) {
