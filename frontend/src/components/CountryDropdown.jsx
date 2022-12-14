@@ -1,21 +1,22 @@
 import {setGlobalState, useGlobalState} from '../state';
 
 const countries = [
-	{name: 'China', value: 'China'},
-	{name: 'Japan', value: 'Japan'},
-	{name: 'India', value: 'India'},
-	{name: 'United Kingdom', value: 'United Kingdom'},
-	{name: 'Portugal', value: 'Portugal'},
-	{name: 'USA', value: 'USA'},
-	{name: 'Brazil', value: 'Brazil'},
-	{name: 'South Africa', value: 'South Africa'},
-	{name: 'Nigeria', value: 'Nigeria'},
+	{name: 'China', value: 'China', flag: '🇨🇳'},
+	{name: 'Japan', value: 'Japan', flag: '🇯🇵'},
+	{name: 'India', value: 'India', flag: '🇮🇳'},
+	{name: 'United Kingdom', value: 'United Kingdom', flag: '🇬🇧'},
+	{name: 'Portugal', value: 'Portugal', flag: '🇵🇹'},
+	{name: 'USA', value: 'USA', flag: '🇺🇸'},
+	{name: 'Brazil', value: 'Brazil', flag: '🇧🇷'},
+	{name: 'South Africa', value: 'South Africa', flag: '🇿🇦'},
+	{name: 'Nigeria', value: 'Nigeria', flag: '🇳🇬'},
 ];
 
 function CountryDropdown() {
 	const [country] = useGlobalState('country');
 	const handleCountryChange = (e) => {
 		setGlobalState('country', e.target.value);
+		setGlobalState('flag', countries.find((c) => c.value === e.target.value).flag);
 	};
 
 	return (

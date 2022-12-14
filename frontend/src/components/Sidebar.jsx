@@ -19,6 +19,7 @@ export default function Sidebar() {
 
 	const [open, setOpen] = useState(true);
 	const [country] = useGlobalState('country');
+	const [flag] = useGlobalState('flag');
 
 	return (
 		<div
@@ -59,6 +60,7 @@ export default function Sidebar() {
 				))}
 			</div>
 			<div className='flex items-center gap-2 absolute bottom-5 px-2'>
+				<div className='text-2xl'>{flag}</div>
 				<div className='text-base'>{country}</div>
 			</div>
 		</div>
