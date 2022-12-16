@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/simulation")
@@ -16,15 +18,16 @@ public class SimulationController {
         this.simulationService = simulationService;
     }
 
-    @Operation(summary = "Represents a day has passed. For simplified implementation")
+    @Operation(summary = "Represents a day has passed")
     @PatchMapping("/increment-day")
     public void incrementDay() {
         simulationService.simulateDay();
     }
 
-    @Operation(summary = "TODO: do not use")
+    @Operation(summary = "Get simulated current Date")
     @GetMapping("/current-day")
-    public ResponseEntity<Integer> getDay() {
-        return ResponseEntity.ok(simulationService.getDay());
+    public ResponseEntity<Date> getDay() {
+        return ResponseEntity.ok(simulationService.getCurrentDate());
     }
+
 }

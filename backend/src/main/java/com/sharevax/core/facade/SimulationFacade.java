@@ -1,11 +1,16 @@
 package com.sharevax.core.facade;
 
 import com.sharevax.core.model.*;
+import com.sharevax.core.model.route.RoutePlan;
+import com.sharevax.core.repository.DeliveryRepository;
 import com.sharevax.core.service.*;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.LineString;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class SimulationFacade {
@@ -51,14 +56,25 @@ public class SimulationFacade {
     }
 
     public Delivery createDelivery(Harbor startHarbor, Harbor destinationHarbor,
-                                   Date estimatedArrivalDate,
-                                   Supply supply, Demand demand) {
-
-        return deliveryService.createDelivery(startHarbor, destinationHarbor, estimatedArrivalDate, supply, demand);
+                                   Supply supply, Demand demand, Date createdAt) {
+        return deliveryService.createDelivery(startHarbor, destinationHarbor, supply, demand, createdAt);
     }
 
     public List<Demand> getUnmatchedDemands() {
         return demandService.findUnmatchedDemands();
+    }
+
+
+    public RoutePlan adaptRoute(LineString routeHistory, LineString futureRoute) {
+        return routeService.adaptRoute(routeHistory, futureRoute);
+    }
+
+    public List<Delivery> findActiveDeliveries() {
+        return deliveryService.findActiveDeliveries();
+    }
+
+    public void saveDelivery(Delivery delivery) {
+        deliveryService.save(delivery);
     }
 
     public List<Supply> getUnmatchedSupplies() {
