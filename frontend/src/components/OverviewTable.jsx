@@ -1,4 +1,4 @@
-import * as React from 'react';
+import {useEffect, useState} from 'react';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -7,143 +7,34 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import {fetchActiveDeliveries} from '../services/services';
 
-const columns = [
-	{id: 'destination', label: 'Destination', minWidth: 10},
-	{id: 'from', label: 'From', minWidth: 21},
-	{id: 'vaccine', label: 'Vaccine', minWidth: 10},
-	{id: 'dose', label: 'Dose', minWidth: 20},
-	{id: 'order_date', label: 'Order Date', minWidth: 21},
-	{id: 'estimated_arrival_date', label: 'Estimated Arrival Date', minWidth: 21},
-	{id: 'current_arrival_date', label: 'Current Arrival Date', minWidth: 21},
-	{id: 'status', label: 'Status', minWidth: 21},
-	{id: 'next_stop', label: 'Next Stop', minWidth: 21},
+const tableHeader = [
+	{id: 'destinationHarbor', label: 'Destination', minWidth: 10},
+	{id: 'startHarbor', label: 'From', minWidth: 21},
+	{id: 'vaccineType', label: 'Vaccine', minWidth: 10},
+	{id: 'quantity', label: 'Quantity', minWidth: 20},
+	{id: 'createdAt', label: 'Order Date', minWidth: 21},
+	{id: 'estimatedArrivalDate', label: 'Estimated Arrival Date', minWidth: 21},
+	{id: 'deliveryStatus', label: 'Status', minWidth: 21},
 	{id: 'urgency', label: 'Urgency', minWidth: 21},
 ];
 
-function createData(
-	destination,
-	from,
-	vaccine,
-	dose,
-	order_date,
-	estimated_arrival_date,
-	current_arrival_date,
-	status,
-	next_stop,
-	urgency,
-) {
-	return {
-		destination,
-		from,
-		vaccine,
-		dose,
-		order_date,
-		estimated_arrival_date,
-		current_arrival_date,
-		status,
-		next_stop,
-		urgency,
-	};
-}
-
-const rows = [
-	createData(
-		'Germany',
-		'Thailand',
-		'A',
-		2000,
-		'2022.4.0',
-		'2022.4.1',
-		'2022.5.1',
-		'2022.5.1',
-		'Shipping',
-		'France',
-		'red',
-	),
-	createData(
-		'China',
-		'USA',
-		'C',
-		5000,
-		'2022.2.1',
-		'2022.2.2',
-		'2022.3.1',
-		'2022.3.1',
-		'Shipping',
-		'Hong Kong',
-		'green',
-	),
-	createData(
-		'Ukase',
-		'Germany',
-		'B',
-		8000,
-		'2022.6.1',
-		'2022.6.2',
-		'2022.6.1',
-		'2022.3.1',
-		'Shipping',
-		'India',
-		'grey',
-	),
-	createData(
-		'Germany',
-		'Thailand',
-		'A',
-		2000,
-		'2022.4.0',
-		'2022.4.1',
-		'2022.5.1',
-		'2022.5.1',
-		'Shipping',
-		'France',
-		'red',
-	),
-	createData(
-		'China',
-		'USA',
-		'C',
-		5000,
-		'2022.2.1',
-		'2022.2.2',
-		'2022.3.1',
-		'2022.3.1',
-		'Shipping',
-		'Hong Kong',
-		'green',
-	),
-	createData(
-		'Ukase',
-		'Germany',
-		'B',
-		8000,
-		'2022.6.1',
-		'2022.6.2',
-		'2022.6.1',
-		'2022.3.1',
-		'Shipping',
-		'India',
-		'grey',
-	),
-	createData(
-		'Germany',
-		'Thailand',
-		'A',
-		2000,
-		'2022.4.0',
-		'2022.4.1',
-		'2022.5.1',
-		'2022.5.1',
-		'Shipping',
-		'France',
-		'red',
-	),
-];
-
 export default function OverviewTable() {
-	const [page, setPage] = React.useState(0);
-	const [rowsPerPage, setRowsPerPage] = React.useState(10);
+	const [page, setPage] = useState(0);
+	const [rowsPerPage, setRowsPerPage] = useState(10);
+	const [activeDeliveriesData, setActiveDeliveriesData] = useState([]);
+	const [loading, setLoading] = useState(true);
+
+	useEffect(() => {
+		fetchActiveDeliveriesData();
+	}, []);
+
+	const fetchActiveDeliveriesData = async () => {
+		const result = await fetchActiveDeliveries();
+		setActiveDeliveriesData(result.data);
+		setLoading(false);
+	};
 
 	const handleChangePage = (event, newPage) => {
 		setPage(newPage);
@@ -154,38 +45,69 @@ export default function OverviewTable() {
 		setPage(0);
 	};
 
+	console.log('New json\n', activeDeliveriesData);
+
+	function formatDate(d) {
+		// return d.substring(0, 10);
+		return d;
+	}
+
+	function formateStatus(s) {
+		if (s == 'IN_TIME') {
+			return <div className='text-green-500'>In Time</div>;
+		} else if (s == 'DELAYED') {
+			return <div className='text-orange-500'>Delayed</div>;
+		} else if (s == 'DELIVERED') {
+			return <div className='text-gray-500'>Delivered</div>;
+		}
+	}
+	function formateUrgency(u) {
+		if (u == 'NORMAL') {
+			return '🟢';
+		} else if (u == 'URGENT') {
+			return '🟠';
+		} else if (u == 'CRITICAL') {
+			return '🔴';
+		}
+	}
+
 	return (
 		<Paper sx={{width: '100%', overflow: 'hidden'}}>
-			<div className='text-bg text-white p-2 bg-main-100 font-mono font-bold'>Vaccines Currently Shipping</div>
+			<div className='text-bg text-white p-2 bg-black font-mono font-bold'>Vaccines Currently Shipping</div>
 			<TableContainer sx={{maxHeight: 260}}>
 				<Table stickyHeader aria-label='sticky table'>
 					<TableHead>
-						<TableRow>
-							{columns.map((column) => (
-								<TableCell
-									key={column.id}
-									align={column.align}
-									style={{minWidth: column.minWidth}}
-									className='font-bold text-white bg-main-100 border-t'
-								>
-									{column.label}
-								</TableCell>
-							))}
-						</TableRow>
+						{!loading && (
+							<TableRow>
+								{tableHeader.map((column) => (
+									<TableCell
+										key={column.id}
+										align={column.align}
+										style={{minWidth: column.minWidth}}
+										className='font-bold text-white bg-black border-t border-gray-500'
+									>
+										{column.label}
+									</TableCell>
+								))}
+							</TableRow>
+						)}
 					</TableHead>
+
 					<TableBody>
-						{rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+						{activeDeliveriesData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
 							return (
-								<TableRow hover role='checkbox' tabIndex={-1} key={row.code}>
-									{columns.map((column) => {
-										const value = row[column.id];
-										return (
-											<TableCell key={column.id} align={column.align} className='font-mono'>
-												{column.format && typeof value === 'number' ? column.format(value) : value}
-											</TableCell>
-										);
-									})}
-								</TableRow>
+								<>
+									<TableRow key={row.deliveryId}>
+										<TableCell align='left'>{row.destinationHarbor.countryName}</TableCell>
+										<TableCell align='left'>{row.startHarbor.countryName}</TableCell>
+										<TableCell align='left'>{row.vaccineType}</TableCell>
+										<TableCell align='left'>{row.quantity}</TableCell>
+										<TableCell align='left'>{formatDate(row.createdAt)}</TableCell>
+										<TableCell align='left'>{formatDate(row.estimatedArrivalDate)}</TableCell>
+										<TableCell align='left'>{formateStatus(row.deliveryStatus)}</TableCell>
+										<TableCell align='left'>{formateUrgency(row.urgency)}</TableCell>
+									</TableRow>
+								</>
 							);
 						})}
 					</TableBody>
@@ -194,7 +116,7 @@ export default function OverviewTable() {
 			<TablePagination
 				rowsPerPageOptions={[5, 10, 20]}
 				component='div'
-				count={rows.length}
+				count={activeDeliveriesData.length}
 				rowsPerPage={rowsPerPage}
 				page={page}
 				onPageChange={handleChangePage}

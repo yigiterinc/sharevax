@@ -16,6 +16,7 @@
     "axios": "^1.2.1",
     "faker": "^5.5.3",
     "leaflet": "^1.9.2",
+    "package.json": "^2.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hooks-global-state": "^2.1.0",
