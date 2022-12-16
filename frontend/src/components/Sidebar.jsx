@@ -5,7 +5,7 @@ import {BsFillPinMapFill} from 'react-icons/bs';
 import {HiMenuAlt3} from 'react-icons/hi';
 import {BiWorld, BiDetail} from 'react-icons/bi';
 import {TbVaccine, TbMessageReport} from 'react-icons/tb';
-import {Link} from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
 import {useGlobalState} from '../state';
 
 export default function Sidebar() {
@@ -20,6 +20,7 @@ export default function Sidebar() {
 	const [open, setOpen] = useState(true);
 	const [country] = useGlobalState('country');
 	const [flag] = useGlobalState('flag');
+	const location = useLocation();
 
 	return (
 		<div
@@ -36,7 +37,7 @@ export default function Sidebar() {
 					<Link
 						to={menu?.link}
 						key={i}
-						className={` ${
+						className={`${location.pathname === menu.link && 'bg-main-300'} ${
 							menu?.margin && 'mt-5'
 						} group flex items-center text-sm  gap-3.5 font-medium p-2 hover:bg-main-300 rounded-md`}
 					>
