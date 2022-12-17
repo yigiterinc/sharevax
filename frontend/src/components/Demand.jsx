@@ -94,14 +94,12 @@ export default function Demand() {
 	};
 
 	return (
-		<div>
-			<form
-				id='demandForm'
-				onSubmit={handleSubmit}
-				className='bg-white shadow-xl hover:shadow-2xl transition duration-150 rounded px-8 pt-3 pb-4 mb-4'
-			>
-				<div className='grid grid-cols-1 my-6'>
-					<label className='text-main-100 font-bold text-xl grid justify-items-center'>Demand</label>
+		<div className='w-[30vw]'>
+			<form id='demandForm' onSubmit={handleSubmit}>
+				<div className='grid grid-cols-1 my-6 mx-6'>
+					<label className='text-main-100 font-bold text-l grid justify-items-center mb-3'>
+						Request vaccines for {country}
+					</label>
 
 					<div className='mb-6'>
 						<label
@@ -220,7 +218,7 @@ export default function Demand() {
 					<button
 						type='submit'
 						value='Submit'
-						className='bg-main-100 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:ease-in hover:scale-105 transition duration-150 ease-out'
+						className='bg-main-100 text-white font-bold mt-6 py-3 px-4 rounded focus:outline-none focus:shadow-outline hover:ease-in hover:scale-105 transition duration-150 ease-out'
 					>
 						Submit
 					</button>

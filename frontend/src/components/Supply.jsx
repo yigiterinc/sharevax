@@ -95,15 +95,12 @@ export default function Supply() {
 	};
 
 	return (
-		<div>
-			<form
-				id='supplyForm'
-				onSubmit={handleSubmit}
-				className='bg-white shadow-xl hover:shadow-2xl transition duration-150 rounded px-8 pt-3 pb-4 mb-4'
-			>
-				<div className='grid grid-cols-1 my-6'>
-					<label className='text-main-100 font-bold text-xl grid justify-items-center'>Supply</label>
-
+		<div className='w-[30vw]'>
+			<form id='supplyForm' onSubmit={handleSubmit}>
+				<div className='grid grid-cols-1 my-6 mx-6'>
+					<label className='text-main-100 font-bold text-l grid justify-items-center mb-3'>
+						Donate/Sell vaccines from {country}
+					</label>
 					<div className='mb-6'>
 						<label
 							id='country-input'
@@ -170,7 +167,7 @@ export default function Supply() {
 							required
 							min='0'
 							value={formValues.unitPrice}
-							placeholder='1'
+							placeholder='0'
 							onChange={handleInputChange}
 						/>
 					</div>
@@ -178,7 +175,7 @@ export default function Supply() {
 					<button
 						type='submit'
 						value='Submit'
-						className='bg-main-100 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:ease-in hover:scale-105 transition duration-150 ease-out'
+						className='bg-main-100 text-white font-bold mt-6 py-3 px-4 rounded focus:outline-none focus:shadow-outline hover:ease-in hover:scale-105 transition duration-150 ease-out'
 					>
 						Submit
 					</button>
