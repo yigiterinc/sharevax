@@ -1,6 +1,6 @@
 //Sidebar on ALL Pages
 //Universal Sidebar component appears on multiple pages
-import {useState, createElement} from 'react';
+import {useState, createElement, useEffect} from 'react';
 import {BsFillPinMapFill} from 'react-icons/bs';
 import {HiMenuAlt3} from 'react-icons/hi';
 import {BiWorld, BiDetail} from 'react-icons/bi';
@@ -9,18 +9,33 @@ import {Link, useLocation} from 'react-router-dom';
 import {useGlobalState} from '../state';
 
 export default function Sidebar() {
-	const menus = [
+	const pages = [
 		{name: 'Overview', link: '/', icon: BiWorld},
-		{name: 'Country Info', link: '/country-info', icon: BsFillPinMapFill},
-		{name: 'Order Detail', link: '/order-detail', icon: BiDetail},
+		{name: 'Country Info', link: '/country-info', icon: BsFillPinMapFill, isCountrySelected: true},
+		{name: 'Order Detail', link: '/order-detail', icon: BiDetail, isCountrySelected: true},
 		{name: 'Report', link: '/report', icon: TbMessageReport},
-		{name: 'Offer Vaccine', link: '/offer-vaccine', icon: TbVaccine, margin: true},
+		{
+			name: 'Supply / Demand Vaccine',
+			link: '/supply-demand-vaccine',
+			icon: TbVaccine,
+			margin: true,
+			isCountrySelected: true,
+		},
 	];
 
+	const [menus, setMenus] = useState([]);
 	const [open, setOpen] = useState(true);
 	const [country] = useGlobalState('country');
 	const [flag] = useGlobalState('flag');
 	const location = useLocation();
+
+	useEffect(() => {
+		if (country === '') {
+			setMenus(pages.filter((page) => !page.isCountrySelected));
+		} else {
+			setMenus(pages);
+		}
+	}, [country]);
 
 	return (
 		<div
