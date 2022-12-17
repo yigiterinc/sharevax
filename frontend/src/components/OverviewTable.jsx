@@ -84,7 +84,7 @@ export default function OverviewTable() {
 										key={column.id}
 										align={column.align}
 										style={{minWidth: column.minWidth}}
-										className='font-bold text-white bg-main-100 border-t border-gray-500'
+										className='font-bold text-white bg-main-100 border-t border-white'
 									>
 										{column.label}
 									</TableCell>
