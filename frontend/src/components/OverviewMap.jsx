@@ -6,8 +6,9 @@ import countries from '../data/custom.geo.json';
 import 'leaflet/dist/leaflet.css';
 import Legend from './Legend';
 import CountryPopup from './CountryPopup';
+import ShipPopup from './ShipPopup';
 import {fetchCountries, fetchActiveDeliveries} from '../services/services';
-import {getColor, legendItems, swapLatLng, deliveryStatus} from '../utils/utils';
+import {getColor, legendItems, swapLatLng} from '../utils/utils';
 import ship from '../assets/ship.png';
 import '../styles/Map.css';
 import {useGlobalState} from '../state';
@@ -155,30 +156,7 @@ const OverviewMap = ({onNextDay, setOnNextDay}) => {
 						shipInfo.map((info, index) => (
 							<Marker key={index} position={info.coordinates} icon={getIcon(26)}>
 								<Popup>
-									<div className='font-semibold'>
-										Coordinates:{' '}
-										<span className='font-normal'>
-											({info.coordinates[0]}, {info.coordinates[1]})
-										</span>
-									</div>
-									<div className='font-semibold'>
-										Start:{' '}
-										<span className='font-normal'>
-											{info.startHarbor}, {info.startCountry}
-										</span>
-									</div>
-									<div className='font-semibold'>
-										Destination:{' '}
-										<span className='font-normal'>
-											{info.endHarbor}, {info.endCountry}
-										</span>
-									</div>
-									<div className='font-semibold'>
-										Status:{' '}
-										<span className={`font-normal ${deliveryStatus[info.status].color}`}>
-											{deliveryStatus[info.status].text}
-										</span>
-									</div>
+									<ShipPopup {...info} />
 								</Popup>
 							</Marker>
 						))}
