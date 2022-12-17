@@ -10,6 +10,7 @@ import {fetchCountries, fetchActiveDeliveries} from '../services/services';
 import {getColor, legendItems, swapLatLng} from '../utils/utils';
 import ship from '../assets/ship.png';
 import '../styles/Map.css';
+import {useGlobalState} from '../state';
 
 const getIcon = (iconSize) => {
 	return L.icon({
@@ -26,6 +27,7 @@ const OverviewMap = ({onNextDay, setOnNextDay}) => {
 	const [shipCoordinates, setShipCoordinates] = useState([]);
 	const [routeHistoryCoordinates, setRouteHistoryCoordinates] = useState([]);
 	const [futureRouteCoordinates, setFutureRouteCoordinates] = useState([]);
+	const [countryState] = useGlobalState('country');
 
 	useEffect(() => {
 		fetchCountryData();
@@ -63,6 +65,10 @@ const OverviewMap = ({onNextDay, setOnNextDay}) => {
 		}
 	}, [onNextDay]);
 
+	useEffect(() => {
+		console.log('countryState', countryState);
+	}, [countryState]);
+
 	const fetchCountryData = async () => {
 		const result = await fetchCountries();
 		setCountriesData(result.data);
@@ -77,9 +83,7 @@ const OverviewMap = ({onNextDay, setOnNextDay}) => {
 
 	const countryStyle = {
 		fillOpacity: 1,
-		color: 'gray',
-		opacity: 0.5,
-		weight: 1,
+		opacity: 0.6,
 	};
 
 	const onEachCountry = (country, layer) => {
@@ -100,10 +104,17 @@ const OverviewMap = ({onNextDay, setOnNextDay}) => {
 
 			layer.bindPopup(popupContent);
 			layer.options.fillColor = getColor(currentCountry.vaccinationRate);
+
+			if (currentCountry.name === countryState) {
+				layer.setStyle({color: 'black', weight: 3});
+			} else {
+				layer.setStyle({color: 'gray', weight: 1});
+			}
 		} else {
 			const countryName = country.properties.name;
 			layer.bindPopup(countryName);
 			layer.options.fillColor = 'white';
+			layer.setStyle({color: 'gray', weight: 1});
 		}
 	};
 
@@ -119,7 +130,7 @@ const OverviewMap = ({onNextDay, setOnNextDay}) => {
 					minZoom={1}
 					scrollWheelZoom={false}
 				>
-					<GeoJSON data={countries} style={countryStyle} onEachFeature={onEachCountry} />
+					<GeoJSON key={countryState} data={countries} style={countryStyle} onEachFeature={onEachCountry} />
 					{!activeDeliveriesLoading &&
 						routeHistoryCoordinates.map((coordinates, index) => (
 							<Polyline key={index} pathOptions={{color: '#6283D5'}} positions={coordinates} />
