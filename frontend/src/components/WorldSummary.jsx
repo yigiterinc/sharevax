@@ -50,35 +50,32 @@ export default function WorldSummary() {
 	console.log('number of countries:', countriesData.length);
 	console.log('country data:', countriesData);
 
-	const blockStyle =
-		'grid grid-rows-2 grid-flow-col bg-main-100 rounded-lg p-3 hover:drop-shadow-xl hover:ease-in hover:scale-105 transition duration-150 ease-out ';
+	const blockStyle = 'grid grid-rows-2 grid-flow-col bg-[#ecfaff] rounded-lg p-3 border border-main-100 h-24';
 
 	return (
-		<div>
-			<div className='grid grid-cols-3 gap-11 scale-10 w-full'>
-				<div className={blockStyle}>
-					<div className='font-bold text-white'>Current Transport</div>
-					<div className='font-bold mt-5 text-white'>
-						{activeDeliveriesData.length.toLocaleString(undefined, {minimumFractionDigits: 0})}
-					</div>
-					<div className='row-span-2 grid justify-items-end items-center'>
-						<GiShipBow size={70} color={'white'} />
-					</div>
+		<div className='grid grid-cols-3 gap-20 w-full'>
+			<div className={blockStyle}>
+				<div className='font-bold text-main-100'>Current Transport</div>
+				<div className='font-bold mt-3 text-main-100'>
+					{activeDeliveriesData.length.toLocaleString(undefined, {minimumFractionDigits: 0})}
 				</div>
+				<div className='row-span-2 grid justify-items-end items-center'>
+					<GiShipBow size={45} color={'#008db9'} />
+				</div>
+			</div>
 
-				<div className={blockStyle}>
-					<div className='font-bold text-white'>Daily Vaccine Production</div>
-					<div className='font-bold mt-5 text-white'>{countDailyVaccineProduction(countriesData)}</div>
-					<div className='row-span-2 grid justify-items-end items-center'>
-						<GiRobotGrab size={70} color={'white'} />
-					</div>
+			<div className={blockStyle}>
+				<div className='font-bold text-main-100'>Daily Vaccine Production</div>
+				<div className='font-bold mt-3 text-main-100'>{countDailyVaccineProduction(countriesData)}</div>
+				<div className='row-span-2 grid justify-items-end items-center'>
+					<GiRobotGrab size={45} color={'#008db9'} />
 				</div>
-				<div className={blockStyle}>
-					<div className='font-bold text-white'>Daily Vaccine Consumption</div>
-					<div className='font-bold mt-5 text-white'>{countDailyVaccineConsumption(countriesData)}</div>
-					<div className='row-span-2 grid justify-items-end items-center'>
-						<TbVaccine size={70} color={'white'} />
-					</div>
+			</div>
+			<div className={blockStyle}>
+				<div className='font-bold text-main-100'>Daily Vaccine Consumption</div>
+				<div className='font-bold mt-3 text-main-100'>{countDailyVaccineConsumption(countriesData)}</div>
+				<div className='row-span-2 grid justify-items-end items-center'>
+					<TbVaccine size={45} color={'#008db9'} />
 				</div>
 			</div>
 		</div>
