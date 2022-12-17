@@ -7,7 +7,7 @@ import 'leaflet/dist/leaflet.css';
 import Legend from './Legend';
 import CountryPopup from './CountryPopup';
 import {fetchCountries, fetchActiveDeliveries} from '../services/services';
-import {getColor, legendItems, swapLatLng} from '../utils/utils';
+import {getColor, legendItems, swapLatLng, deliveryStatus} from '../utils/utils';
 import ship from '../assets/ship.png';
 import '../styles/Map.css';
 import {useGlobalState} from '../state';
@@ -24,7 +24,7 @@ const OverviewMap = ({onNextDay, setOnNextDay}) => {
 	const [activeDeliveriesData, setActiveDeliveriesData] = useState([]);
 	const [countriesLoading, setCountriesLoading] = useState(true);
 	const [activeDeliveriesLoading, setActiveDeliveriesLoading] = useState(true);
-	const [shipCoordinates, setShipCoordinates] = useState([]);
+	const [shipInfo, setShipInfo] = useState([]);
 	const [routeHistoryCoordinates, setRouteHistoryCoordinates] = useState([]);
 	const [futureRouteCoordinates, setFutureRouteCoordinates] = useState([]);
 	const [countryState] = useGlobalState('country');
@@ -49,14 +49,24 @@ const OverviewMap = ({onNextDay, setOnNextDay}) => {
 				});
 				setRouteHistoryCoordinates((prev) => [...prev, routeHistory]);
 				setFutureRouteCoordinates((prev) => [...prev, futureRoute]);
-				setShipCoordinates((prev) => [...prev, shipLocation]);
+				setShipInfo((prev) => [
+					...prev,
+					{
+						startHarbor: delivery.startHarbor.name,
+						startCountry: delivery.startHarbor.countryName,
+						endHarbor: delivery.destinationHarbor.name,
+						endCountry: delivery.destinationHarbor.countryName,
+						status: delivery.deliveryStatus,
+						coordinates: shipLocation,
+					},
+				]);
 			});
 		}
 	}, [activeDeliveriesLoading]);
 
 	useEffect(() => {
 		if (onNextDay) {
-			setShipCoordinates([]);
+			setShipInfo([]);
 			setRouteHistoryCoordinates([]);
 			setFutureRouteCoordinates([]);
 			setActiveDeliveriesLoading(true);
@@ -68,6 +78,8 @@ const OverviewMap = ({onNextDay, setOnNextDay}) => {
 	useEffect(() => {
 		console.log('countryState', countryState);
 	}, [countryState]);
+
+	console.log(activeDeliveriesData);
 
 	const fetchCountryData = async () => {
 		const result = await fetchCountries();
@@ -140,10 +152,33 @@ const OverviewMap = ({onNextDay, setOnNextDay}) => {
 							<Polyline key={index} pathOptions={{color: '#6283D5', dashArray: '5 8'}} positions={coordinates} />
 						))}
 					{!activeDeliveriesLoading &&
-						shipCoordinates.map((coordinate, index) => (
-							<Marker key={index} position={coordinate} icon={getIcon(26)}>
+						shipInfo.map((info, index) => (
+							<Marker key={index} position={info.coordinates} icon={getIcon(26)}>
 								<Popup>
-									Coordinates: ({coordinate[0]}, {coordinate[1]})
+									<div className='font-semibold'>
+										Coordinates:{' '}
+										<span className='font-normal'>
+											({info.coordinates[0]}, {info.coordinates[1]})
+										</span>
+									</div>
+									<div className='font-semibold'>
+										Start:{' '}
+										<span className='font-normal'>
+											{info.startHarbor}, {info.startCountry}
+										</span>
+									</div>
+									<div className='font-semibold'>
+										Destination:{' '}
+										<span className='font-normal'>
+											{info.endHarbor}, {info.endCountry}
+										</span>
+									</div>
+									<div className='font-semibold'>
+										Status:{' '}
+										<span className={`font-normal ${deliveryStatus[info.status].color}`}>
+											{deliveryStatus[info.status].text}
+										</span>
+									</div>
 								</Popup>
 							</Marker>
 						))}

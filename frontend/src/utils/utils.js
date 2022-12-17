@@ -52,3 +52,9 @@ export const swapLatLng = (coordinates) => {
 	coordinates[0] = coordinates.splice(1, 1, coordinates[0])[0];
 	return coordinates;
 };
+
+export const deliveryStatus = {
+	IN_TIME: {color: 'text-green-500', text: 'In time'},
+	DELAYED: {color: 'text-orange-500', text: 'Delayed'},
+	DELIVERED: {color: 'text-gray-500', text: 'Delivered'},
+};
