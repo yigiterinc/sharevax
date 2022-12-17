@@ -13,7 +13,7 @@ export default function Sidebar() {
 		{name: 'Country Info', link: '/country-info', icon: BsFillPinMapFill},
 		{name: 'Order Detail', link: '/order-detail', icon: BiDetail},
 		{name: 'Report', link: '/report', icon: TbMessageReport},
-		{name: 'Offer Vaccine', link: '/offer-vaccine', icon: TbVaccine, margin: true},
+		{name: 'Supply / Demand Vaccine', link: '/supply-demand-vaccine', icon: TbVaccine, margin: true},
 	];
 
 	const [open, setOpen] = useState(true);

@@ -16,7 +16,7 @@ function App() {
 				<Route path='/country-info' element={<CountryInfo />} />
 				<Route path='/order-detail' element={<OrderDetail />} />
 				<Route path='/report' element={<Report />} />
-				<Route path='/offer-vaccine' element={<OfferVaccine />} />
+				<Route path='/supply-demand-vaccine' element={<OfferVaccine />} />
 			</Routes>
 		</div>
 	);
