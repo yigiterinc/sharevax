@@ -11,13 +11,19 @@ function NextDaySnackbar({onNextDay}) {
 	useEffect(() => {
 		if (onNextDay) {
 			fetchCurrentDay();
-			if (!loading) {
-				handleOnNextDay();
-			}
+			console.log('fetched current day');
 		}
 	}, [onNextDay]);
 
+	useEffect(() => {
+		if (!loading) {
+			console.log('if not loading');
+			handleOnNextDay();
+		}
+	}, [loading]);
+
 	const fetchCurrentDay = async () => {
+		setLoading(true);
 		const result = await fetchSimulationDay();
 		setCurrentDay(result.data);
 		setLoading(false);
