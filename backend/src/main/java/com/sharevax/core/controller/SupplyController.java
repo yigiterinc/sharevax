@@ -34,7 +34,7 @@ public class SupplyController {
     @Operation(summary = "Create a supply")
     @PostMapping
     public ResponseEntity<Supply> createSupply(@RequestBody final CreateSupplyDto createSupplyDto) {
-        supplyService.createSupply(createSupplyDto);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(supplyService.createSupply(createSupplyDto));
+
     }
 }
