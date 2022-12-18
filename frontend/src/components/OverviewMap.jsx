@@ -136,7 +136,7 @@ const OverviewMap = ({onNextDay, setUpdated}) => {
 			{!countriesLoading && (
 				<MapContainer
 					className='overview-map-container w-full h-[65vh] relative z-0'
-					style={{backgroundColor: '#e8f4f6'}}
+					style={{backgroundColor: '#ecfaff'}}
 					center={[30.0, 0.0]}
 					zoom={2}
 					maxZoom={5}
