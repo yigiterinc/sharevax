@@ -3,11 +3,15 @@ import {FaParachuteBox} from 'react-icons/fa';
 import {TbVaccine} from 'react-icons/tb';
 import Demand from '../components/Demand';
 import Supply from '../components/Supply';
+import CountryDropdown from '../components/CountryDropdown';
 
 function SupplyDemandVaccine() {
 	const [openTab, setOpenTab] = useState(1);
 	return (
-		<div className='flex flex-col items-center gap-12 m-8 grow'>
+		<div className='flex flex-col items-center gap-12 m-6 grow'>
+			<div className='flex justify-end w-full gap-3 -mb-8'>
+				<CountryDropdown />
+			</div>
 			<div className='flex flex-wrap'>
 				<div className='w-full'>
 					<ul className='flex mb-0 list-none flex-wrap pt-3 pb-4 flex-row' role='tablist'>

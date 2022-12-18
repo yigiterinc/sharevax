@@ -5,6 +5,7 @@ import OverviewTable from '../components/OverviewTable';
 import CountryDropdown from '../components/CountryDropdown';
 import NextDayButton from '../components/NextDayButton';
 import NextDaySnackbar from '../components/NextDaySnackbar';
+import WorldSummary from '../components/WorldSummary';
 
 function Home() {
 	const [onNextDay, setOnNextDay] = useState(false);
@@ -17,6 +18,7 @@ function Home() {
 			</div>
 			<NextDaySnackbar onNextDay={onNextDay} />
 			<OverviewMap onNextDay={onNextDay} setOnNextDay={setOnNextDay} />
+			<WorldSummary />
 			<OverviewTable />
 		</div>
 	);
