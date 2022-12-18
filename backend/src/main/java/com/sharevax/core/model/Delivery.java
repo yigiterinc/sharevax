@@ -8,6 +8,7 @@ import lombok.*;
 import org.locationtech.jts.geom.LineString;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 import java.util.Date;
 
 @NoArgsConstructor
@@ -30,7 +31,6 @@ public class Delivery {
     @JsonManagedReference
     private Harbor startHarbor;
 
-
     @ManyToOne
     @JoinColumn(name = "destination_harbor_id", nullable = false)
     @JsonManagedReference
@@ -44,6 +44,9 @@ public class Delivery {
 
     @Column(name = "delivery_updated_date")
     private Date updatedAt;
+
+    @Column(name="quantity")
+    private BigInteger quantity;
 
     @Column(name = "delivery_status", nullable = false)
     @Enumerated(EnumType.STRING)
