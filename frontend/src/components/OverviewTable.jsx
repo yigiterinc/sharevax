@@ -72,11 +72,11 @@ export default function OverviewTable({onNextDay, setUpdated}) {
 	}
 	function formateUrgency(u) {
 		if (u == 'NORMAL') {
-			return '🟢';
+			return <div className='text-green-500'>🟢 Normal</div>;
 		} else if (u == 'URGENT') {
-			return '🟠';
+			return <div className='text-orange-500'>🟠 Urgent</div>;
 		} else if (u == 'CRITICAL') {
-			return '🔴';
+			return <div className='text-red-600'>🔴 Critical</div>;
 		}
 	}
 
