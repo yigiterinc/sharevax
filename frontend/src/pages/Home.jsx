@@ -1,5 +1,5 @@
 //Home Page
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import OverviewMap from '../components/OverviewMap';
 import OverviewTable from '../components/OverviewTable';
 import CountryDropdown from '../components/CountryDropdown';
@@ -9,6 +9,16 @@ import WorldSummary from '../components/WorldSummary';
 
 function Home() {
 	const [onNextDay, setOnNextDay] = useState(false);
+	const [mapUpdated, setMapUpdated] = useState(false);
+	const [tableUpdated, setTableUpdated] = useState(false);
+
+	useEffect(() => {
+		if (mapUpdated && tableUpdated) {
+			setOnNextDay(false);
+			setMapUpdated(false);
+			setTableUpdated(false);
+		}
+	}, [mapUpdated, tableUpdated]);
 
 	return (
 		<div className='flex flex-col items-center gap-12 m-6 grow'>
@@ -17,9 +27,9 @@ function Home() {
 				<CountryDropdown />
 			</div>
 			<NextDaySnackbar onNextDay={onNextDay} />
-			<OverviewMap onNextDay={onNextDay} setOnNextDay={setOnNextDay} />
+			<OverviewMap onNextDay={onNextDay} setUpdated={setMapUpdated} />
 			<WorldSummary />
-			<OverviewTable />
+			<OverviewTable onNextDay={onNextDay} setUpdated={setTableUpdated} />
 		</div>
 	);
 }

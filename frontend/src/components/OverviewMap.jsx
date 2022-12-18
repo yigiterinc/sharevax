@@ -20,7 +20,7 @@ const getIcon = (iconSize) => {
 	});
 };
 
-const OverviewMap = ({onNextDay, setOnNextDay}) => {
+const OverviewMap = ({onNextDay, setUpdated}) => {
 	const [countriesData, setCountriesData] = useState([]);
 	const [activeDeliveriesData, setActiveDeliveriesData] = useState([]);
 	const [countriesLoading, setCountriesLoading] = useState(true);
@@ -72,7 +72,7 @@ const OverviewMap = ({onNextDay, setOnNextDay}) => {
 			setFutureRouteCoordinates([]);
 			setActiveDeliveriesLoading(true);
 			fetchActiveDeliveriesData();
-			setOnNextDay(false);
+			setUpdated(true);
 		}
 	}, [onNextDay]);
 

@@ -20,11 +20,20 @@ const tableHeader = [
 	{id: 'urgency', label: 'Urgency', minWidth: 21},
 ];
 
-export default function OverviewTable() {
+export default function OverviewTable({onNextDay, setUpdated}) {
 	const [page, setPage] = useState(0);
 	const [rowsPerPage, setRowsPerPage] = useState(10);
 	const [activeDeliveriesData, setActiveDeliveriesData] = useState([]);
 	const [loading, setLoading] = useState(true);
+
+	useEffect(() => {
+		if (onNextDay) {
+			setActiveDeliveriesData([]);
+			setLoading(true);
+			fetchActiveDeliveriesData();
+			setUpdated(true);
+		}
+	}, [onNextDay]);
 
 	useEffect(() => {
 		fetchActiveDeliveriesData();
