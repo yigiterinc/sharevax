@@ -1,4 +1,5 @@
-import {MapContainer, Polyline, GeoJSON} from 'react-leaflet';
+import {MapContainer, Polyline, GeoJSON, Marker, Popup} from 'react-leaflet';
+import L from 'leaflet';
 import {useEffect, useState} from 'react';
 import ReactDOMServer from 'react-dom/server';
 import countries from '../data/custom.geo.json';
@@ -12,7 +13,14 @@ import ship from '../assets/ship.png';
 import '../styles/Map.css';
 import {useGlobalState} from '../state';
 
-const OverviewMap = () => {
+const getIcon = (iconSize) => {
+	return L.icon({
+		iconUrl: ship,
+		iconSize: [iconSize],
+	});
+};
+
+const OverviewMap = ({onNextDay, setOnNextDay}) => {
 	const [countriesData, setCountriesData] = useState([]);
 	const [activeDeliveriesData, setActiveDeliveriesData] = useState([]);
 	const [countriesLoading, setCountriesLoading] = useState(true);
@@ -24,6 +32,7 @@ const OverviewMap = () => {
 
 	useEffect(() => {
 		fetchCountryData();
+		fetchActiveDeliveriesData();
 	}, []);
 
 	useEffect(() => {
@@ -76,16 +85,14 @@ const OverviewMap = () => {
 	const fetchCountryData = async () => {
 		const result = await fetchCountries();
 		setCountriesData(result.data);
-		setLoading(false);
+		setCountriesLoading(false);
 	};
 
-	const coordinates = [
-		[40.43, -74.0],
-		[40, -70],
-		[39, -60],
-		[40, -50],
-		[47.14, -1.34],
-	];
+	const fetchActiveDeliveriesData = async () => {
+		const result = await fetchActiveDeliveries();
+		setActiveDeliveriesData(result.data);
+		setActiveDeliveriesLoading(false);
+	};
 
 	const countryStyle = {
 		fillOpacity: 1,
@@ -99,7 +106,7 @@ const OverviewMap = () => {
 			);
 
 			const popupContent = ReactDOMServer.renderToString(
-				<Popup
+				<CountryPopup
 					countryName={currentCountry.name}
 					vaccinationRate={currentCountry.vaccinationRate}
 					vaccineConsumption={currentCountry.dailyVaccineConsumption}
@@ -126,9 +133,9 @@ const OverviewMap = () => {
 
 	return (
 		<>
-			{!loading && (
+			{!countriesLoading && (
 				<MapContainer
-					className='w-full h-[65vh] relative z-0'
+					className='overview-map-container w-full h-[65vh] relative z-0'
 					style={{backgroundColor: '#e8f4f6'}}
 					center={[30.0, 0.0]}
 					zoom={2}
