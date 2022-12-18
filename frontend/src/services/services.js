@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {COUNTRIES, SUPPLIES, HARBORS, ACTIVE_DELIVERIES, PROGRESS_SIMULATION} from './endpoints';
+import {COUNTRIES, SUPPLIES, HARBORS, ACTIVE_DELIVERIES, PROGRESS_SIMULATION, SIMULATION_DAY} from './endpoints';
 
 export const fetchCountries = async function () {
 	return await axios.get(COUNTRIES);
@@ -20,4 +20,8 @@ export const fetchActiveDeliveries = async function () {
 
 export const progressSimulation = async function () {
 	return await axios.patch(PROGRESS_SIMULATION);
+};
+
+export const fetchSimulationDay = async function () {
+	return await axios.get(SIMULATION_DAY);
 };

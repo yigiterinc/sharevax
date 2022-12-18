@@ -1,19 +1,32 @@
 import {useSnackbar} from 'notistack';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
+import {fetchSimulationDay} from '../services/services';
+import {millisecondsToDate} from '../utils/utils';
 
 function NextDaySnackbar({onNextDay}) {
+	const [currentDay, setCurrentDay] = useState();
+	const [loading, setLoading] = useState(true);
 	const {enqueueSnackbar} = useSnackbar();
 
 	useEffect(() => {
 		if (onNextDay) {
-			handleOnNextDay();
+			fetchCurrentDay();
+			if (!loading) {
+				handleOnNextDay();
+			}
 		}
 	}, [onNextDay]);
 
+	const fetchCurrentDay = async () => {
+		const result = await fetchSimulationDay();
+		setCurrentDay(result.data);
+		setLoading(false);
+	};
+
 	const handleOnNextDay = () => {
-		enqueueSnackbar('Success! It is the next day', {
+		enqueueSnackbar(`Success! Today is ${millisecondsToDate(currentDay)}`, {
 			variant: 'success',
-			autoHideDuration: 3000,
+			autoHideDuration: 2500,
 			anchorOrigin: {vertical: 'top', horizontal: 'right'},
 			style: {marginTop: '60px'},
 		});
