@@ -6,16 +6,12 @@ import com.sharevax.core.model.Delivery;
 import com.sharevax.core.model.Delivery.DeliveryStatus;
 import com.sharevax.core.model.Demand;
 import com.sharevax.core.model.Supply;
-import com.sharevax.core.model.route.RoutePlan;
+import com.sharevax.core.serializer.RoutePlanDto;
 import com.sharevax.core.repository.SupplyRepository;
-import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
-import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -164,10 +160,8 @@ public class SimulationService {
             // Match the demand to the supply
             demandToSupply.put(demand, supply);
 
-            // Remove the demand from the list of demands
             demands.remove(demand);
 
-            // Remove the supply from the list of supplies
             demandToClosestSupply.remove(demand);
         }
 
@@ -328,10 +322,10 @@ public class SimulationService {
                 LineString routeHistory = delivery.getRouteHistory();
                 LineString futureRoute = delivery.getFutureRoute();
 
-                RoutePlan routePlan = simulationFacade.adaptRoute(routeHistory, futureRoute);
-                routeHistory = routePlan.getRouteHistory();
-                futureRoute = routePlan.getFutureRoute();
-                dayCounter = routePlan.getDuration();
+                RoutePlanDto routePlanDto = simulationFacade.updateShipRoute(routeHistory, futureRoute);
+                routeHistory = routePlanDto.getRouteHistory();
+                futureRoute = routePlanDto.getFutureRoute();
+                dayCounter = routePlanDto.getDuration();
 
                 if (futureRoute.isEmpty()) { // arrive at the destination
                     delivery.setDeliveryStatus(Delivery.DeliveryStatus.DELIVERED);
