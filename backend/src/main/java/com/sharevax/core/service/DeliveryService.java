@@ -116,4 +116,7 @@ public class DeliveryService {
         return calendar.getTime();
     }
 
+    public void deleteAll() {
+        deliveryRepository.deleteAll();
+    }
 }

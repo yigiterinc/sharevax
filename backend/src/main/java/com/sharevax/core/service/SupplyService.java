@@ -65,4 +65,8 @@ public class SupplyService {
     public List<Supply> findUnmatchedSupplies() {
         return supplyRepository.findUnmatchedSupplies();
     }
+
+    public void deleteAll() {
+        supplyRepository.deleteAll();
+    }
 }

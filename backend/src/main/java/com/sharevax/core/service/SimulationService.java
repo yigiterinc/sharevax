@@ -59,7 +59,25 @@ public class SimulationService {
         updateVaccinationRates();
 
         matchSupplyAndDemand();
+    }
 
+    public void resetSimulation() {
+        DAY_COUNTER = 0;
+        resetDatabaseState();
+    }
+
+    private void resetDatabaseState() {
+        // delete all deliveries
+        simulationFacade.deleteAllDeliveries();
+
+        // delete all supplies
+        simulationFacade.deleteAllSupplies();
+
+        // delete all demands
+        simulationFacade.deleteAllDemands();
+
+        // reset country data
+        simulationFacade.resetCountryData();
     }
 
     public void matchSupplyAndDemand() {

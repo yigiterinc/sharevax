@@ -76,4 +76,20 @@ public class SimulationFacade {
     public List<Supply> getUnmatchedSupplies() {
         return supplyService.findUnmatchedSupplies();
     }
+
+    public void resetCountryData() {
+        countryService.resetCountryData();
+    }
+
+    public void deleteAllDeliveries() {
+        deliveryService.deleteAll();
+    }
+
+    public void deleteAllSupplies() {
+        supplyService.deleteAll();
+    }
+
+    public void deleteAllDemands() {
+        demandService.deleteAll();
+    }
 }
