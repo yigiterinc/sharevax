@@ -5,7 +5,7 @@ import {Routes, Route} from 'react-router-dom';
 import CountryInfo from './pages/CountryInfo';
 import OrderDetail from './pages/OrderDetail';
 import Report from './pages/Report';
-import OfferVaccine from './pages/OfferVaccine';
+import SupplyDemandVaccine from './pages/SupplyDemandVaccine';
 
 function App() {
 	return (
@@ -16,7 +16,7 @@ function App() {
 				<Route path='/country-info' element={<CountryInfo />} />
 				<Route path='/order-detail' element={<OrderDetail />} />
 				<Route path='/report' element={<Report />} />
-				<Route path='/offer-vaccine' element={<OfferVaccine />} />
+				<Route path='/supply-demand-vaccine' element={<SupplyDemandVaccine />} />
 			</Routes>
 		</div>
 	);

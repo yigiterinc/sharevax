@@ -11,15 +11,11 @@ export const legendItems = [
 ];
 
 export const getColor = (val) => {
-	let color = '';
 	for (let i = 1; i < scale.length; i++) {
 		if (val < scale[i]) {
-			color = colors[i - 1];
 			return colors[i - 1];
 		}
 	}
-	color = colors[colors.length - 1];
-	console.log(color);
 	return colors[colors.length - 1];
 };
 
@@ -55,4 +51,10 @@ export const separateNumberWithCommas = (val) => {
 export const swapLatLng = (coordinates) => {
 	coordinates[0] = coordinates.splice(1, 1, coordinates[0])[0];
 	return coordinates;
+};
+
+export const deliveryStatus = {
+	IN_TIME: {color: 'text-green-500', text: 'In time'},
+	DELAYED: {color: 'text-orange-500', text: 'Delayed'},
+	DELIVERED: {color: 'text-gray-500', text: 'Delivered'},
 };
