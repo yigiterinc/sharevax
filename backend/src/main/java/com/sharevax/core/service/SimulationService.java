@@ -139,6 +139,16 @@ public class SimulationService {
             demandToClosestSupply.put(demand, distanceScores.get(demand).getRight());
         }
 
+        var maxCumulativeScore = demandToCumulativeScore.values().stream().max(Double::compareTo).get();
+        var minCumulativeScore = demandToCumulativeScore.values().stream().min(Double::compareTo).get();
+
+        // Normalize the cumulative scores based on max and min
+        for (Demand demand : demands) {
+            var cumulativeScore = demandToCumulativeScore.get(demand);
+            var normalizedCumulativeScore = (cumulativeScore - minCumulativeScore) / (maxCumulativeScore - minCumulativeScore);
+            demandToCumulativeScore.put(demand, normalizedCumulativeScore);
+        }
+
         // Sort descending based on demandToCumulativeScore
         demands.sort((d1, d2) -> demandToCumulativeScore.get(d2).compareTo(demandToCumulativeScore.get(d1)));
 
