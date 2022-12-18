@@ -50,7 +50,7 @@ export default function WorldSummary() {
 	console.log('number of countries:', countriesData.length);
 	console.log('country data:', countriesData);
 
-	const blockStyle = 'grid grid-rows-2 grid-flow-col bg-[#ecfaff] rounded-lg p-3 border border-main-100 h-24';
+	const blockStyle = 'grid grid-rows-2 grid-flow-col bg-[#ecfaff] rounded-lg p-3 h-24 shadow-lg';
 
 	return (
 		<div className='grid grid-cols-3 gap-20 w-full'>
