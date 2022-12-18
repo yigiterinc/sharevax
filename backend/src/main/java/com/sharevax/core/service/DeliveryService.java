@@ -91,6 +91,14 @@ public class DeliveryService {
         return deliveryDtos;
     }
 
+    public List<Delivery> findActiveDeliveries() {
+        return deliveryRepository.findActiveDeliveries();
+    }
+
+    public void save(Delivery delivery) {
+        deliveryRepository.save(delivery);
+    }
+
     private boolean isRelated(Integer countryId, Delivery delivery) {
         return delivery.getSupply().getId() == countryId ||
             delivery.getDemand().getId() == countryId;

@@ -10,6 +10,7 @@ import com.sharevax.core.model.route.RoutePlan;
 import com.sharevax.core.repository.SupplyRepository;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -338,9 +339,12 @@ public class SimulationService {
 
     private boolean isDelayed(Date estimatedArrivalDate) {
 
-        long today = getCurrentDate().getTime();
-        long estimatedArrivalDateTime = estimatedArrivalDate.getTime();
-        int dayDiff = (int) ((today - estimatedArrivalDateTime) / (1000 * 60 * 60 * 24));
+        long todayMillisecond = getCurrentDate().getTime();
+        long estimatedArrivalMillisecond = estimatedArrivalDate.getTime();
+
+        long millisecondDiff = todayMillisecond - estimatedArrivalMillisecond;
+        int dayDiff = (int) TimeUnit.MILLISECONDS.toDays(millisecondDiff);
+
         if (dayDiff > 1) {
             return true;
         }
