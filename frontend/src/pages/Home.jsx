@@ -3,7 +3,7 @@ import OverviewMap from '../components/OverviewMap';
 import OverviewTable from '../components/OverviewTable';
 import CountryDropdown from '../components/CountryDropdown';
 import NextDayButton from '../components/NextDayButton';
-import WorldSummary from '../components/WorldSummary';
+import NextDaySnackbar from '../components/NextDaySnackbar';
 
 function Home() {
 	return (
@@ -12,10 +12,8 @@ function Home() {
 				<NextDayButton />
 				<CountryDropdown />
 			</div>
-			<div className='flex flex-row w-full'>
-				<OverviewMap />
-			</div>
-			<WorldSummary />
+			<NextDaySnackbar onNextDay={onNextDay} />
+			<OverviewMap onNextDay={onNextDay} setOnNextDay={setOnNextDay} />
 			<OverviewTable />
 		</div>
 	);

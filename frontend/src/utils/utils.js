@@ -11,14 +11,50 @@ export const legendItems = [
 ];
 
 export const getColor = (val) => {
-	let color = '';
 	for (let i = 1; i < scale.length; i++) {
 		if (val < scale[i]) {
-			color = colors[i - 1];
 			return colors[i - 1];
 		}
 	}
-	color = colors[colors.length - 1];
-	console.log(color);
 	return colors[colors.length - 1];
+};
+
+export const separateNumberWithCommas = (val) => {
+	// remove sign if negative
+	var sign = 1;
+	if (val < 0) {
+		sign = -1;
+		val = -val;
+	}
+	// trim the number decimal point if it exists
+	let num = val.toString().includes('.') ? val.toString().split('.')[0] : val.toString();
+	let len = num.toString().length;
+	let result = '';
+	let count = 1;
+
+	for (let i = len - 1; i >= 0; i--) {
+		result = num.toString()[i] + result;
+		if (count % 3 === 0 && count !== 0 && i !== 0) {
+			result = ',' + result;
+		}
+		count++;
+	}
+
+	// add number after decimal point
+	if (val.toString().includes('.')) {
+		result = result + '.' + val.toString().split('.')[1];
+	}
+	// return result with - sign if negative
+	return sign < 0 ? '-' + result : result;
+};
+
+export const swapLatLng = (coordinates) => {
+	coordinates[0] = coordinates.splice(1, 1, coordinates[0])[0];
+	return coordinates;
+};
+
+export const deliveryStatus = {
+	IN_TIME: {color: 'text-green-500', text: 'In time'},
+	DELAYED: {color: 'text-orange-500', text: 'Delayed'},
+	DELIVERED: {color: 'text-gray-500', text: 'Delivered'},
 };
