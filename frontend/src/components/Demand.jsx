@@ -1,5 +1,6 @@
 //Request button => request form
 import {useState} from 'react';
+import {useSnackbar} from 'notistack';
 import {CREATE_DEMAND} from '../services/endpoints';
 import {useGlobalState} from '../state/index';
 
@@ -55,6 +56,7 @@ function showVaccineType(index) {
 
 export default function Demand() {
 	const [country] = useGlobalState('country');
+	const {enqueueSnackbar} = useSnackbar();
 
 	const [formValues, setFormValues] = useState(defaultValues);
 	const handleInputChange = (e) => {
@@ -62,6 +64,24 @@ export default function Demand() {
 		setFormValues({
 			...formValues,
 			[name]: value,
+		});
+	};
+
+	const handleSubmitSuccess = () => {
+		enqueueSnackbar('Success! Demand Submitted!', {
+			variant: 'success',
+			autoHideDuration: 2500,
+			anchorOrigin: {vertical: 'top', horizontal: 'right'},
+			style: {marginTop: '60px'},
+		});
+	};
+
+	const handleSubmitError = () => {
+		enqueueSnackbar('Failed! Error submitting Demand!', {
+			variant: 'error',
+			autoHideDuration: 2500,
+			anchorOrigin: {vertical: 'top', horizontal: 'right'},
+			style: {marginTop: '60px'},
 		});
 	};
 
@@ -81,7 +101,7 @@ export default function Demand() {
 			.then((response) => response.json())
 			.then((response) => {
 				console.log('Success:', JSON.stringify(response));
-				alert('Success! Demand Submitted!');
+				handleSubmitSuccess();
 				document.getElementById('demandForm').reset();
 				document.getElementById('quantity').value = '';
 				document.getElementById('selectVaccineType').value = document.getElementById('disabledOption').value;
@@ -89,7 +109,7 @@ export default function Demand() {
 			})
 			.catch((error) => {
 				console.error('Error:', error);
-				alert('Failed! Error submitting Demand!\nDemand form clearing aborted!');
+				handleSubmitError();
 			});
 	};
 

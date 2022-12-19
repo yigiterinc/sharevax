@@ -1,5 +1,6 @@
 //Supply button => supply form
 import {useState} from 'react';
+import {useSnackbar} from 'notistack';
 import {CREATE_SUPPLY} from '../services/endpoints';
 import {useGlobalState} from '../state/index';
 
@@ -21,6 +22,7 @@ const countries = [
 	{name: 'South Africa', id: 8, value: 'South Africa'},
 	{name: 'Nigeria', id: 9, value: 'Nigeria'},
 ];
+
 function mapCountryId(country) {
 	for (let i = 0; i < countries.length; i++) {
 		if (countries[i].name == country) {
@@ -55,6 +57,7 @@ function showVaccineType(index) {
 
 export default function Supply() {
 	const [country] = useGlobalState('country');
+	const {enqueueSnackbar} = useSnackbar();
 
 	const [formValues, setFormValues] = useState(defaultValues);
 	const handleInputChange = (e) => {
@@ -62,6 +65,24 @@ export default function Supply() {
 		setFormValues({
 			...formValues,
 			[name]: value,
+		});
+	};
+
+	const handleSubmitSuccess = () => {
+		enqueueSnackbar('Success! Supply Submitted!', {
+			variant: 'success',
+			autoHideDuration: 2500,
+			anchorOrigin: {vertical: 'top', horizontal: 'right'},
+			style: {marginTop: '60px'},
+		});
+	};
+
+	const handleSubmitError = () => {
+		enqueueSnackbar('Failed! Error submitting Supply!', {
+			variant: 'error',
+			autoHideDuration: 2500,
+			anchorOrigin: {vertical: 'top', horizontal: 'right'},
+			style: {marginTop: '60px'},
 		});
 	};
 
@@ -82,7 +103,7 @@ export default function Supply() {
 			.then((response) => response.json())
 			.then((response) => {
 				console.log('Success:', JSON.stringify(response));
-				alert('Success! Supply Submitted!');
+				handleSubmitSuccess();
 				document.getElementById('supplyForm').reset();
 				document.getElementById('supplyQuantity').value = '';
 				document.getElementById('unitPrice').value = '';
@@ -90,7 +111,7 @@ export default function Supply() {
 			})
 			.catch((error) => {
 				console.error('Error:', error);
-				alert('Failed! Error submitting Supply!\nDemand form clearing aborted!');
+				handleSubmitError();
 			});
 	};
 
