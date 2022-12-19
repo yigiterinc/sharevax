@@ -1,4 +1,4 @@
-package com.sharevax.core.model.route;
+package com.sharevax.core.serializer;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
