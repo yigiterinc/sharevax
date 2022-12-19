@@ -4,9 +4,17 @@ import {TbVaccine} from 'react-icons/tb';
 import {fetchActiveDeliveries, fetchCountries} from '../services/services';
 import {useEffect, useState} from 'react';
 
-export default function WorldSummary() {
+export default function WorldSummary({onNextDay, setUpdated}) {
 	//fetch activeDeliveries number
 	const [activeDeliveriesData, setActiveDeliveriesData] = useState([]);
+
+	useEffect(() => {
+		if (onNextDay) {
+			setActiveDeliveriesData([]);
+			fetchActiveDeliveriesData();
+			setUpdated(true);
+		}
+	}, [onNextDay]);
 
 	useEffect(() => {
 		fetchActiveDeliveriesData();

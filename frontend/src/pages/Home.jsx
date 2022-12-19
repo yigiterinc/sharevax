@@ -11,14 +11,16 @@ function Home() {
 	const [onNextDay, setOnNextDay] = useState(false);
 	const [mapUpdated, setMapUpdated] = useState(false);
 	const [tableUpdated, setTableUpdated] = useState(false);
+	const [summaryUpdated, setSummaryUpdated] = useState(false);
 
 	useEffect(() => {
-		if (mapUpdated && tableUpdated) {
+		if (mapUpdated && tableUpdated && summaryUpdated) {
 			setOnNextDay(false);
 			setMapUpdated(false);
 			setTableUpdated(false);
+			setSummaryUpdated(false);
 		}
-	}, [mapUpdated, tableUpdated]);
+	}, [mapUpdated, tableUpdated, summaryUpdated]);
 
 	return (
 		<div className='flex flex-col items-center gap-12 m-6 grow'>
@@ -28,7 +30,7 @@ function Home() {
 			</div>
 			<NextDaySnackbar onNextDay={onNextDay} />
 			<OverviewMap onNextDay={onNextDay} setUpdated={setMapUpdated} />
-			<WorldSummary />
+			<WorldSummary onNextDay={onNextDay} setUpdated={setSummaryUpdated} />
 			<OverviewTable onNextDay={onNextDay} setUpdated={setTableUpdated} />
 		</div>
 	);
