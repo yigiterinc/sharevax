@@ -7,6 +7,7 @@ import com.sharevax.core.model.Supply;
 import com.sharevax.core.model.dto.DeliveryDto;
 import com.sharevax.core.repository.DeliveryRepository;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import org.locationtech.jts.geom.Coordinate;
@@ -37,7 +38,8 @@ public class DeliveryService {
 
 
         LineString futureRoute = routeService.getLineString(startHarbor, destinationHarbor);
-        LineString routeHistory = routeService.getLineString(startHarbor, startHarbor);
+        LineString routeHistory = routeService.getLineString(
+            new ArrayList<>(Arrays.asList(startHarbor.getCoordinate().getCoordinate())));
 
         // calculate the estimatedArrivalDate
         int duration = routeService.getDeliveryDays(startHarbor, destinationHarbor);
