@@ -22,7 +22,7 @@ public class SupplyService {
         this.countryService = countryService;
     }
 
-    public void createSupply(final CreateSupplyDto createSupplyDto) {
+    public Supply createSupply(final CreateSupplyDto createSupplyDto) {
         Supply supply = new Supply();
         supply.setCountry(countryService.getCountryById(createSupplyDto.getCountryId()));
         supply.setVaccineType(VaccineType.valueOf(createSupplyDto.getVaccineType()));
@@ -30,6 +30,7 @@ public class SupplyService {
         supply.setUnitPrice(createSupplyDto.getUnitPrice());
 
         supplyRepository.save(supply);
+        return supply;
     }
 
     public Supply createSupply(Integer countryId, String vaccineType, BigInteger quantity, double unitPrice) {

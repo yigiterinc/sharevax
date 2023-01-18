@@ -58,3 +58,12 @@ export const deliveryStatus = {
 	DELAYED: {color: 'text-orange-500', text: 'Delayed'},
 	DELIVERED: {color: 'text-gray-500', text: 'Delivered'},
 };
+
+export const millisecondsToDate = (milliseconds) => {
+	const date = new Date(milliseconds);
+	return date.toLocaleDateString('en-US', {
+		year: 'numeric',
+		month: 'short',
+		day: 'numeric',
+	});
+};
