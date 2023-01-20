@@ -1,11 +1,11 @@
-const CountryReportPopup = () => {
+const ReportPopup = ({name}) => {
 	const onClickReport = () => {
 		alert('Reported');
 	};
 
 	return (
 		<div className='flex flex-col items-center gap-5 mt-8 mb-2'>
-			<div className='font-semibold text-base'>Block Harbor</div>
+			<div className='font-semibold text-base'>Block {name}</div>
 			<div>
 				<div className='font-semibold mb-2'>Start day</div>
 				<input className='rounded border h-[40px] px-3 focus:outline-none' type='date' />
@@ -21,4 +21,4 @@ const CountryReportPopup = () => {
 	);
 };
 
-export default CountryReportPopup;
+export default ReportPopup;
