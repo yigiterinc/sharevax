@@ -8,14 +8,9 @@ import com.sharevax.core.model.Demand;
 import com.sharevax.core.model.Supply;
 import com.sharevax.core.model.route.RoutePlan;
 import com.sharevax.core.repository.SupplyRepository;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
-import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

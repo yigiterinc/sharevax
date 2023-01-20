@@ -55,7 +55,7 @@ public class BlockedStrait extends Event {
         // Unblock the strait and update delivery status and route as necessary
     }
 
-    enum StraitOption {
+    public enum StraitOption {
         MALACCA,
         GIBRALTAR,
         DOVER,

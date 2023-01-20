@@ -59,7 +59,7 @@ public class BlockedPassage extends Event {
         // Unblock the passage and update delivery status and route as necessary
     }
 
-    enum PassageOption {
+    public enum PassageOption {
         NORTHWEST,
         NORTHEAST,
     }

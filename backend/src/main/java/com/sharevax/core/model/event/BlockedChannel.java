@@ -53,7 +53,7 @@ public class BlockedChannel extends Event {
         // Unblock the channel and update channel status and route as necessary
     }
 
-    enum ChannelOption {
+    public enum ChannelOption {
         SUEZ,
         PANAMA,
         KIEL,

@@ -68,4 +68,8 @@ public class EventService {
     public List<Event> getAllEvents() {
         return eventRepository.findAll();
     }
+
+    public List<Event> getActiveEvents() {
+        return eventRepository.findAllByEventStatus(Event.EventStatus.ACTIVE);
+    }
 }
