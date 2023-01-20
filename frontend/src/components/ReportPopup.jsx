@@ -1,4 +1,19 @@
+import {useEffect, useState} from 'react';
+import {fetchSimulationDay} from '../services/services';
+import {millisecondsToYYYYMMDD} from '../utils/utils';
+
 const ReportPopup = ({name}) => {
+	const [currentDay, setCurrentDay] = useState();
+
+	useEffect(() => {
+		fetchCurrentDay();
+	}, []);
+
+	const fetchCurrentDay = async () => {
+		const result = await fetchSimulationDay();
+		setCurrentDay(millisecondsToYYYYMMDD(result.data));
+	};
+
 	const onClickReport = () => {
 		alert('Reported');
 	};
@@ -8,7 +23,7 @@ const ReportPopup = ({name}) => {
 			<div className='font-semibold text-base'>Block {name}</div>
 			<div>
 				<div className='font-semibold mb-2'>Start day</div>
-				<input className='rounded border h-[40px] px-3 focus:outline-none' type='date' />
+				<input className='rounded border h-[40px] px-3 focus:outline-none' type='date' defaultValue={currentDay} />
 			</div>
 			<button
 				type='button'

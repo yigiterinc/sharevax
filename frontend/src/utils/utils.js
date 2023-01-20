@@ -67,3 +67,13 @@ export const millisecondsToDate = (milliseconds) => {
 		day: 'numeric',
 	});
 };
+
+// convert milliseconds to YYYY-MM-DD
+export const millisecondsToYYYYMMDD = (milliseconds) => {
+	var date = new Date(milliseconds); // Date 2011-05-09T06:08:45.178Z
+	var year = date.getFullYear();
+	var month = ('0' + (date.getMonth() + 1)).slice(-2);
+	var day = ('0' + date.getDate()).slice(-2);
+
+	return `${year}-${month}-${day}`; // 2011-05-09
+};
