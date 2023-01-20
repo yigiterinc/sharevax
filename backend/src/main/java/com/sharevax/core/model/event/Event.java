@@ -51,7 +51,7 @@ public abstract class Event {
      */
     protected abstract void processEventEnd();
 
-    enum EventStatus {
+    public enum EventStatus {
         PENDING, // The event has not started yet
         ACTIVE, // The event is currently active, no ending message has arrived
         COMPLETED  // The event has ended, we have received ending event from user
@@ -61,7 +61,7 @@ public abstract class Event {
     @Enumerated(EnumType.STRING)
     protected EventStatus eventStatus = EventStatus.PENDING;
 
-    @Column(name = "start_time")
+    @Column(name = "remaining_time")
     protected int remainingDaysToStart;
 
     public void startEvent() {

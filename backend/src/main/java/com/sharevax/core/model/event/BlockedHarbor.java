@@ -18,37 +18,38 @@ public class BlockedHarbor extends Event {
 
     @OneToOne
     @JsonIgnore
-    private Harbor blockedHarbor;
+    private Harbor harbor;
 
     public BlockedHarbor() {
         super();
     }
 
-    public BlockedHarbor(Harbor blockedHarbor) {
-        super(blockedHarbor.getName(), 0);
-        this.blockedHarbor = blockedHarbor;
+    public BlockedHarbor(Harbor harbor) {
+        super(harbor.getName(), 0);
+        this.harbor = harbor;
     }
 
-    public BlockedHarbor(Harbor blockedHarbor, int startTime) {
-        super(blockedHarbor.getName(), startTime);
-        this.blockedHarbor = blockedHarbor;
+    public BlockedHarbor(Harbor harbor, int startTime) {
+        super(harbor.getName(), startTime);
+        this.harbor = harbor;
         this.remainingDaysToStart = startTime;
     }
 
     @Override
     protected String getDescriptiveMessage() {
-        return "Harbor " + blockedHarbor.getName() + " is blocked";
+        return "Harbor " + harbor.getName() + " is blocked";
     }
 
     @Override
     protected void processEventStart() {
-        // TODO Auto-generated method stub
-        // Actually block the harbor and update delivery
+        harbor.setStatus(Harbor.HarborStatus.CLOSED);
+        eventStatus = EventStatus.ACTIVE;
     }
 
     @Override
     protected void processEventEnd() {
-        // TODO Auto-generated method stub
+        harbor.setStatus(Harbor.HarborStatus.AVAILABLE);
+        eventStatus = EventStatus.COMPLETED;
         // Unblock the harbor and update delivery status and route as necessary
     }
 }

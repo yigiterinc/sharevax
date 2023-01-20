@@ -42,9 +42,8 @@ public class BlockedChannel extends Event {
 
     @Override
     protected void processEventStart() {
-        // TODO Auto-generated method stub
-        // Update event status to active
-        // Update channel if necessary
+        eventStatus = EventStatus.ACTIVE;
+        System.out.printf("Blocked channel event for channel %s is now active\n", subject);
     }
 
     @Override

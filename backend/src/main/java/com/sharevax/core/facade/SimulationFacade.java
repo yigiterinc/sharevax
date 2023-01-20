@@ -19,16 +19,18 @@ public class SimulationFacade {
     private final CountryService countryService;
     private final DeliveryService deliveryService;
     private final RouteService routeService;
+    private final EventService eventService;
 
     public SimulationFacade(SupplyService supplyService, DemandService demandService,
                             CountryService countryService, RouteService routeService,
-                            DeliveryService deliveryService) {
+                            DeliveryService deliveryService, EventService eventService) {
 
         this.supplyService = supplyService;
         this.demandService = demandService;
         this.countryService = countryService;
         this.routeService = routeService;
         this.deliveryService = deliveryService;
+        this.eventService = eventService;
     }
 
     public List<Supply> getAllSupplies() {
@@ -80,4 +82,9 @@ public class SimulationFacade {
     public List<Supply> getUnmatchedSupplies() {
         return supplyService.findUnmatchedSupplies();
     }
+
+    public void processEvents() {
+        eventService.processEvents();
+    }
+
 }

@@ -20,6 +20,7 @@ public class EventService {
 
     public EventService(EventRepository eventRepository,
                         HarborRepository harborRepository) {
+
         this.eventRepository = eventRepository;
         this.harborRepository = harborRepository;
     }
@@ -46,6 +47,22 @@ public class EventService {
         }
 
         return eventRepository.save(delayingEvent);
+    }
+
+    public void processEvents() {
+        List<Event> eventsToBeProcessed = eventRepository.findAllByEventStatus(Event.EventStatus.PENDING);
+
+        for (Event event : eventsToBeProcessed) {
+            event.setRemainingDaysToStart(event.getRemainingDaysToStart() - 1);
+            if (event.getRemainingDaysToStart() <= 0) {
+                event.startEvent();
+                if (event instanceof BlockedHarbor) {
+                    harborRepository.save(((BlockedHarbor) event).getHarbor());
+                }
+            }
+
+            eventRepository.save(event);
+        }
     }
 
     public List<Event> getAllEvents() {
