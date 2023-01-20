@@ -1,18 +1,23 @@
 package com.sharevax.core.model.event;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sharevax.core.model.Harbor;
-import org.springframework.cglib.core.Block;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 
 @Entity
+@Getter
+@Setter
 @DiscriminatorValue("BLOCKED_HARBOR")
-public class BlockedHarbor extends DelayingEvent {
+public class BlockedHarbor extends Event {
 
     @OneToOne
+    @JsonIgnore
     private Harbor blockedHarbor;
 
     public BlockedHarbor() {
@@ -20,15 +25,14 @@ public class BlockedHarbor extends DelayingEvent {
     }
 
     public BlockedHarbor(Harbor blockedHarbor) {
-        super(blockedHarbor.getName());
+        super(blockedHarbor.getName(), 0);
         this.blockedHarbor = blockedHarbor;
     }
 
-    public BlockedHarbor(Harbor blockedHarbor, int startTime, int endTime) {
-        super(blockedHarbor.getName());
+    public BlockedHarbor(Harbor blockedHarbor, int startTime) {
+        super(blockedHarbor.getName(), startTime);
         this.blockedHarbor = blockedHarbor;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.remainingDaysToStart = startTime;
     }
 
     @Override

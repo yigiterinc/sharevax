@@ -6,15 +6,33 @@ import lombok.Setter;
 
 import com.sharevax.core.util.CasingUtil;
 
+import javax.persistence.*;
+import java.util.Arrays;
+
 @Getter
 @Setter
 @NoArgsConstructor
-public class BlockedStrait extends DelayingEvent {
+@Entity
+@DiscriminatorValue("BLOCKED_STRAIT")
+public class BlockedStrait extends Event {
+
+    @Column(name = "strait_name")
+    @Enumerated(EnumType.STRING)
     private StraitOption straitOption;
 
-    public BlockedStrait(StraitOption straitOption) {
-        super(straitOption.name());
+    public BlockedStrait(StraitOption straitOption, int startTime) {
+        super(straitOption.name(), startTime);
         this.straitOption = straitOption;
+    }
+
+    public BlockedStrait(String straitOption, int startTime) {
+        super(straitOption, startTime);
+        String[] straitOptions = Arrays.stream(BlockedStrait.StraitOption.values()).map(Enum::name).toArray(String[]::new);
+        if (Arrays.stream(straitOptions).noneMatch(straitOption::equals)) {
+            throw new IllegalArgumentException("Invalid passage option");
+        }
+
+        this.straitOption = StraitOption.valueOf(subject);
     }
 
     @Override

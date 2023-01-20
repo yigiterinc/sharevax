@@ -1,8 +1,20 @@
 package com.sharevax.core.model.event;
 
 import com.sharevax.core.util.CasingUtil;
+import lombok.Getter;
+import lombok.Setter;
 
-public class BlockedPassage extends DelayingEvent {
+import javax.persistence.*;
+import java.util.Arrays;
+
+@Entity
+@Getter
+@Setter
+@DiscriminatorValue("BLOCKED_PASSAGE")
+public class BlockedPassage extends Event {
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "passage_name")
     private PassageOption passage;
 
     public BlockedPassage() {
@@ -10,15 +22,23 @@ public class BlockedPassage extends DelayingEvent {
     }
 
     public BlockedPassage(PassageOption passage) {
-        super(passage.name());
+        super(passage.name(), 0);
         this.passage = passage;
     }
 
-    public BlockedPassage(PassageOption passage, int startTime, int endTime) {
-        super();
+    public BlockedPassage(PassageOption passage, int startTime) {
+        super(passage.name(), startTime);
         this.passage = passage;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.remainingDaysToStart = startTime;
+    }
+
+    public BlockedPassage(String passageOption, int remainingDaysToStart) {
+        super(passageOption, remainingDaysToStart);
+        String[] channelOptions = Arrays.stream(BlockedPassage.PassageOption.values()).map(Enum::name).toArray(String[]::new);
+        if (Arrays.stream(channelOptions).noneMatch(passageOption::equals)) {
+            throw new IllegalArgumentException("Invalid passage option");
+        }
+        this.passage = PassageOption.valueOf(subject);
     }
 
     @Override
