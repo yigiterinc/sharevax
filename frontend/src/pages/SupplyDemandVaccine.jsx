@@ -1,8 +1,10 @@
 import {useState, createElement} from 'react';
 import {FaParachuteBox} from 'react-icons/fa';
 import {TbVaccine} from 'react-icons/tb';
+import {BsCheckCircleFill} from 'react-icons/bs';
 import Demand from '../components/Demand';
 import Supply from '../components/Supply';
+import Approval from '../components/Approval';
 import CountryDropdown from '../components/CountryDropdown';
 
 function SupplyDemandVaccine() {
@@ -55,6 +57,26 @@ function SupplyDemandVaccine() {
 								</div>
 							</a>
 						</li>
+						<li className='-mb-px mr-2 last:mr-0 flex-auto text-center focus:outline-none focus:shadow-outline hover:ease-in hover:scale-105 transition duration-150 ease-out'>
+							<a
+								className={
+									'text-xs font-bold uppercase px-5 py-3 shadow-lg rounded block leading-normal ' +
+									(openTab === 3 ? 'text-white bg-main-100' : 'text-main-100 bg-white')
+								}
+								onClick={(e) => {
+									e.preventDefault();
+									setOpenTab(3);
+								}}
+								data-toggle='tab'
+								href='#link3'
+								role='tablist'
+							>
+								<div className='flex justify-center items-center gap-3 '>
+									<div>{createElement(BsCheckCircleFill, {size: '20'})}</div>
+									<h2>Approval</h2>
+								</div>
+							</a>
+						</li>
 					</ul>
 					<div className='relative flex flex-col min-w-0 bg-white w-full mb-6 shadow-lg rounded'>
 						<div className='px-4 py-5'>
@@ -64,6 +86,9 @@ function SupplyDemandVaccine() {
 								</div>
 								<div className={openTab === 2 ? 'block' : 'hidden'} id='link2'>
 									<Demand />
+								</div>
+								<div className={openTab === 3 ? 'block' : 'hidden'} id='link3'>
+									<Approval />
 								</div>
 							</div>
 						</div>
