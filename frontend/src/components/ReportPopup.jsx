@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import {fetchSimulationDay} from '../services/services';
 import {millisecondsToYYYYMMDD} from '../utils/utils';
 
-const ReportPopup = ({name}) => {
+const ReportPopup = ({name, type}) => {
 	const [currentDay, setCurrentDay] = useState();
 
 	useEffect(() => {
@@ -15,12 +15,14 @@ const ReportPopup = ({name}) => {
 	};
 
 	const onClickReport = () => {
-		alert('Reported');
+		console.log('Reported');
 	};
 
 	return (
 		<div className='flex flex-col items-center gap-5 mt-8 mb-2'>
-			<div className='font-semibold text-base'>Block {name}</div>
+			<div className='font-semibold text-base'>
+				{name} {type}
+			</div>
 			<div>
 				<div className='font-semibold mb-2'>Start day</div>
 				<input className='rounded border h-[40px] px-3 focus:outline-none' type='date' defaultValue={currentDay} />

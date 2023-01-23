@@ -11,6 +11,15 @@ import '../styles/Map.css';
 import {useGlobalState} from '../state';
 import straits from '../data/straits.json';
 import channels from '../data/channels.json';
+// import UnblockPopup from './UnblockPopup';
+// import blocked from '../assets/blocked.png';
+
+// const blockedIcon = (iconSize) => {
+// 	return L.icon({
+// 		iconUrl: blocked,
+// 		iconSize: [iconSize, iconSize],
+// 	});
+// };
 
 const greenIcon = () => {
 	return L.icon({
@@ -111,7 +120,8 @@ const ReportMap = () => {
 						return (
 							<Marker key={strait.name} position={strait.coordinate} icon={greenIcon()}>
 								<Popup>
-									<ReportPopup name={strait.name} />
+									<ReportPopup name={strait.name} type='Strait' />
+									{/* <UnblockPopup name={strait.name} type='Strait' /> */}
 								</Popup>
 							</Marker>
 						);
@@ -121,7 +131,8 @@ const ReportMap = () => {
 						return (
 							<Marker key={channel.name} position={channel.coordinate} icon={orangeIcon()}>
 								<Popup>
-									<ReportPopup name={channel.name} />
+									<ReportPopup name={channel.name} type='Channel' />
+									{/* <UnblockPopup name={channel.name} type='Channel' /> */}
 								</Popup>
 							</Marker>
 						);
@@ -132,7 +143,8 @@ const ReportMap = () => {
 							return (
 								<Marker key={harbor.name} position={[harbor.coordinate[1], harbor.coordinate[0]]} icon={blueIcon()}>
 									<Popup>
-										<ReportPopup name={harbor.name} />
+										<ReportPopup name={harbor.name} type='Harbor' />
+										{/* <UnblockPopup name={harbor.name} type='Harbor' /> */}
 									</Popup>
 								</Marker>
 							);
