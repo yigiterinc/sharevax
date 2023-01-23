@@ -1,5 +1,13 @@
 import axios from 'axios';
-import {COUNTRIES, SUPPLIES, HARBORS, ACTIVE_DELIVERIES, PROGRESS_SIMULATION, SIMULATION_DAY} from './endpoints';
+import {
+	COUNTRIES,
+	SUPPLIES,
+	HARBORS,
+	ACTIVE_DELIVERIES,
+	PROGRESS_SIMULATION,
+	SIMULATION_DAY,
+	CREATE_EVENT,
+} from './endpoints';
 
 export const fetchCountries = async function () {
 	return await axios.get(COUNTRIES);
@@ -24,4 +32,8 @@ export const progressSimulation = async function () {
 
 export const fetchSimulationDay = async function () {
 	return await axios.get(SIMULATION_DAY);
+};
+
+export const createEvent = async function (type, subject, remainingDaysToStart) {
+	return await axios.post(CREATE_EVENT, {type, subject, remainingDaysToStart});
 };
