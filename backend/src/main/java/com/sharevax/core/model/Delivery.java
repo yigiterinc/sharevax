@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.math.BigInteger;
 import lombok.*;
 import org.locationtech.jts.geom.LineString;
 
@@ -58,6 +59,9 @@ public class Delivery {
 
     @Column(name = "future_route")
     private LineString futureRoute;
+
+    @Column(name = "quantity")
+    private BigInteger quantity;
 
     @OneToOne
     private Supply supply;

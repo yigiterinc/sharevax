@@ -43,7 +43,7 @@ public class DeliveryDto {
                 .destinationHarbor(HarborSummaryDto.from(delivery.getDestinationHarbor()))
                 .deliveryStatus(delivery.getDeliveryStatus().toString())
                 .createdAt(delivery.getCreatedAt())
-                .quantity(delivery.getSupply().getQuantity())
+                .quantity(delivery.getQuantity())
                 .urgency(delivery.getDemand().getUrgency().toString())
                 .vaccineType(delivery.getSupply().getVaccineType().toString())
                 .estimatedArrivalDate(delivery.getEstimatedArrivalDate())

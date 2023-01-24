@@ -1,6 +1,7 @@
 package com.sharevax.core.service;
 
 import com.sharevax.core.model.Country;
+import com.sharevax.core.model.Demand;
 import com.sharevax.core.model.Supply;
 import com.sharevax.core.model.VaccineType;
 import com.sharevax.core.model.dto.CreateSupplyDto;
@@ -53,5 +54,16 @@ public class SupplyService {
 
     public List<Supply> findUnmatchedSupplies() {
         return supplyRepository.findUnmatchedSupplies();
+    }
+
+    public void decreaseQuantity(Integer supplyId, BigInteger quantity) {
+        Supply supply = getSupplyById(supplyId);
+        supply.setQuantity(supply.getQuantity().subtract(quantity));
+        if(supply.getQuantity().compareTo(BigInteger.valueOf(0)) == 1){   // greater than 0
+            supplyRepository.save(supply);
+        }
+        else{
+            //supplyRepository.deleteById(supplyId);
+        }
     }
 }

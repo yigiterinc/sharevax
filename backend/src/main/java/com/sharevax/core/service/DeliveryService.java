@@ -6,6 +6,7 @@ import com.sharevax.core.model.Harbor;
 import com.sharevax.core.model.Supply;
 import com.sharevax.core.model.dto.DeliveryDto;
 import com.sharevax.core.repository.DeliveryRepository;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -33,8 +34,7 @@ public class DeliveryService {
     }
 
     public Delivery createDelivery(Harbor startHarbor, Harbor destinationHarbor,
-                                   Supply supply, Demand demand, Date createdAt) {
-
+                                   Supply supply, Demand demand, Date createdAt, BigInteger quantity) {
 
         LineString futureRoute = routeService.getLineString(startHarbor, destinationHarbor);
         LineString routeHistory = routeService.getLineString(startHarbor, startHarbor);
@@ -57,6 +57,7 @@ public class DeliveryService {
                 .futureRoute(futureRoute)
                 .remainingDaysToNextHarbor(remainingDaysToNextHarbor)
                 .updatedAt(createdAt)
+                .quantity(quantity)
                 .build();
 
         return deliveryRepository.save(delivery);

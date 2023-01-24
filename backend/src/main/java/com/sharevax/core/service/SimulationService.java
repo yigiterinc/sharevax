@@ -109,17 +109,10 @@ public class SimulationService {
 
         for (var demand : matchedBestPairs.keySet()) {
             var supply = matchedBestPairs.get(demand);
-            if (supply != null) {
+            boolean isSameCountry = supply.getCountry().getId()==demand.getCountry().getId();
+            if (supply != null && !isSameCountry) {
                 System.out.println("Matched " + demand + " with " + supply);
-                // Create the Delivery
-                Delivery delivery = simulationFacade.createDelivery(
-                        supply.getCountry().getHarbors().get(0), // TODO use closest harbor
-                        demand.getCountry().getHarbors().get(0), // TODO use closest harbor
-                        supply,
-                        demand,
-                        getCurrentDate()
-                );
-                System.out.println("Created delivery: " + delivery);
+                simulationFacade.createSuggestion(supply, demand);
             }
         }
     }
