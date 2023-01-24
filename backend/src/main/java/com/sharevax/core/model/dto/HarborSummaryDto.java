@@ -2,7 +2,7 @@ package com.sharevax.core.model.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.sharevax.core.model.Harbor;
-import com.sharevax.core.model.route.PointSerializer;
+import com.sharevax.core.serializer.PointSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -6,6 +6,8 @@ import com.sharevax.core.model.Harbor;
 import com.sharevax.core.model.Supply;
 import com.sharevax.core.model.dto.DeliveryDto;
 import com.sharevax.core.repository.DeliveryRepository;
+
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -47,12 +49,15 @@ public class DeliveryService {
 
         int remainingDaysToNextHarbor = routeService.getDaysToNextStop(routeHistory, futureRoute);
 
+        BigInteger transferQuantity = supply.getQuantity().min(demand.getQuantity());
+
         Delivery delivery = Delivery.builder()
                 .startHarbor(startHarbor)
                 .destinationHarbor(destinationHarbor)
                 .estimatedArrivalDate(estimatedArrivalDate)
                 .supply(supply)
                 .createdAt(createdAt)
+                .quantity(transferQuantity)
                 .deliveryStatus(Delivery.DeliveryStatus.IN_TIME)
                 .demand(demand)
                 .routeHistory(routeHistory)
@@ -113,4 +118,7 @@ public class DeliveryService {
         return calendar.getTime();
     }
 
+    public void deleteAll() {
+        deliveryRepository.deleteAll();
+    }
 }

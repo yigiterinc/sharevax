@@ -54,4 +54,8 @@ public class DemandService {
     public List<Demand> findUnmatchedDemands() {
         return demandRepository.findUnmatchedDemands();
     }
+
+    public void deleteAll() {
+        demandRepository.deleteAll();
+    }
 }

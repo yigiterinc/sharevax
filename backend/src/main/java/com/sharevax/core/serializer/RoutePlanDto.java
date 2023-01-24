@@ -1,4 +1,4 @@
-package com.sharevax.core.model.route;
+package com.sharevax.core.serializer;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,13 +8,13 @@ import org.locationtech.jts.geom.LineString;
 @Getter
 @Setter
 @NoArgsConstructor
-public class RoutePlan {
+public class RoutePlanDto {
 
 	private LineString routeHistory;
 	private LineString futureRoute;
 	private int duration;
 
-	public RoutePlan(LineString routeHistory, LineString futureRoute, int duration) {
+	public RoutePlanDto(LineString routeHistory, LineString futureRoute, int duration) {
 		this.routeHistory = routeHistory;
 		this.futureRoute = futureRoute;
 		this.duration = duration;
