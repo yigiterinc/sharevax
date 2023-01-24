@@ -1,6 +1,7 @@
 package com.sharevax.core.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,14 +15,16 @@ public class CreateSupplyDto {
     Integer countryId;
     String vaccineType;
     BigInteger quantity;
+    Date expirationDate;
 
     // this is optional in json
     double unitPrice;
 
-    public CreateSupplyDto(Integer countryId, String vaccineType, BigInteger quantity, double unitPrice) {
+    public CreateSupplyDto(Integer countryId, String vaccineType, BigInteger quantity, Date expirationDate, double unitPrice) {
         this.countryId = countryId;
         this.vaccineType = vaccineType;
         this.quantity = quantity;
+        this.expirationDate = expirationDate;
         this.unitPrice = unitPrice;
     }
 

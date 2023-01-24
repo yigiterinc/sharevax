@@ -28,19 +28,8 @@ public class SupplyService {
         supply.setVaccineType(VaccineType.valueOf(createSupplyDto.getVaccineType()));
         supply.setQuantity(createSupplyDto.getQuantity());
         supply.setUnitPrice(createSupplyDto.getUnitPrice());
-
+        supply.setExpirationDate(createSupplyDto.getExpirationDate());
         supplyRepository.save(supply);
-    }
-
-    public Supply createSupply(Integer countryId, String vaccineType, BigInteger quantity, double unitPrice) {
-        Supply supply = Supply.builder()
-                .country(countryService.getCountryById(countryId))
-                .vaccineType(VaccineType.valueOf(vaccineType))
-                .quantity(quantity)
-                .unitPrice(unitPrice)
-                .build();
-
-        return supplyRepository.save(supply);
     }
 
     public List<Supply> getAllSupplies() {
