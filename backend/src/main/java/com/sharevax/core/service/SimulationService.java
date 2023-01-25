@@ -109,10 +109,12 @@ public class SimulationService {
 
         for (var demand : matchedBestPairs.keySet()) {
             var supply = matchedBestPairs.get(demand);
-            boolean isSameCountry = supply.getCountry().getId()==demand.getCountry().getId();
-            if (supply != null && !isSameCountry) {
-                System.out.println("Matched " + demand + " with " + supply);
-                simulationFacade.createSuggestion(supply, demand);
+            if (supply != null) {
+                boolean isSameCountry = supply.getCountry().getId() == demand.getCountry().getId();
+                if (!isSameCountry) {
+                    System.out.println("Matched " + demand + " with " + supply);
+                    simulationFacade.createSuggestion(supply, demand);
+                }
             }
         }
     }
