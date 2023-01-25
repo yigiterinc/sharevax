@@ -2,124 +2,128 @@ import {useEffect, useState} from 'react';
 import fetchSuggestions from '../services/services';
 import {useGlobalState} from '../state/index';
 
-// const data = [
-// 	{id: 'supplier', label: 'USA', amount: 4000, expirationDate: '22.4.2023'},
-// 	{id: 'supplier', label: 'China', amount: 3000, expirationDate: '23.7.2023'},
-// 	{id: 'supplier', label: 'Germany', amount: 6000, expirationDate: '1.5.2023'},
+// const defaultValues = {
+// 	countryId: 0,
+// 	suggestionId: 0,
+// 	status: '',
+// };
+
+//mock suggestion data for pre-testing
+// const suggestions = [
+// 	{
+// 		id: 360,
+// 		supplierStatus: 'PENDING',
+// 		demanderStatus: 'PENDING',
+// 		supply: {
+// 			id: 32,
+// 			country: {
+// 				id: 2,
+// 				name: 'Japan',
+// 				population: 12500000,
+// 				vaccinationRate: 2.0724800000000023,
+// 				dailyVaccineConsumption: 367000,
+// 				vaccineStock: 371219000,
+// 				dailyVaccineProduction: 9000000,
+// 			},
+// 			vaccineType: 'PFIZER',
+// 			quantity: 1000,
+// 			expirationDate: 1675585945000,
+// 			unitPrice: 0,
+// 		},
+// 		demand: {
+// 			id: 24,
+// 			country: {
+// 				id: 1,
+// 				name: 'China',
+// 				population: 7680000,
+// 				vaccinationRate: 1.459895833333331,
+// 				dailyVaccineConsumption: 100000,
+// 				vaccineStock: 95328241120,
+// 				dailyVaccineProduction: 2217035840,
+// 			},
+// 			vaccineType: 'BIONTECH',
+// 			quantity: 100,
+// 			urgency: 'URGENT',
+// 		},
+// 		quantity: 100,
+// 	},
+// 	{
+// 		id: 356,
+// 		supplierStatus: 'PENDING',
+// 		demanderStatus: 'PENDING',
+// 		supply: {
+// 			id: 32,
+// 			country: {
+// 				id: 2,
+// 				name: 'Japan',
+// 				population: 12500000,
+// 				vaccinationRate: 2.0724800000000023,
+// 				dailyVaccineConsumption: 367000,
+// 				vaccineStock: 371219000,
+// 				dailyVaccineProduction: 9000000,
+// 			},
+// 			vaccineType: 'PFIZER',
+// 			quantity: 1000,
+// 			expirationDate: 1674584945000,
+// 			unitPrice: 0,
+// 		},
+// 		demand: {
+// 			id: 25,
+// 			country: {
+// 				id: 1,
+// 				name: 'China',
+// 				population: 7680000,
+// 				vaccinationRate: 1.459895833333331,
+// 				dailyVaccineConsumption: 100000,
+// 				vaccineStock: 95328241120,
+// 				dailyVaccineProduction: 2217035840,
+// 			},
+// 			vaccineType: 'BIONTECH',
+// 			quantity: 100,
+// 			urgency: 'URGENT',
+// 		},
+// 		quantity: 100,
+// 	},
+// 	{
+// 		id: 352,
+// 		supplierStatus: 'PENDING',
+// 		demanderStatus: 'PENDING',
+// 		supply: {
+// 			id: 32,
+// 			country: {
+// 				id: 5,
+// 				name: 'Japan',
+// 				population: 12500000,
+// 				vaccinationRate: 2.0724800000000023,
+// 				dailyVaccineConsumption: 367000,
+// 				vaccineStock: 371219000,
+// 				dailyVaccineProduction: 9000000,
+// 			},
+// 			vaccineType: 'PFIZER',
+// 			quantity: 1000,
+// 			expirationDate: 1774584945000,
+// 			unitPrice: 0,
+// 		},
+// 		demand: {
+// 			id: 163,
+// 			country: {
+// 				id: 4,
+// 				name: 'China',
+// 				population: 7680000,
+// 				vaccinationRate: 1.459895833333331,
+// 				dailyVaccineConsumption: 100000,
+// 				vaccineStock: 95328241120,
+// 				dailyVaccineProduction: 2217035840,
+// 			},
+// 			vaccineType: 'PFIZER',
+// 			quantity: 10,
+// 			urgency: 'NORMAL',
+// 		},
+// 		quantity: 10,
+// 	},
 // ];
-const suggestions = [
-	{
-		id: 360,
-		supplierStatus: 'PENDING',
-		demanderStatus: 'PENDING',
-		supply: {
-			id: 32,
-			country: {
-				id: 2,
-				name: 'Japan',
-				population: 12500000,
-				vaccinationRate: 2.0724800000000023,
-				dailyVaccineConsumption: 367000,
-				vaccineStock: 371219000,
-				dailyVaccineProduction: 9000000,
-			},
-			vaccineType: 'PFIZER',
-			quantity: 1000,
-			expirationDate: 1674584945000,
-			unitPrice: 0,
-		},
-		demand: {
-			id: 24,
-			country: {
-				id: 1,
-				name: 'China',
-				population: 7680000,
-				vaccinationRate: 1.459895833333331,
-				dailyVaccineConsumption: 100000,
-				vaccineStock: 95328241120,
-				dailyVaccineProduction: 2217035840,
-			},
-			vaccineType: 'BIONTECH',
-			quantity: 100,
-			urgency: 'URGENT',
-		},
-		quantity: 100,
-	},
-	{
-		id: 356,
-		supplierStatus: 'PENDING',
-		demanderStatus: 'PENDING',
-		supply: {
-			id: 32,
-			country: {
-				id: 2,
-				name: 'Japan',
-				population: 12500000,
-				vaccinationRate: 2.0724800000000023,
-				dailyVaccineConsumption: 367000,
-				vaccineStock: 371219000,
-				dailyVaccineProduction: 9000000,
-			},
-			vaccineType: 'PFIZER',
-			quantity: 1000,
-			expirationDate: 1674584945000,
-			unitPrice: 0,
-		},
-		demand: {
-			id: 25,
-			country: {
-				id: 1,
-				name: 'China',
-				population: 7680000,
-				vaccinationRate: 1.459895833333331,
-				dailyVaccineConsumption: 100000,
-				vaccineStock: 95328241120,
-				dailyVaccineProduction: 2217035840,
-			},
-			vaccineType: 'BIONTECH',
-			quantity: 100,
-			urgency: 'URGENT',
-		},
-		quantity: 100,
-	},
-	{
-		id: 352,
-		supplierStatus: 'PENDING',
-		demanderStatus: 'PENDING',
-		supply: {
-			id: 32,
-			country: {
-				id: 2,
-				name: 'Japan',
-				population: 12500000,
-				vaccinationRate: 2.0724800000000023,
-				dailyVaccineConsumption: 367000,
-				vaccineStock: 371219000,
-				dailyVaccineProduction: 9000000,
-			},
-			vaccineType: 'PFIZER',
-			quantity: 1000,
-			expirationDate: 1674584945000,
-			unitPrice: 0,
-		},
-		demand: {
-			id: 163,
-			country: {
-				id: 1,
-				name: 'China',
-				population: 7680000,
-				vaccinationRate: 1.459895833333331,
-				dailyVaccineConsumption: 100000,
-				vaccineStock: 95328241120,
-				dailyVaccineProduction: 2217035840,
-			},
-			vaccineType: 'PFIZER',
-			quantity: 10,
-			urgency: 'NORMAL',
-		},
-		quantity: 10,
-	},
-];
+// const suggestions = [];
+
 export default function Suggestion({onNextDay, setUpdated}) {
 	const [country] = useGlobalState('country');
 	const [id] = useGlobalState('id');
@@ -146,40 +150,32 @@ export default function Suggestion({onNextDay, setUpdated}) {
 	console.log('Country selected:', country, '\nCountry ID:', id);
 	console.log('\nSuggestion data got:\n', suggestionData);
 
-	function numberOfSuggestions(data) {
-		let l = data.length;
-		return l > 0 ? (
-			<div className='grid justify-items-center items-center'>You have {l} suggestions:</div>
-		) : (
-			<div className='grid justify-items-center items-center'>You have no suggestion.</div>
-		);
-	}
-
+	//formate expiration date
 	function formatDate(d) {
 		let date = new Date(d);
 		return date.toLocaleDateString('en-US');
 	}
 
-	function supplyOrDemand(data) {
+	//determine role(supplier or demander) by matching global id with id in incoming data
+	function supplyOrDemand(data, i) {
 		let role = '';
-		let supplyIndex = 0;
-
 		for (let i = 0; i < data.length; i++) {
 			if (data[i].supply.country.id == id) {
-				role = 'demander';
-			} else if (data[i].demand.country.id == id) {
 				role = 'supplier';
-				supplyIndex = i;
 			}
 		}
-
-		if (role == 'supplier') {
+		role = role == 'supplier' ? 'supplier' : 'demander';
+		// console.log('role in supplyOrDemand:', role);
+		if (role == 'demander') {
+			// let i = 0;
 			return (
-				<div className='grid grid-rows-flex'>
-					<div>
-						<b>Expiration Date:</b>
+				<div>
+					<div className='grid grid-rows-1'>
+						<div>
+							<b>Expiration Date:</b>
+						</div>
+						<div>{formatDate(data[i].supply.expirationDate)}</div>
 					</div>
-					<div>{formatDate(data[supplyIndex].supply.expirationDate)}</div>
 				</div>
 			);
 		} else {
@@ -187,9 +183,44 @@ export default function Suggestion({onNextDay, setUpdated}) {
 		}
 	}
 
+	//display suggestion number msg
+	let caseIndex = []; //store all index of supply/demand
+	function showNotification(data) {
+		let role = '';
+		for (let i = 0; i < data.length; i++) {
+			if (data[i].supply.country.id == id) {
+				role = 'supplier';
+			}
+		}
+		role = role == 'supplier' ? 'supplier' : 'demander';
+
+		if (role == 'demander') {
+			for (let i = 0; i < data.length; i++) {
+				if (data[i].demand.country.id == id) {
+					caseIndex.push(i);
+				}
+			}
+		} else if (role == 'supplier') {
+			for (let i = 0; i < data.length; i++) {
+				if (data[i].supply.country.id == id) {
+					caseIndex.push(i);
+				}
+			}
+		}
+		let caseNotEmpty = (
+			<div>
+				<div className='grid justify-items-center items-center'>You have {caseIndex.length} suggestions:</div>
+			</div>
+		);
+		let caseEmpty = <div className='grid justify-items-center items-center'>You have no suggestion.</div>;
+		// console.log('Role:', role, '\nCaseLength:', caseLength);
+		return caseIndex.length == 0 ? caseEmpty : caseNotEmpty;
+	}
+
+	//Styling Suggestion piece
 	function suggestionPiece(data, i) {
 		let role = '';
-		let roleName, sExpirationDate, supplyIndex;
+		let roleName;
 
 		for (let i = 0; i < data.length; i++) {
 			if (data[i].supply.country.id == id) {
@@ -200,7 +231,6 @@ export default function Suggestion({onNextDay, setUpdated}) {
 				roleName = <div>{data[i].supply.country.name}</div>;
 			}
 		}
-		console.log(sExpirationDate, supplyIndex);
 		let suggestion = (
 			<div className='grid grid-cols-2 border-2 border-main-100 rounded-xl p-5 m-5'>
 				<div className='grid grid-rows-flex grid-cols-1'>
@@ -210,7 +240,7 @@ export default function Suggestion({onNextDay, setUpdated}) {
 					<div>
 						<b>Amount: </b> {data[i].quantity}
 					</div>
-					<div>{supplyOrDemand(data)}</div>
+					<div>{supplyOrDemand(data, i)}</div>
 				</div>
 				<div className='grid float-right'>
 					<div className='grid justify-items-center items-center mb-1'>
@@ -237,31 +267,25 @@ export default function Suggestion({onNextDay, setUpdated}) {
 		return suggestion;
 	}
 
+	//show all suggestion pieces, ps. the map function below does not work, need a fix to use map
 	function showSuggestion(data) {
-		if (data.length == 1) {
-			return <div>{suggestionPiece(data, 0)}</div>;
-		} else if (data.length == 2) {
-			return (
-				<div>
-					<div>{suggestionPiece(data, 0)}</div>
-					<div>{suggestionPiece(data, 1)}</div>
-				</div>
-			);
-		} else if (data.length == 3) {
-			return (
-				<div>
-					<div>{suggestionPiece(data, 0)}</div>
-					<div>{suggestionPiece(data, 1)}</div>
-					<div>{suggestionPiece(data, 2)}</div>
-				</div>
-			);
-		}
+		return (
+			<>
+				{(() => {
+					const arr = [];
+					for (let i = 0; i < caseIndex.length; i++) {
+						arr.push(<div>{suggestionPiece(data, caseIndex[i])}</div>);
+					}
+					return arr;
+				})()}
+			</>
+		);
 	}
 
 	return (
 		<div>
-			<div>{numberOfSuggestions(suggestions)}</div>
-			<div>{showSuggestion(suggestions)}</div>
+			<div>{showNotification(suggestionData)}</div>
+			<div>{showSuggestion(suggestionData)}</div>
 		</div>
 	);
 }
