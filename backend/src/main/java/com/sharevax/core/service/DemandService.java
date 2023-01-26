@@ -56,6 +56,10 @@ public class DemandService {
         return demandRepository.findUnmatchedDemands();
     }
 
+    public void deleteAll() {
+        demandRepository.deleteAll();
+    }
+
     public void decreaseQuantity(Integer demandId, BigInteger quantity) {
         Demand demand = getDemandById(demandId);
         demand.setQuantity(demand.getQuantity().subtract(quantity));

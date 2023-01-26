@@ -1,4 +1,5 @@
 import {setGlobalState, useGlobalState} from '../state';
+import {useNavigate} from 'react-router-dom';
 
 const countries = [
 	{name: 'China', value: 'China', flag: '🇨🇳'},
@@ -14,9 +15,18 @@ const countries = [
 
 function CountryDropdown() {
 	const [country] = useGlobalState('country');
+	const navigate = useNavigate();
+
 	const handleCountryChange = (e) => {
-		setGlobalState('country', e.target.value);
-		setGlobalState('flag', countries.find((c) => c.value === e.target.value).flag);
+		if (e.target.value === '') {
+			setGlobalState('country', '');
+			setGlobalState('flag', '');
+			navigate('/');
+			return;
+		} else {
+			setGlobalState('country', e.target.value);
+			setGlobalState('flag', countries.find((c) => c.value === e.target.value).flag);
+		}
 	};
 
 	return (

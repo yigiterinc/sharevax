@@ -23,7 +23,7 @@ public class SupplyService {
         this.countryService = countryService;
     }
 
-    public void createSupply(final CreateSupplyDto createSupplyDto) {
+    public Supply createSupply(final CreateSupplyDto createSupplyDto) {
         Supply supply = new Supply();
         supply.setCountry(countryService.getCountryById(createSupplyDto.getCountryId()));
         supply.setVaccineType(VaccineType.valueOf(createSupplyDto.getVaccineType()));
@@ -31,6 +31,7 @@ public class SupplyService {
         supply.setUnitPrice(createSupplyDto.getUnitPrice());
         supply.setExpirationDate(createSupplyDto.getExpirationDate());
         supplyRepository.save(supply);
+        return supply;
     }
 
     public List<Supply> getAllSupplies() {
@@ -54,6 +55,10 @@ public class SupplyService {
 
     public List<Supply> findUnmatchedSupplies() {
         return supplyRepository.findUnmatchedSupplies();
+    }
+
+    public void deleteAll() {
+        supplyRepository.deleteAll();
     }
 
     public void decreaseQuantity(Integer supplyId, BigInteger quantity) {

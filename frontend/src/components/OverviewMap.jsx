@@ -20,7 +20,7 @@ const getIcon = (iconSize) => {
 	});
 };
 
-const OverviewMap = ({onNextDay, setOnNextDay}) => {
+const OverviewMap = ({onNextDay, setUpdated}) => {
 	const [countriesData, setCountriesData] = useState([]);
 	const [activeDeliveriesData, setActiveDeliveriesData] = useState([]);
 	const [countriesLoading, setCountriesLoading] = useState(true);
@@ -72,7 +72,7 @@ const OverviewMap = ({onNextDay, setOnNextDay}) => {
 			setFutureRouteCoordinates([]);
 			setActiveDeliveriesLoading(true);
 			fetchActiveDeliveriesData();
-			setOnNextDay(false);
+			setUpdated(true);
 		}
 	}, [onNextDay]);
 
@@ -136,7 +136,7 @@ const OverviewMap = ({onNextDay, setOnNextDay}) => {
 			{!countriesLoading && (
 				<MapContainer
 					className='overview-map-container w-full h-[65vh] relative z-0'
-					style={{backgroundColor: '#e8f4f6'}}
+					style={{backgroundColor: '#ecfaff'}}
 					center={[30.0, 0.0]}
 					zoom={2}
 					maxZoom={5}

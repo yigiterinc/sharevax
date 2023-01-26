@@ -4,7 +4,7 @@ import com.sharevax.core.model.Country;
 import com.sharevax.core.model.Demand;
 import com.sharevax.core.model.Harbor;
 import com.sharevax.core.model.Supply;
-import com.sharevax.core.model.route.RoutePlan;
+import com.sharevax.core.serializer.RoutePlanDto;
 import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
 import eu.europa.ec.eurostat.jgiscotools.util.GeoDistanceUtil;
 import eu.europa.ec.eurostat.searoute.SeaRouting;
@@ -94,7 +94,7 @@ public class RouteService {
 
 
     // update the route based on ship's velocity
-    public RoutePlan adaptRoute(LineString routeHistory, LineString futureRoute) {
+    public RoutePlanDto updateShipRoutes(LineString routeHistory, LineString futureRoute) {
 
         List<Coordinate> routeHistoryList = getCoordinates(routeHistory);
         List<Coordinate> futureRouteList = getCoordinates(futureRoute);
@@ -129,7 +129,7 @@ public class RouteService {
         routeHistory = getLineString(routeHistoryList);
         futureRoute = getLineString(futureRouteList);
 
-        return new RoutePlan(routeHistory, futureRoute, duration);
+        return new RoutePlanDto(routeHistory, futureRoute, duration);
     }
 
     public List<Coordinate> getCoordinates(LineString lineString) {
@@ -158,13 +158,46 @@ public class RouteService {
         // turn the Route into LineString
         Feature route = getRoute(p1, p2);
 
-        // remove the first one
+        // insert points
         Coordinate[] coordinates = route.getGeometry().getCoordinates();
         List<Coordinate> coordinatesList = new ArrayList<Coordinate>();
-        coordinatesList.addAll(Arrays.asList(coordinates));
+        for (int i = 0; i < coordinates.length - 1; i++) {
+            Coordinate start = coordinates[i];
+            Coordinate next = coordinates[i + 1];
+            coordinatesList.add(start);
+            int duration = getDeliveryDays(getPoint(start), getPoint(next));
+            int pointsToInsert = duration - 1;
+            int j = 0;
+            while (j < pointsToInsert) {
+                Coordinate coordinate = getMiddlePoint(start, next, j, pointsToInsert);
+                coordinatesList.add(coordinate);
+                j++;
+            }
+        }
+        coordinatesList.add(coordinates[coordinates.length - 1]);
+
+        // remove the first one
         coordinatesList.remove(0);
 
         return getLineString(coordinatesList);
+    }
+
+    /**
+     *
+     * @param start
+     * @param end
+     * @param index [0,..] The n th point between start and end
+     * @param totalPoints total points between start and end
+     */
+    private Coordinate getMiddlePoint(Coordinate start, Coordinate end, int index,
+        int totalPoints) {
+        double xUnit = (end.getX() - start.getX()) / totalPoints;
+        double yUnit = (end.getY() - start.getY()) / totalPoints;
+
+        double x = start.getX() + xUnit * (index + 1);
+        double y = start.getY() + yUnit * (index + 1);
+
+        return new Coordinate(x, y);
     }
 
     private Feature getRoute(Point start, Point end) {

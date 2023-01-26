@@ -3,7 +3,7 @@ package com.sharevax.core.model.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.sharevax.core.model.Delivery;
-import com.sharevax.core.model.route.LineStringSerializer;
+import com.sharevax.core.serializer.LineStringSerializer;
 import lombok.*;
 import org.locationtech.jts.geom.LineString;
 

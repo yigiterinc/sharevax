@@ -2,6 +2,7 @@ package com.sharevax.core.facade;
 
 import com.sharevax.core.model.*;
 import com.sharevax.core.model.route.RoutePlan;
+import com.sharevax.core.serializer.RoutePlanDto;
 import com.sharevax.core.service.*;
 import org.locationtech.jts.geom.LineString;
 import org.springframework.stereotype.Service;
@@ -62,8 +63,8 @@ public class SimulationFacade {
     }
 
 
-    public RoutePlan adaptRoute(LineString routeHistory, LineString futureRoute) {
-        return routeService.adaptRoute(routeHistory, futureRoute);
+    public RoutePlanDto updateShipRoute(LineString routeHistory, LineString futureRoute) {
+        return routeService.updateShipRoutes(routeHistory, futureRoute);
     }
 
     public List<Delivery> findActiveDeliveries() {
@@ -78,4 +79,20 @@ public class SimulationFacade {
         return supplyService.findUnmatchedSupplies();
     }
 
+
+    public void resetCountryData() {
+        countryService.resetCountryData();
+    }
+
+    public void deleteAllDeliveries() {
+        deliveryService.deleteAll();
+    }
+
+    public void deleteAllSupplies() {
+        supplyService.deleteAll();
+    }
+
+    public void deleteAllDemands() {
+        demandService.deleteAll();
+    }
 }
