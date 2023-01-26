@@ -89,10 +89,8 @@ public class SuggestionService {
         Delivery delivery = deliveryService.createDelivery(
             suggestion.getSupply().getCountry().getHarbors().get(0), // TODO use closest harbor
             suggestion.getDemand().getCountry().getHarbors().get(0), // TODO use closest harbor
-            suggestion.getSupply(),
-            suggestion.getDemand(),
             currentDate,
-            suggestion.getQuantity());
+            suggestion);
         System.out.println("Created delivery: " + delivery);
     }
 

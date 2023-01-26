@@ -63,9 +63,6 @@ public class Delivery {
     @Column(name = "future_route")
     private LineString futureRoute;
 
-    @Column(name = "quantity")
-    private BigInteger quantity;
-
     @OneToOne
     private Supply supply;
 

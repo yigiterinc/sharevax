@@ -63,11 +63,6 @@ public class DemandService {
     public void decreaseQuantity(Integer demandId, BigInteger quantity) {
         Demand demand = getDemandById(demandId);
         demand.setQuantity(demand.getQuantity().subtract(quantity));
-        if(demand.getQuantity().compareTo(BigInteger.valueOf(0)) == 1){   // greater than 0
-            demandRepository.save(demand);
-        }
-        else{
-            //demandRepository.deleteById(demandId);
-        }
+        demandRepository.save(demand);
     }
 }

@@ -64,11 +64,6 @@ public class SupplyService {
     public void decreaseQuantity(Integer supplyId, BigInteger quantity) {
         Supply supply = getSupplyById(supplyId);
         supply.setQuantity(supply.getQuantity().subtract(quantity));
-        if(supply.getQuantity().compareTo(BigInteger.valueOf(0)) == 1){   // greater than 0
-            supplyRepository.save(supply);
-        }
-        else{
-            //supplyRepository.deleteById(supplyId);
-        }
+        supplyRepository.save(supply);
     }
 }
