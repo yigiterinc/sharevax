@@ -1,12 +1,8 @@
 import {useEffect, useState} from 'react';
 import fetchSuggestions from '../services/services';
 import {useGlobalState} from '../state/index';
-
-// const defaultValues = {
-// 	countryId: 0,
-// 	suggestionId: 0,
-// 	status: '',
-// };
+import {CREATE_SUGGESTION} from '../services/endpoints';
+import {fetchSimulationDay} from '../services/services';
 
 //mock suggestion data for pre-testing
 // const suggestions = [
@@ -128,6 +124,40 @@ export default function Suggestion({onNextDay, setUpdated}) {
 	const [country] = useGlobalState('country');
 	const [id] = useGlobalState('id');
 
+	//handle submit
+	const defaultValues = {
+		suggestionId: 0,
+		countryId: id,
+		approvalStatus: '',
+		currentDate: '2023-01-26T19:06:36.364Z',
+	};
+	const [formValues] = useState(defaultValues);
+	const handleSubmit = (event, sID, status) => {
+		event.preventDefault();
+		console.log('sID:', sID);
+		console.log('FV', formValues);
+		formValues.suggestionId = sID;
+		// formValues.countryId = parseInt(formValues.countryId);
+		formValues.approvalStatus = status;
+		formValues.currentDate = formatDate(currentDate);
+
+		fetch(CREATE_SUGGESTION, {
+			method: 'POST',
+			body: JSON.stringify(formValues),
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})
+			.then((response) => response.json())
+			.then((response) => {
+				console.log('Suggestion submitted:', formValues);
+				console.log('Success:', JSON.stringify(response));
+			})
+			.catch((error) => {
+				console.error('Error:', error);
+			});
+	};
+
 	//fetch suggestions
 	const [suggestionData, setSuggestionData] = useState([]);
 
@@ -155,6 +185,28 @@ export default function Suggestion({onNextDay, setUpdated}) {
 		let date = new Date(d);
 		return date.toLocaleDateString('en-US');
 	}
+
+	//fetch current date
+	const [currentDate, setCurrentDate] = useState([]);
+
+	useEffect(() => {
+		if (onNextDay) {
+			setCurrentDate([]);
+
+			fetchCurrentDateData([]);
+			setUpdated(true);
+		}
+	}, [onNextDay]);
+
+	useEffect(() => {
+		fetchCurrentDateData();
+	}, []);
+
+	const fetchCurrentDateData = async () => {
+		const result = await fetchSimulationDay();
+		setCurrentDate(result.data);
+	};
+	console.log('DDDD', currentDate);
 
 	//determine role(supplier or demander) by matching global id with id in incoming data
 	function supplyOrDemand(data, i) {
@@ -232,37 +284,43 @@ export default function Suggestion({onNextDay, setUpdated}) {
 			}
 		}
 		let suggestion = (
-			<div className='grid grid-cols-2 border-2 border-main-100 rounded-xl p-5 m-5'>
-				<div className='grid grid-rows-flex grid-cols-1'>
-					<div className='capitalize grid grid-rows-flex'>
-						<b>{role}:</b> {roleName}
+			<form id={data[i].id}>
+				<div className='grid grid-cols-2 border-2 border-main-100 rounded-xl p-5 m-5'>
+					<div className='grid grid-rows-flex grid-cols-1'>
+						<div className='capitalize grid grid-rows-flex'>
+							<b>{role}:</b> {roleName}
+						</div>
+						<div>
+							<b>Amount: </b> {data[i].quantity}
+						</div>
+						<div>{supplyOrDemand(data, i)}</div>
 					</div>
-					<div>
-						<b>Amount: </b> {data[i].quantity}
+					<div className='grid float-right'>
+						<div className='grid justify-items-center items-center mb-1'>
+							<button
+								type='submit'
+								className='text-green-500 font-bold p-1 rounded-sm hover:bg-green-500 hover:text-white hover:ease-in transition duration-500 ease-out'
+								name='approvalStatus'
+								value={'APPROVED'}
+								onClick={(e) => handleSubmit(e, data[i].id, 'APPROVED')}
+							>
+								Accept
+							</button>
+						</div>
+						<div className='grid justify-items-center items-center mt-1'>
+							<button
+								type='submit'
+								className='text-red-500 font-bold  p-1 rounded-sm hover:bg-red-500 hover:text-white hover:ease-in transition duration-500 ease-out'
+								name='approvalStatus'
+								value={'DENIED'}
+								onClick={(e) => handleSubmit(e, data[i].id, 'DENIED')}
+							>
+								Decline
+							</button>
+						</div>
 					</div>
-					<div>{supplyOrDemand(data, i)}</div>
 				</div>
-				<div className='grid float-right'>
-					<div className='grid justify-items-center items-center mb-1'>
-						<button
-							type='submit'
-							value='Submit'
-							className='text-green-500 font-bold p-1 rounded-sm hover:bg-green-500 hover:text-white hover:ease-in transition duration-500 ease-out'
-						>
-							Accept
-						</button>
-					</div>
-					<div className='grid justify-items-center items-center mt-1'>
-						<button
-							type='submit'
-							value='Submit'
-							className='text-red-500 font-bold  p-1 rounded-sm hover:bg-red-500 hover:text-white hover:ease-in transition duration-500 ease-out'
-						>
-							Decline
-						</button>
-					</div>
-				</div>
-			</div>
+			</form>
 		);
 		return suggestion;
 	}
