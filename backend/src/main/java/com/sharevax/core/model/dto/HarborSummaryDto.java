@@ -22,11 +22,14 @@ public class HarborSummaryDto {
 
     String countryName;
 
+    String harborStatus;
+
     public static HarborSummaryDto from(Harbor harbor) {
         return HarborSummaryDto.builder()
                 .name(harbor.getName())
                 .coordinate(harbor.getCoordinate())
                 .countryName(harbor.getCountry().getName())
+                .harborStatus(harbor.getStatus().toString())
                 .build();
     }
 }

@@ -4,6 +4,10 @@ import com.sharevax.core.model.Country;
 import com.sharevax.core.model.Demand;
 import com.sharevax.core.model.Harbor;
 import com.sharevax.core.model.Supply;
+import com.sharevax.core.model.event.BlockedChannel;
+import com.sharevax.core.model.event.BlockedPassage;
+import com.sharevax.core.model.event.BlockedStrait;
+import com.sharevax.core.model.event.Event;
 import com.sharevax.core.model.route.RoutePlan;
 import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
 import eu.europa.ec.eurostat.jgiscotools.util.GeoDistanceUtil;
@@ -12,21 +16,18 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.locationtech.jts.geom.*;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class RouteService {
 
     private final int SPEED_FACTOR = 200;
-    private final CountryService countryService;
     private final SeaRouting seaRouting;
+    private final EventService eventService;
 
-    public RouteService(CountryService countryService) {
-        this.countryService = countryService;
+    public RouteService(EventService eventService) {
         this.seaRouting = new SeaRouting();
+        this.eventService = eventService;
     }
 
     public double findShortestDistanceBetweenDemandAndSupply(Demand demand, Supply supply) {
@@ -207,7 +208,43 @@ public class RouteService {
         double long2 = end.getX();
         double lat2 = end.getY();
 
-        return seaRouting.getRoute(long1, lat1, long2, lat2);
+        // find all blocked paths
+        List<Event> activeEvents = eventService.getActiveEvents();
+        Set<String> blockedStraitNames = findBlockedStraits(activeEvents);
+        Set<String> blockedPassageNames = findBlockedPassages(activeEvents);
+        Set<String> blockedChannelNames = findBlockedChannels(activeEvents);
+        return seaRouting.getRoute(long1, lat1, long2, lat2,
+                blockedChannelNames.contains("SUEZ"), blockedChannelNames.contains("PANAMA"),
+                blockedStraitNames.contains("MALACCA"), blockedStraitNames.contains("GIBRALTAR"), blockedStraitNames.contains("DOVER"),
+                blockedStraitNames.contains("BERING"), blockedStraitNames.contains("MAGELLAN"), blockedStraitNames.contains("BAB_EL_MANDEB"),
+                blockedChannelNames.contains("KIEL"), blockedChannelNames.contains("CORINTH"),
+                blockedPassageNames.contains("NORTHWEST"), blockedPassageNames.contains("NORTHEAST"));
+    }
+
+    private Set<String> findBlockedStraits(List<Event> activeEvents) {
+        List<String> straitNames = Arrays.stream(BlockedStrait.StraitOption.values()).map(Enum::toString).toList();
+        return findBlocked(activeEvents, straitNames);
+    }
+
+    private Set<String> findBlockedPassages(List<Event> activeEvents) {
+        List<String> passageNames = Arrays.stream(BlockedPassage.PassageOption.values()).map(Enum::toString).toList();
+        return findBlocked(activeEvents, passageNames);
+    }
+
+    private Set<String> findBlockedChannels(List<Event> activeEvents) {
+        List<String> channelNames = Arrays.stream(BlockedChannel.ChannelOption.values()).map(Enum::toString).toList();
+        return findBlocked(activeEvents, channelNames);
+    }
+
+    private Set<String> findBlocked(List<Event> activeEvents, List<String> namesToSearchFor) {
+        var passageEvents = activeEvents.stream().filter(e -> namesToSearchFor.contains(e.getSubject())).toList();
+        Set<String> blockedPassages = new HashSet<>();
+
+        for (Event event : passageEvents) {
+            blockedPassages.add(event.getSubject());
+        }
+
+        return blockedPassages;
     }
 
     private double getDistance(Feature route) {
@@ -217,7 +254,6 @@ public class RouteService {
 
 
     public int getDaysToNextStop(LineString routeHistory, LineString futureRoute) {
-
         if (futureRoute.isEmpty()) {
             return 0;
         }

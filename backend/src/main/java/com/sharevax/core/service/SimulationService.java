@@ -8,14 +8,9 @@ import com.sharevax.core.model.Demand;
 import com.sharevax.core.model.Supply;
 import com.sharevax.core.model.route.RoutePlan;
 import com.sharevax.core.repository.SupplyRepository;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
-import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -56,7 +51,7 @@ public class SimulationService {
 
     public void simulateDay() {
         DAY_COUNTER++;
-        triggerEvents();    // TODO: implement this
+        simulationFacade.processEvents();
         updateShipLocations();
 
         updateVaccineStocks();
@@ -273,11 +268,6 @@ public class SimulationService {
         }
     }
 
-    private void triggerEvents() {
-        // TODO
-        // Check for events that should be triggered
-    }
-
     /**
      *
      * @return simulated current date according to the offset DAY_COUNTER
@@ -298,6 +288,9 @@ public class SimulationService {
         return date;
     }
 
+    public int getDayCounter() {
+        return DAY_COUNTER;
+    }
 
     private void updateShipLocations() {
 
