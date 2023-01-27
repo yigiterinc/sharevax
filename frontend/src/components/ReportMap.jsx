@@ -75,11 +75,11 @@ const ReportMap = () => {
 		if (!eventsLoading) {
 			eventsData.forEach((event) => {
 				if (event.type === 'STRAIT' && event.eventStatus === 'ACTIVE') {
-					setBlockedStraits((blockedStraits) => [...blockedStraits, event.subject]);
+					setBlockedStraits((blockedStraits) => [...blockedStraits, event]);
 				} else if (event.type === 'CHANNEL' && event.eventStatus === 'ACTIVE') {
-					setBlockedChannels((blockedChannels) => [...blockedChannels, event.subject]);
+					setBlockedChannels((blockedChannels) => [...blockedChannels, event]);
 				} else if (event.type === 'HARBOR' && event.eventStatus === 'ACTIVE') {
-					setBlockedHarbors((blockedHarbors) => [...blockedHarbors, event.subject]);
+					setBlockedHarbors((blockedHarbors) => [...blockedHarbors, event]);
 				}
 			});
 		}
@@ -144,10 +144,14 @@ const ReportMap = () => {
 					<GeoJSON key={countryState} data={countries} style={countryStyle} onEachFeature={onEachCountry} />
 					{/* Straits */}
 					{straits.map((strait) => {
-						return blockedStraits.includes(strait.name.toUpperCase().replace(/-/g, '_')) ? (
+						return blockedStraits.some((bs) => bs.subject === strait.name.toUpperCase().replace(/-/g, '_')) ? (
 							<Marker key={strait.name} position={strait.coordinate} icon={blockedIcon(20)}>
 								<Popup>
-									<UnblockPopup name={strait.name} type='Strait' />
+									<UnblockPopup
+										id={blockedStraits.find((bs) => bs.subject === strait.name.toUpperCase().replace(/-/g, '_')).id}
+										name={strait.name}
+										type='Strait'
+									/>
 								</Popup>
 							</Marker>
 						) : (
@@ -160,10 +164,14 @@ const ReportMap = () => {
 					})}
 					{/* Channels */}
 					{channels.map((channel) => {
-						return blockedChannels.includes(channel.name.toUpperCase()) ? (
+						return blockedChannels.some((bc) => bc.subject === channel.name.toUpperCase()) ? (
 							<Marker key={channel.name} position={channel.coordinate} icon={blockedIcon(20)}>
 								<Popup>
-									<UnblockPopup name={channel.name} type='Channel' />
+									<UnblockPopup
+										id={blockedChannels.find((bc) => bc.subject === channel.name.toUpperCase()).id}
+										name={channel.name}
+										type='Channel'
+									/>
 								</Popup>
 							</Marker>
 						) : (
@@ -177,14 +185,18 @@ const ReportMap = () => {
 					{/* Harbors */}
 					{!harborsLoading &&
 						harborsData.map((harbor) => {
-							return blockedHarbors.includes(harbor.name) ? (
+							return blockedHarbors.some((bh) => bh.subject === harbor.name) ? (
 								<Marker
 									key={harbor.name}
 									position={[harbor.coordinate[1], harbor.coordinate[0]]}
 									icon={blockedIcon(20)}
 								>
 									<Popup>
-										<UnblockPopup name={harbor.name} type='Harbor' />
+										<UnblockPopup
+											id={blockedHarbors.find((bh) => bh.subject === harbor.name).id}
+											name={harbor.name}
+											type='Harbor'
+										/>
 									</Popup>
 								</Marker>
 							) : (

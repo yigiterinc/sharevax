@@ -1,6 +1,11 @@
-const UnblockPopup = ({name, type}) => {
-	const onClickReport = () => {
+import {finishEvent} from '../services/services';
+
+const UnblockPopup = ({id, name, type}) => {
+	console.log(id);
+	const onClickUnblock = async () => {
 		console.log('Unblocked');
+		let result = await finishEvent(id);
+		console.log(result);
 	};
 
 	return (
@@ -11,7 +16,7 @@ const UnblockPopup = ({name, type}) => {
 			<button
 				type='button'
 				className='text-white bg-green-500 hover:bg-green-600 active:ring-4 active:ring-green-300 font-medium rounded-lg text-sm px-4 py-2'
-				onClick={onClickReport}
+				onClick={onClickUnblock}
 			>
 				Unblock
 			</button>
