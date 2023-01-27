@@ -155,6 +155,8 @@ export default function Suggestion({onNextDay, setUpdated}) {
 			.catch((error) => {
 				console.error('Error:', error);
 			});
+		//fetch suggestion data on submit
+		fetchSuggestionData();
 		showStatus(status, sID);
 	};
 
@@ -192,8 +194,12 @@ export default function Suggestion({onNextDay, setUpdated}) {
 			document.getElementById(sID).remove();
 		} else if (status == 'APPROVED') {
 			// document.getElementById('msg').contentWindow.location.reload(true);
-			document.getElementById(sID + 'approveButton').setAttribute('disabled', 'disabled');
-			document.getElementById(sID + 'denyButton').setAttribute('disabled', 'disabled');
+			// document.getElementById(sID + 'approveButton').hidden = true;
+			// document.getElementById(sID + 'denyButton').hidden = true;
+			// document.getElementById(sID + 'pending').classList.remove('hidden');
+			console.log('af');
+			// document.getElementById(sID + 'approveButton').setAttribute('disabled', 'disabled');
+			// document.getElementById(sID + 'denyButton').setAttribute('disabled', 'disabled');
 		}
 	}
 
@@ -285,6 +291,52 @@ export default function Suggestion({onNextDay, setUpdated}) {
 		return caseIndex.length == 0 ? caseEmpty : caseNotEmpty;
 	}
 
+	//button options: Pending or not
+	function deniedOrApproved(data, i, status) {
+		let buttons1 = (
+			<div className='grid float-right'>
+				<div className='grid justify-items-center items-center mb-1'>
+					<button
+						id={data[i].id + 'approveButton'}
+						type='submit'
+						className='text-green-500 font-bold p-1 rounded-sm hover:bg-green-500 hover:text-white hover:ease-in transition duration-500 ease-out'
+						name='approvalStatus'
+						value={'APPROVED'}
+						onClick={(e) => handleSubmit(e, data[i].id, 'APPROVED')}
+					>
+						Accept
+					</button>
+				</div>
+				<div className='grid justify-items-center items-center mt-1'>
+					<button
+						id={data[i].id + 'denyButton'}
+						type='submit'
+						className='text-red-500 font-bold  p-1 rounded-sm hover:bg-red-500 hover:text-white hover:ease-in transition duration-500 ease-out'
+						name='approvalStatus'
+						value={'DENIED'}
+						onClick={(e) => handleSubmit(e, data[i].id, 'DENIED')}
+					>
+						Decline
+					</button>
+				</div>
+			</div>
+		);
+		let buttons2 = (
+			<div className='grid float-right'>
+				<div className='grid justify-items-center items-center mt-1'>
+					<div
+						id={data[i].id + 'pending'}
+						className='text-orange-500 font-bold  p-1 rounded-sm disabled'
+						value={'PENDING'}
+					>
+						Waiting...
+					</div>
+				</div>
+			</div>
+		);
+		return status == 'PENDING' ? buttons1 : buttons2;
+	}
+
 	//Styling Suggestion piece
 	function suggestionPiece(data, i) {
 		let role = '';
@@ -299,7 +351,10 @@ export default function Suggestion({onNextDay, setUpdated}) {
 				roleName = <div>{data[i].supply.country.name}</div>;
 			}
 		}
-
+		function roleStatus() {
+			return role == 'demander' ? data[i].supplierStatus : data[i].demanderStatus;
+		}
+		// let a = roleStatus();
 		let suggestion = (
 			<form id={data[i].id}>
 				<div className='grid grid-cols-2 border-2 border-main-100 rounded-xl p-5 m-5'>
@@ -312,35 +367,19 @@ export default function Suggestion({onNextDay, setUpdated}) {
 						</div>
 						<div>{supplyOrDemand(data, i)}</div>
 					</div>
-					<div className='grid float-right'>
-						<div className='grid justify-items-center items-center mb-1'>
-							<button
-								id={data[i].id + 'approveButton'}
-								type='submit'
-								className='text-green-500 font-bold p-1 rounded-sm hover:bg-green-500 hover:text-white hover:ease-in transition duration-500 ease-out'
-								name='approvalStatus'
-								value={'APPROVED'}
-								onClick={(e) => handleSubmit(e, data[i].id, 'APPROVED')}
-							>
-								Accept
-							</button>
-						</div>
-						<div className='grid justify-items-center items-center mt-1'>
-							<button
-								id={data[i].id + 'denyButton'}
-								type='submit'
-								className='text-red-500 font-bold  p-1 rounded-sm hover:bg-red-500 hover:text-white hover:ease-in transition duration-500 ease-out'
-								name='approvalStatus'
-								value={'DENIED'}
-								onClick={(e) => handleSubmit(e, data[i].id, 'DENIED')}
-							>
-								Decline
-							</button>
-						</div>
-					</div>
+					<div className='grid grid-rows-flex grid-cols-1'>{deniedOrApproved(data, i, roleStatus())}</div>
 				</div>
 			</form>
 		);
+
+		// if (role == 'demander' && data[i].demanderStatus == 'APPROVED') {
+		// 	deniedOrApproved(data, i, 'PENDING');
+		// } else if (role == 'supplier' && data[i].supplierStatus == 'APPROVED') {
+		// 	deniedOrApproved(data, i, 'PENDING');
+		// } else {
+		// 	deniedOrApproved(data, i, '');
+		// }
+
 		return suggestion;
 	}
 
