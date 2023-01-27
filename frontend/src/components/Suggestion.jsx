@@ -139,7 +139,7 @@ export default function Suggestion({onNextDay, setUpdated}) {
 		formValues.suggestionId = sID;
 		// formValues.countryId = parseInt(formValues.countryId);
 		formValues.approvalStatus = status;
-		formValues.currentDate = formatDate(currentDate);
+		formValues.currentDate = new Date(currentDate).toISOString();
 
 		fetch(CREATE_SUGGESTION, {
 			method: 'POST',
@@ -206,7 +206,7 @@ export default function Suggestion({onNextDay, setUpdated}) {
 		const result = await fetchSimulationDay();
 		setCurrentDate(result.data);
 	};
-	console.log('DDDD', currentDate);
+	// console.log('DDDD', currentDate);
 
 	//determine role(supplier or demander) by matching global id with id in incoming data
 	function supplyOrDemand(data, i) {
