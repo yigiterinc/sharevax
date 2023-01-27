@@ -72,4 +72,10 @@ public class EventService {
     public List<Event> getActiveEvents() {
         return eventRepository.findAllByEventStatus(Event.EventStatus.ACTIVE);
     }
+
+    public Event finishEvent(int eventId) {
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new RuntimeException("Event with supplied id not found"));
+        event.setEventStatus(Event.EventStatus.COMPLETED);
+        return eventRepository.save(event);
+    }
 }

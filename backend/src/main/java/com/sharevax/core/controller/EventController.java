@@ -28,4 +28,9 @@ public class EventController {
     private ResponseEntity<Event> saveEvent(@RequestBody ReportEventDto event) {
         return ResponseEntity.ok(eventService.saveEvent(event));
     }
+
+    @PatchMapping("/finish/{id}")
+    private ResponseEntity<Event> finishEvent(@PathVariable int id) {
+        return ResponseEntity.ok(eventService.finishEvent(id));
+    }
 }
