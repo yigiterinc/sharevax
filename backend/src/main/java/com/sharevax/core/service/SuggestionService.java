@@ -46,6 +46,7 @@ public class SuggestionService {
 
         if (response.getApprovalStatus().equals(ApprovalStatus.DENIED)) {
             suggestionRepository.deleteById(response.getSuggestionId());
+            return true;
         }
         if (response.getApprovalStatus().equals(ApprovalStatus.APPROVED)) {
             Boolean isDemander =
