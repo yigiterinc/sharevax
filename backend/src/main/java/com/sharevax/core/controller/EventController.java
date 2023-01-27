@@ -1,5 +1,6 @@
 package com.sharevax.core.controller;
 
+import com.sharevax.core.model.dto.EventDto;
 import com.sharevax.core.model.dto.ReportEventDto;
 import com.sharevax.core.model.event.Event;
 import com.sharevax.core.service.EventService;
@@ -11,7 +12,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/event")
 public class EventController {
-    // TODO: Implement this controller
 
     private final EventService eventService;
 
@@ -20,8 +20,8 @@ public class EventController {
     }
 
     @GetMapping
-    private ResponseEntity<List<Event>> getAllEvents() {
-        return ResponseEntity.ok(eventService.getAllEvents());
+    private ResponseEntity<List<EventDto>> getAllEvents() {
+        return ResponseEntity.ok(eventService.getAllEvents().stream().map(EventDto::fromEvent).toList());
     }
 
     @PostMapping
