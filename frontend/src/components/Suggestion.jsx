@@ -156,7 +156,21 @@ export default function Suggestion({onNextDay, setUpdated}) {
 			.catch((error) => {
 				console.error('Error:', error);
 			});
+		fetchSuggestionData();
+		showStatus(status, sID);
 	};
+
+	//display status of suggestion piece
+	function showStatus(status, sID) {
+		// document.getElementById('msg').value = showNotification(suggestionData);
+		if (status == 'DENIED') {
+			document.getElementById(sID).remove();
+		} else if (status == 'APPROVED') {
+			// document.getElementById('msg').contentWindow.location.reload(true);
+			document.getElementById(sID + 'approveButton').setAttribute('disabled', 'disabled');
+			document.getElementById(sID + 'denyButton').setAttribute('disabled', 'disabled');
+		}
+	}
 
 	//fetch suggestions
 	const [suggestionData, setSuggestionData] = useState([]);
@@ -176,9 +190,9 @@ export default function Suggestion({onNextDay, setUpdated}) {
 	const fetchSuggestionData = async () => {
 		const result = await fetchSuggestions();
 		setSuggestionData(result.data);
+		console.log('Country selected:', country, '\nCountry ID:', id);
+		console.log('\nSuggestion data got:\n', suggestionData);
 	};
-	console.log('Country selected:', country, '\nCountry ID:', id);
-	console.log('\nSuggestion data got:\n', suggestionData);
 
 	//formate expiration date
 	function formatDate(d) {
@@ -192,7 +206,6 @@ export default function Suggestion({onNextDay, setUpdated}) {
 	useEffect(() => {
 		if (onNextDay) {
 			setCurrentDate([]);
-
 			fetchCurrentDateData([]);
 			setUpdated(true);
 		}
@@ -283,6 +296,7 @@ export default function Suggestion({onNextDay, setUpdated}) {
 				roleName = <div>{data[i].supply.country.name}</div>;
 			}
 		}
+
 		let suggestion = (
 			<form id={data[i].id}>
 				<div className='grid grid-cols-2 border-2 border-main-100 rounded-xl p-5 m-5'>
@@ -298,6 +312,7 @@ export default function Suggestion({onNextDay, setUpdated}) {
 					<div className='grid float-right'>
 						<div className='grid justify-items-center items-center mb-1'>
 							<button
+								id={data[i].id + 'approveButton'}
 								type='submit'
 								className='text-green-500 font-bold p-1 rounded-sm hover:bg-green-500 hover:text-white hover:ease-in transition duration-500 ease-out'
 								name='approvalStatus'
@@ -309,6 +324,7 @@ export default function Suggestion({onNextDay, setUpdated}) {
 						</div>
 						<div className='grid justify-items-center items-center mt-1'>
 							<button
+								id={data[i].id + 'denyButton'}
 								type='submit'
 								className='text-red-500 font-bold  p-1 rounded-sm hover:bg-red-500 hover:text-white hover:ease-in transition duration-500 ease-out'
 								name='approvalStatus'
@@ -342,7 +358,7 @@ export default function Suggestion({onNextDay, setUpdated}) {
 
 	return (
 		<div>
-			<div>{showNotification(suggestionData)}</div>
+			<div id='msg'>{showNotification(suggestionData)}</div>
 			<div>{showSuggestion(suggestionData)}</div>
 		</div>
 	);
