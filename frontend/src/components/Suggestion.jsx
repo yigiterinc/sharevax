@@ -178,7 +178,7 @@ export default function Suggestion({onNextDay, setUpdated}) {
 	}, []);
 
 	const fetchSuggestionData = async () => {
-		const result = await fetchSuggestions();
+		const result = await fetchSuggestions(id);
 		setSuggestionData(result.data);
 		setSuggestionLength(result.data.length);
 		console.log('Country selected:', country, '\nCountry ID:', id);

@@ -26,8 +26,8 @@ export const fetchActiveDeliveries = async function () {
 	return await axios.get(url);
 };
 
-export default async function fetchSuggestions() {
-	const url = SUGGESTION;
+export default async function fetchSuggestions(id) {
+	const url = SUGGESTION + id;
 	return await axios.get(url);
 }
 
