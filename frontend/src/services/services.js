@@ -8,6 +8,7 @@ import {
 	SIMULATION_DAY,
 	CREATE_EVENT,
 	GET_EVENTS,
+	FINISH_EVENT,
 } from './endpoints';
 
 export const fetchCountries = async function () {
@@ -41,4 +42,8 @@ export const createEvent = async function (type, subject, remainingDaysToStart) 
 
 export const fetchEvents = async function () {
 	return await axios.get(GET_EVENTS);
+};
+
+export const finishEvent = async function (eventId) {
+	return await axios.patch(FINISH_EVENT(eventId));
 };
