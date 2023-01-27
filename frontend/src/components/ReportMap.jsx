@@ -5,21 +5,21 @@ import countries from '../data/custom.geo.json';
 import 'leaflet/dist/leaflet.css';
 import Legend from './Legend';
 import ReportPopup from './ReportPopup';
-import {fetchCountries, fetchHarbors} from '../services/services';
+import {fetchCountries, fetchHarbors, fetchEvents} from '../services/services';
 import {getColor, legendItems} from '../utils/utils';
 import '../styles/Map.css';
 import {useGlobalState} from '../state';
 import straits from '../data/straits.json';
 import channels from '../data/channels.json';
-// import UnblockPopup from './UnblockPopup';
-// import blocked from '../assets/blocked.png';
+import UnblockPopup from './UnblockPopup';
+import blocked from '../assets/blocked.png';
 
-// const blockedIcon = (iconSize) => {
-// 	return L.icon({
-// 		iconUrl: blocked,
-// 		iconSize: [iconSize, iconSize],
-// 	});
-// };
+const blockedIcon = (iconSize) => {
+	return L.icon({
+		iconUrl: blocked,
+		iconSize: [iconSize, iconSize],
+	});
+};
 
 const greenIcon = () => {
 	return L.icon({
@@ -51,18 +51,39 @@ const orangeIcon = () => {
 const ReportMap = () => {
 	const [countriesData, setCountriesData] = useState([]);
 	const [harborsData, setHarborsData] = useState([]);
+	const [eventsData, setEventsData] = useState([]);
 	const [countriesLoading, setCountriesLoading] = useState(true);
 	const [harborsLoading, setHarborsLoading] = useState(true);
+	const [eventsLoading, setEventsLoading] = useState(true);
 	const [countryState] = useGlobalState('country');
+
+	const [blockedStraits, setBlockedStraits] = useState([]);
+	const [blockedChannels, setBlockedChannels] = useState([]);
+	const [blockedHarbors, setBlockedHarbors] = useState([]);
 
 	useEffect(() => {
 		fetchCountryData();
 		fetchHarborsData();
+		fetchEventsData();
 	}, []);
 
 	useEffect(() => {
 		console.log('countryState', countryState);
 	}, [countryState]);
+
+	useEffect(() => {
+		if (!eventsLoading) {
+			eventsData.forEach((event) => {
+				if (event.type === 'STRAIT' && event.eventStatus === 'ACTIVE') {
+					setBlockedStraits((blockedStraits) => [...blockedStraits, event.subject]);
+				} else if (event.type === 'CHANNEL' && event.eventStatus === 'ACTIVE') {
+					setBlockedChannels((blockedChannels) => [...blockedChannels, event.subject]);
+				} else if (event.type === 'HARBOR' && event.eventStatus === 'ACTIVE') {
+					setBlockedHarbors((blockedHarbors) => [...blockedHarbors, event.subject]);
+				}
+			});
+		}
+	}, [eventsData]);
 
 	const fetchCountryData = async () => {
 		const result = await fetchCountries();
@@ -74,6 +95,12 @@ const ReportMap = () => {
 		const result = await fetchHarbors();
 		setHarborsData(result.data);
 		setHarborsLoading(false);
+	};
+
+	const fetchEventsData = async () => {
+		const result = await fetchEvents();
+		setEventsData(result.data);
+		setEventsLoading(false);
 	};
 
 	const countryStyle = {
@@ -117,22 +144,32 @@ const ReportMap = () => {
 					<GeoJSON key={countryState} data={countries} style={countryStyle} onEachFeature={onEachCountry} />
 					{/* Straits */}
 					{straits.map((strait) => {
-						return (
+						return blockedStraits.includes(strait.name.toUpperCase().replace(/-/g, '_')) ? (
+							<Marker key={strait.name} position={strait.coordinate} icon={blockedIcon(20)}>
+								<Popup>
+									<UnblockPopup name={strait.name} type='Strait' />
+								</Popup>
+							</Marker>
+						) : (
 							<Marker key={strait.name} position={strait.coordinate} icon={greenIcon()}>
 								<Popup>
 									<ReportPopup name={strait.name} type='Strait' />
-									{/* <UnblockPopup name={strait.name} type='Strait' /> */}
 								</Popup>
 							</Marker>
 						);
 					})}
 					{/* Channels */}
 					{channels.map((channel) => {
-						return (
+						return blockedChannels.includes(channel.name.toUpperCase()) ? (
+							<Marker key={channel.name} position={channel.coordinate} icon={blockedIcon(20)}>
+								<Popup>
+									<UnblockPopup name={channel.name} type='Channel' />
+								</Popup>
+							</Marker>
+						) : (
 							<Marker key={channel.name} position={channel.coordinate} icon={orangeIcon()}>
 								<Popup>
 									<ReportPopup name={channel.name} type='Channel' />
-									{/* <UnblockPopup name={channel.name} type='Channel' /> */}
 								</Popup>
 							</Marker>
 						);
@@ -140,11 +177,20 @@ const ReportMap = () => {
 					{/* Harbors */}
 					{!harborsLoading &&
 						harborsData.map((harbor) => {
-							return (
+							return blockedHarbors.includes(harbor.name) ? (
+								<Marker
+									key={harbor.name}
+									position={[harbor.coordinate[1], harbor.coordinate[0]]}
+									icon={blockedIcon(20)}
+								>
+									<Popup>
+										<UnblockPopup name={harbor.name} type='Harbor' />
+									</Popup>
+								</Marker>
+							) : (
 								<Marker key={harbor.name} position={[harbor.coordinate[1], harbor.coordinate[0]]} icon={blueIcon()}>
 									<Popup>
 										<ReportPopup name={harbor.name} type='Harbor' />
-										{/* <UnblockPopup name={harbor.name} type='Harbor' /> */}
 									</Popup>
 								</Marker>
 							);

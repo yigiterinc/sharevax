@@ -7,6 +7,7 @@ import {
 	PROGRESS_SIMULATION,
 	SIMULATION_DAY,
 	CREATE_EVENT,
+	GET_EVENTS,
 } from './endpoints';
 
 export const fetchCountries = async function () {
@@ -36,4 +37,8 @@ export const fetchSimulationDay = async function () {
 
 export const createEvent = async function (type, subject, remainingDaysToStart) {
 	return await axios.post(CREATE_EVENT, {type, subject, remainingDaysToStart});
+};
+
+export const fetchEvents = async function () {
+	return await axios.get(GET_EVENTS);
 };

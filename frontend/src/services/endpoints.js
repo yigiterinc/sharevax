@@ -10,3 +10,4 @@ export const CREATE_DEMAND = `${BASE_URL}/demands`;
 export const PROGRESS_SIMULATION = `${BASE_URL}/simulation/increment-day`;
 export const SIMULATION_DAY = `${BASE_URL}/simulation/current-day`;
 export const CREATE_EVENT = `${BASE_URL}/event`;
+export const GET_EVENTS = `${BASE_URL}/event`;
