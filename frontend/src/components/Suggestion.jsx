@@ -137,7 +137,6 @@ export default function Suggestion({onNextDay, setUpdated}) {
 		console.log('sID:', sID);
 		console.log('FV', formValues);
 		formValues.suggestionId = sID;
-		// formValues.countryId = parseInt(formValues.countryId);
 		formValues.approvalStatus = status;
 		formValues.currentDate = new Date(currentDate).toISOString();
 
@@ -156,27 +155,16 @@ export default function Suggestion({onNextDay, setUpdated}) {
 			.catch((error) => {
 				console.error('Error:', error);
 			});
-		fetchSuggestionData();
 		showStatus(status, sID);
 	};
 
-	//display status of suggestion piece
-	function showStatus(status, sID) {
-		// document.getElementById('msg').value = showNotification(suggestionData);
-		if (status == 'DENIED') {
-			document.getElementById(sID).remove();
-		} else if (status == 'APPROVED') {
-			// document.getElementById('msg').contentWindow.location.reload(true);
-			document.getElementById(sID + 'approveButton').setAttribute('disabled', 'disabled');
-			document.getElementById(sID + 'denyButton').setAttribute('disabled', 'disabled');
-		}
-	}
-
 	//fetch suggestions
 	const [suggestionData, setSuggestionData] = useState([]);
+	const [suggestionLength, setSuggestionLength] = useState([]);
 
 	useEffect(() => {
 		if (onNextDay) {
+			setSuggestionLength([]);
 			setSuggestionData([]);
 			fetchSuggestionData();
 			setUpdated(true);
@@ -190,9 +178,24 @@ export default function Suggestion({onNextDay, setUpdated}) {
 	const fetchSuggestionData = async () => {
 		const result = await fetchSuggestions();
 		setSuggestionData(result.data);
+		setSuggestionLength(result.data.length);
 		console.log('Country selected:', country, '\nCountry ID:', id);
 		console.log('\nSuggestion data got:\n', suggestionData);
 	};
+
+	//display status of suggestion piece
+	function showStatus(status, sID) {
+		//refetch suggestion data, display the length of the new suggestion data in {suggestionLength} of function `showNotification(data)`
+		fetchSuggestionData();
+		// document.getElementById('msg').value = showNotification(suggestionData);
+		if (status == 'DENIED') {
+			document.getElementById(sID).remove();
+		} else if (status == 'APPROVED') {
+			// document.getElementById('msg').contentWindow.location.reload(true);
+			document.getElementById(sID + 'approveButton').setAttribute('disabled', 'disabled');
+			document.getElementById(sID + 'denyButton').setAttribute('disabled', 'disabled');
+		}
+	}
 
 	//formate expiration date
 	function formatDate(d) {
@@ -274,7 +277,7 @@ export default function Suggestion({onNextDay, setUpdated}) {
 		}
 		let caseNotEmpty = (
 			<div>
-				<div className='grid justify-items-center items-center'>You have {caseIndex.length} suggestions:</div>
+				<div className='grid justify-items-center items-center'>You have {suggestionLength} suggestions:</div>
 			</div>
 		);
 		let caseEmpty = <div className='grid justify-items-center items-center'>You have no suggestion.</div>;
