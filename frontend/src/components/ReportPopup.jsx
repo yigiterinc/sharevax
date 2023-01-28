@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import {fetchSimulationDay, createEvent} from '../services/services';
 import {millisecondsToYYYYMMDD, daysBetween} from '../utils/utils';
 
-const ReportPopup = ({name, type}) => {
+const ReportPopup = ({name, type, onBlock}) => {
 	const [currentDay, setCurrentDay] = useState({todaysDate: '', formattedDate: ''});
 	const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -18,16 +18,16 @@ const ReportPopup = ({name, type}) => {
 
 	const onClickReport = async () => {
 		if (type === 'Harbor') {
-			let result = await createEvent('Blocked' + type, name, daysBetween(currentDay.todaysDate, selectedDate));
-			console.log(result);
+			await createEvent('Blocked' + type, name, daysBetween(currentDay.todaysDate, selectedDate));
+			onBlock();
 			return;
 		}
-		let result = await createEvent(
+		await createEvent(
 			'Blocked' + type,
 			name.toUpperCase().replace(/-/g, '_'),
 			daysBetween(currentDay.todaysDate, selectedDate),
 		);
-		console.log(result);
+		onBlock();
 	};
 
 	return (

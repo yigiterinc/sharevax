@@ -45,5 +45,5 @@ export const fetchEvents = async function () {
 };
 
 export const finishEvent = async function (eventId) {
-	return await axios.patch(FINISH_EVENT(eventId));
+	return await axios.post(FINISH_EVENT(eventId));
 };

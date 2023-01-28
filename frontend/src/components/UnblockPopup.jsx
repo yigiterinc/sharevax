@@ -1,11 +1,10 @@
 import {finishEvent} from '../services/services';
 
-const UnblockPopup = ({id, name, type}) => {
-	console.log(id);
+const UnblockPopup = ({id, name, type, onUnblock}) => {
 	const onClickUnblock = async () => {
 		console.log('Unblocked');
-		let result = await finishEvent(id);
-		console.log(result);
+		await finishEvent(id);
+		onUnblock();
 	};
 
 	return (

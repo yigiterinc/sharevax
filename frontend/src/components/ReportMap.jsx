@@ -60,6 +60,7 @@ const ReportMap = () => {
 	const [blockedStraits, setBlockedStraits] = useState([]);
 	const [blockedChannels, setBlockedChannels] = useState([]);
 	const [blockedHarbors, setBlockedHarbors] = useState([]);
+	const [blockedLoading, setBlockedLoading] = useState(true);
 
 	useEffect(() => {
 		fetchCountryData();
@@ -82,6 +83,7 @@ const ReportMap = () => {
 					setBlockedHarbors((blockedHarbors) => [...blockedHarbors, event]);
 				}
 			});
+			setBlockedLoading(false);
 		}
 	}, [eventsData]);
 
@@ -129,6 +131,20 @@ const ReportMap = () => {
 		}
 	};
 
+	const handleBlock = () => {
+		setEventsLoading(true);
+		fetchEventsData();
+	};
+
+	const handleUnblock = () => {
+		setEventsLoading(true);
+		setBlockedStraits([]);
+		setBlockedChannels([]);
+		setBlockedHarbors([]);
+		setBlockedLoading(true);
+		fetchEventsData();
+	};
+
 	return (
 		<>
 			{!countriesLoading && (
@@ -143,47 +159,52 @@ const ReportMap = () => {
 				>
 					<GeoJSON key={countryState} data={countries} style={countryStyle} onEachFeature={onEachCountry} />
 					{/* Straits */}
-					{straits.map((strait) => {
-						return blockedStraits.some((bs) => bs.subject === strait.name.toUpperCase().replace(/-/g, '_')) ? (
-							<Marker key={strait.name} position={strait.coordinate} icon={blockedIcon(20)}>
-								<Popup>
-									<UnblockPopup
-										id={blockedStraits.find((bs) => bs.subject === strait.name.toUpperCase().replace(/-/g, '_')).id}
-										name={strait.name}
-										type='Strait'
-									/>
-								</Popup>
-							</Marker>
-						) : (
-							<Marker key={strait.name} position={strait.coordinate} icon={greenIcon()}>
-								<Popup>
-									<ReportPopup name={strait.name} type='Strait' />
-								</Popup>
-							</Marker>
-						);
-					})}
+					{!blockedLoading &&
+						straits.map((strait) => {
+							return blockedStraits.some((bs) => bs.subject === strait.name.toUpperCase().replace(/-/g, '_')) ? (
+								<Marker key={strait.name} position={strait.coordinate} icon={blockedIcon(20)}>
+									<Popup>
+										<UnblockPopup
+											id={blockedStraits.find((bs) => bs.subject === strait.name.toUpperCase().replace(/-/g, '_')).id}
+											name={strait.name}
+											type='Strait'
+											onUnblock={() => handleUnblock()}
+										/>
+									</Popup>
+								</Marker>
+							) : (
+								<Marker key={strait.name} position={strait.coordinate} icon={greenIcon()}>
+									<Popup>
+										<ReportPopup name={strait.name} type='Strait' onBlock={() => handleBlock()} />
+									</Popup>
+								</Marker>
+							);
+						})}
 					{/* Channels */}
-					{channels.map((channel) => {
-						return blockedChannels.some((bc) => bc.subject === channel.name.toUpperCase()) ? (
-							<Marker key={channel.name} position={channel.coordinate} icon={blockedIcon(20)}>
-								<Popup>
-									<UnblockPopup
-										id={blockedChannels.find((bc) => bc.subject === channel.name.toUpperCase()).id}
-										name={channel.name}
-										type='Channel'
-									/>
-								</Popup>
-							</Marker>
-						) : (
-							<Marker key={channel.name} position={channel.coordinate} icon={orangeIcon()}>
-								<Popup>
-									<ReportPopup name={channel.name} type='Channel' />
-								</Popup>
-							</Marker>
-						);
-					})}
+					{!blockedLoading &&
+						channels.map((channel) => {
+							return blockedChannels.some((bc) => bc.subject === channel.name.toUpperCase()) ? (
+								<Marker key={channel.name} position={channel.coordinate} icon={blockedIcon(20)}>
+									<Popup>
+										<UnblockPopup
+											id={blockedChannels.find((bc) => bc.subject === channel.name.toUpperCase()).id}
+											name={channel.name}
+											type='Channel'
+											onUnblock={() => handleUnblock()}
+										/>
+									</Popup>
+								</Marker>
+							) : (
+								<Marker key={channel.name} position={channel.coordinate} icon={orangeIcon()}>
+									<Popup>
+										<ReportPopup name={channel.name} type='Channel' onBlock={() => handleBlock()} />
+									</Popup>
+								</Marker>
+							);
+						})}
 					{/* Harbors */}
 					{!harborsLoading &&
+						!blockedLoading &&
 						harborsData.map((harbor) => {
 							return blockedHarbors.some((bh) => bh.subject === harbor.name) ? (
 								<Marker
@@ -196,13 +217,14 @@ const ReportMap = () => {
 											id={blockedHarbors.find((bh) => bh.subject === harbor.name).id}
 											name={harbor.name}
 											type='Harbor'
+											onUnblock={() => handleUnblock()}
 										/>
 									</Popup>
 								</Marker>
 							) : (
 								<Marker key={harbor.name} position={[harbor.coordinate[1], harbor.coordinate[0]]} icon={blueIcon()}>
 									<Popup>
-										<ReportPopup name={harbor.name} type='Harbor' />
+										<ReportPopup name={harbor.name} type='Harbor' onBlock={() => handleBlock()} />
 									</Popup>
 								</Marker>
 							);
