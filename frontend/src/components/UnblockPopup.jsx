@@ -1,10 +1,26 @@
+import {useSnackbar} from 'notistack';
 import {finishEvent} from '../services/services';
 
 const UnblockPopup = ({id, name, type, onUnblock}) => {
+	const {enqueueSnackbar} = useSnackbar();
+
 	const onClickUnblock = async () => {
-		console.log('Unblocked');
-		await finishEvent(id);
-		onUnblock();
+		try {
+			await finishEvent(id);
+			onUnblock();
+			enqueueSnackbar('Success!', {
+				variant: 'success',
+				autoHideDuration: 2500,
+				anchorOrigin: {vertical: 'top', horizontal: 'right'},
+			});
+		} catch (e) {
+			console.log(e);
+			enqueueSnackbar('Something went wrong!', {
+				variant: 'error',
+				autoHideDuration: 2500,
+				anchorOrigin: {vertical: 'top', horizontal: 'right'},
+			});
+		}
 	};
 
 	return (

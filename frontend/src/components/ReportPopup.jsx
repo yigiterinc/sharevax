@@ -1,10 +1,12 @@
 import {useEffect, useState} from 'react';
+import {useSnackbar} from 'notistack';
 import {fetchSimulationDay, createEvent} from '../services/services';
 import {millisecondsToYYYYMMDD, daysBetween} from '../utils/utils';
 
 const ReportPopup = ({name, type, onBlock}) => {
 	const [currentDay, setCurrentDay] = useState({todaysDate: '', formattedDate: ''});
 	const [selectedDate, setSelectedDate] = useState(new Date());
+	const {enqueueSnackbar} = useSnackbar();
 
 	useEffect(() => {
 		fetchCurrentDay();
@@ -17,17 +19,23 @@ const ReportPopup = ({name, type, onBlock}) => {
 	};
 
 	const onClickReport = async () => {
-		if (type === 'Harbor') {
-			await createEvent('Blocked' + type, name, daysBetween(currentDay.todaysDate, selectedDate));
+		const formattedName = type === 'Harbor' ? name : name.toUpperCase().replace(/-/g, '_');
+		try {
+			await createEvent('Blocked' + type, formattedName, daysBetween(currentDay.todaysDate, selectedDate));
 			onBlock();
-			return;
+			enqueueSnackbar('Success!', {
+				variant: 'success',
+				autoHideDuration: 2500,
+				anchorOrigin: {vertical: 'top', horizontal: 'right'},
+			});
+		} catch (e) {
+			console.log(e);
+			enqueueSnackbar('Something went wrong!', {
+				variant: 'error',
+				autoHideDuration: 2500,
+				anchorOrigin: {vertical: 'top', horizontal: 'right'},
+			});
 		}
-		await createEvent(
-			'Blocked' + type,
-			name.toUpperCase().replace(/-/g, '_'),
-			daysBetween(currentDay.todaysDate, selectedDate),
-		);
-		onBlock();
 	};
 
 	return (
