@@ -14,7 +14,7 @@ export default function Sidebar() {
 		{name: 'Country Info', link: '/country-info', icon: BsFillPinMapFill, isCountrySelected: true},
 		{name: 'Order Detail', link: '/order-detail', icon: BiDetail, isCountrySelected: true},
 		{name: 'Report', link: '/report', icon: TbMessageReport},
-		{name: 'Suggestion', link: '/suggestion', icon: BsCheckCircleFill},
+		{name: 'Suggestion', link: '/suggestion', icon: BsCheckCircleFill, isCountrySelected: true},
 		{
 			name: 'Supply / Demand Vaccine',
 			link: '/supply-demand-vaccine',
