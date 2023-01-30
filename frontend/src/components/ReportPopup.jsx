@@ -44,7 +44,7 @@ const ReportPopup = ({name, type, onBlock, isPending, remainingDays}) => {
 				{name} {type}
 			</div>
 			{isPending ? (
-				<div className='font-semibold mb-2 text-red-500'>
+				<div className='font-semibold mb-2 text-orange-500'>
 					Will be blocked in {remainingDays} {remainingDays === 1 ? 'day' : 'days'}
 				</div>
 			) : (
