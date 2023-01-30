@@ -3,7 +3,7 @@ import {useSnackbar} from 'notistack';
 import {fetchSimulationDay, createEvent} from '../services/services';
 import {millisecondsToYYYYMMDD, daysBetween} from '../utils/utils';
 
-const ReportPopup = ({name, type, onBlock}) => {
+const ReportPopup = ({name, type, onBlock, isPending, remainingDays}) => {
 	const [currentDay, setCurrentDay] = useState({todaysDate: '', formattedDate: ''});
 	const [selectedDate, setSelectedDate] = useState(new Date());
 	const {enqueueSnackbar} = useSnackbar();
@@ -43,22 +43,30 @@ const ReportPopup = ({name, type, onBlock}) => {
 			<div className='font-semibold text-base'>
 				{name} {type}
 			</div>
-			<div>
-				<div className='font-semibold mb-2'>Start day</div>
-				<input
-					className='rounded border h-[40px] px-3 focus:outline-none'
-					type='date'
-					value={selectedDate.toISOString().split('T')[0]}
-					onChange={(e) => setSelectedDate(new Date(e.target.value))}
-				/>
-			</div>
-			<button
-				type='button'
-				className='text-white bg-red-500 hover:bg-red-600 active:ring-4 active:ring-red-300 font-medium rounded-lg text-sm px-4 py-2'
-				onClick={onClickReport}
-			>
-				Block
-			</button>
+			{isPending ? (
+				<div className='font-semibold mb-2 text-red-500'>
+					Will be blocked in {remainingDays} {remainingDays === 1 ? 'day' : 'days'}
+				</div>
+			) : (
+				<>
+					<div>
+						<div className='font-semibold mb-2'>Start day</div>
+						<input
+							className='rounded border h-[40px] px-3 focus:outline-none'
+							type='date'
+							value={selectedDate.toISOString().split('T')[0]}
+							onChange={(e) => setSelectedDate(new Date(e.target.value))}
+						/>
+					</div>
+					<button
+						type='button'
+						className='text-white bg-red-500 hover:bg-red-600 active:ring-4 active:ring-red-300 font-medium rounded-lg text-sm px-4 py-2'
+						onClick={onClickReport}
+					>
+						Block
+					</button>
+				</>
+			)}
 		</div>
 	);
 };

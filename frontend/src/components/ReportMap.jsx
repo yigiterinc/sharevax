@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import {MapContainer, GeoJSON, Marker, Popup} from 'react-leaflet';
 import L from 'leaflet';
 import {useEffect, useState} from 'react';
@@ -101,7 +102,8 @@ const ReportMap = () => {
 
 	const fetchEventsData = async () => {
 		const result = await fetchEvents();
-		setEventsData(result.data);
+		const filteredResult = result.data.filter((event) => event.eventStatus !== 'COMPLETED');
+		setEventsData(filteredResult);
 		setEventsLoading(false);
 	};
 
@@ -175,7 +177,24 @@ const ReportMap = () => {
 							) : (
 								<Marker key={strait.name} position={strait.coordinate} icon={greenIcon()}>
 									<Popup>
-										<ReportPopup name={strait.name} type='Strait' onBlock={() => handleBlock()} />
+										{eventsData.some(
+											(event) =>
+												event.subject === strait.name.toUpperCase().replace(/-/g, '_') &&
+												event.eventStatus === 'PENDING',
+										) ? (
+											<ReportPopup
+												name={strait.name}
+												type='Strait'
+												onBlock={() => handleBlock()}
+												isPending
+												remainingDays={
+													eventsData.find((e) => e.subject === strait.name.toUpperCase().replace(/-/g, '_'))
+														.remainingDaysToStart
+												}
+											/>
+										) : (
+											<ReportPopup name={strait.name} type='Strait' onBlock={() => handleBlock()} />
+										)}
 									</Popup>
 								</Marker>
 							);
@@ -197,7 +216,22 @@ const ReportMap = () => {
 							) : (
 								<Marker key={channel.name} position={channel.coordinate} icon={orangeIcon()}>
 									<Popup>
-										<ReportPopup name={channel.name} type='Channel' onBlock={() => handleBlock()} />
+										{eventsData.some(
+											(event) => event.subject === channel.name.toUpperCase() && event.eventStatus === 'PENDING',
+										) ? (
+											<ReportPopup
+												name={channel.name}
+												type='Channel'
+												onBlock={() => handleBlock()}
+												isPending
+												remainingDays={
+													eventsData.find((e) => e.subject === channel.name.toUpperCase().replace(/-/g, '_'))
+														.remainingDaysToStart
+												}
+											/>
+										) : (
+											<ReportPopup name={channel.name} type='Channel' onBlock={() => handleBlock()} />
+										)}
 									</Popup>
 								</Marker>
 							);
@@ -224,7 +258,17 @@ const ReportMap = () => {
 							) : (
 								<Marker key={harbor.name} position={[harbor.coordinate[1], harbor.coordinate[0]]} icon={blueIcon()}>
 									<Popup>
-										<ReportPopup name={harbor.name} type='Harbor' onBlock={() => handleBlock()} />
+										{eventsData.some((event) => event.subject === harbor.name && event.eventStatus === 'PENDING') ? (
+											<ReportPopup
+												name={harbor.name}
+												type='Harbor'
+												onBlock={() => handleBlock()}
+												isPending
+												remainingDays={eventsData.find((e) => e.subject === harbor.name).remainingDaysToStart}
+											/>
+										) : (
+											<ReportPopup name={harbor.name} type='Harbor' onBlock={() => handleBlock()} />
+										)}
 									</Popup>
 								</Marker>
 							);
