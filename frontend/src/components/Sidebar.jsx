@@ -1,9 +1,9 @@
 //Sidebar on ALL Pages
 //Universal Sidebar component appears on multiple pages
 import {useState, createElement, useEffect} from 'react';
-import {BsFillPinMapFill, BsCheckCircleFill} from 'react-icons/bs';
+import {BsCheckCircleFill} from 'react-icons/bs'; //BsFillPinMapFill for `Country Info`
 import {HiMenuAlt3} from 'react-icons/hi';
-import {BiWorld, BiDetail} from 'react-icons/bi';
+import {BiWorld} from 'react-icons/bi'; //BiDetail for `Order Detail`
 import {TbVaccine, TbMessageReport} from 'react-icons/tb';
 import {Link, useLocation} from 'react-router-dom';
 import {useGlobalState} from '../state';
@@ -11,8 +11,8 @@ import {useGlobalState} from '../state';
 export default function Sidebar() {
 	const pages = [
 		{name: 'Overview', link: '/', icon: BiWorld},
-		{name: 'Country Info', link: '/country-info', icon: BsFillPinMapFill, isCountrySelected: true},
-		{name: 'Order Detail', link: '/order-detail', icon: BiDetail, isCountrySelected: true},
+		// {name: 'Country Info', link: '/country-info', icon: BsFillPinMapFill, isCountrySelected: true},
+		// {name: 'Order Detail', link: '/order-detail', icon: BiDetail, isCountrySelected: true},
 		{name: 'Report', link: '/report', icon: TbMessageReport},
 		{name: 'Suggestion', link: '/suggestion', icon: BsCheckCircleFill, isCountrySelected: true},
 		{
