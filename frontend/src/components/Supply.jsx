@@ -7,6 +7,7 @@ import {useGlobalState} from '../state/index';
 const defaultValues = {
 	countryId: '',
 	vaccineType: '',
+	expirationDate: '',
 	quantity: '',
 	unitPrice: '',
 };
@@ -107,6 +108,7 @@ export default function Supply() {
 				document.getElementById('supplyForm').reset();
 				document.getElementById('supplyQuantity').value = '';
 				document.getElementById('unitPrice').value = '';
+				document.getElementById('expirationDate').value = '';
 				document.getElementById('supplySelectVaccineType').value = document.getElementById('disabledOption').value;
 			})
 			.catch((error) => {
@@ -160,7 +162,20 @@ export default function Supply() {
 							{showVaccineType(11)}
 						</select>
 					</div>
-
+					<div className='mb-6'>
+						<label className='text-main-100 text-l font-bold'>Expiration Date*</label>
+						<br />
+						<input
+							className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-2'
+							type='date'
+							id='expirationDate'
+							name='expirationDate'
+							value={formValues.expirationDate}
+							min='2023-01-01'
+							max='2050-12-31'
+							onChange={handleInputChange}
+						/>
+					</div>
 					<div className='mb-6'>
 						<label className='text-main-100 text-l font-bold'>Quantity*</label>
 						<input
