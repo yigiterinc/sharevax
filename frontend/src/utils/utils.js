@@ -79,16 +79,15 @@ export const millisecondsToYYYYMMDD = (milliseconds) => {
 };
 
 export const daysBetween = (date1, date2) => {
-	// The number of milliseconds in one day
 	const oneDay = 24 * 60 * 60 * 1000;
 
-	// Convert both dates to milliseconds
-	const date1InMs = date1.getTime();
-	const date2InMs = date2.getTime();
+	const newDate1 = new Date(date1);
+	newDate1.setHours(0, 0, 0, 0);
 
-	// Calculate the difference in milliseconds
-	const differenceInMs = Math.abs(date2InMs - date1InMs);
+	const newDate2 = new Date(date2);
+	newDate2.setHours(0, 0, 0, 0);
 
-	// Convert back to days and return
+	const differenceInMs = Math.abs(newDate2 - newDate1);
+
 	return Math.round(differenceInMs / oneDay);
 };
