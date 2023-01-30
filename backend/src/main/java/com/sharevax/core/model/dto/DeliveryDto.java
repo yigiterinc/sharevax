@@ -3,7 +3,7 @@ package com.sharevax.core.model.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.sharevax.core.model.Delivery;
-import com.sharevax.core.model.route.LineStringSerializer;
+import com.sharevax.core.serializer.LineStringSerializer;
 import lombok.*;
 import org.locationtech.jts.geom.LineString;
 
@@ -43,7 +43,7 @@ public class DeliveryDto {
                 .destinationHarbor(HarborSummaryDto.from(delivery.getDestinationHarbor()))
                 .deliveryStatus(delivery.getDeliveryStatus().toString())
                 .createdAt(delivery.getCreatedAt())
-                .quantity(delivery.getSupply().getQuantity())
+                .quantity(delivery.getQuantity())
                 .urgency(delivery.getDemand().getUrgency().toString())
                 .vaccineType(delivery.getSupply().getVaccineType().toString())
                 .estimatedArrivalDate(delivery.getEstimatedArrivalDate())

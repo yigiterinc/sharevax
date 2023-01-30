@@ -4,7 +4,7 @@ import com.sharevax.core.model.Country;
 import com.sharevax.core.model.Demand;
 import com.sharevax.core.model.Harbor;
 import com.sharevax.core.model.Supply;
-import com.sharevax.core.model.route.RoutePlan;
+import com.sharevax.core.serializer.RoutePlanDto;
 import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
 import eu.europa.ec.eurostat.jgiscotools.util.GeoDistanceUtil;
 import eu.europa.ec.eurostat.searoute.SeaRouting;
@@ -94,7 +94,7 @@ public class RouteService {
 
 
     // update the route based on ship's velocity
-    public RoutePlan adaptRoute(LineString routeHistory, LineString futureRoute) {
+    public RoutePlanDto updateShipRoutes(LineString routeHistory, LineString futureRoute) {
 
         List<Coordinate> routeHistoryList = getCoordinates(routeHistory);
         List<Coordinate> futureRouteList = getCoordinates(futureRoute);
@@ -129,7 +129,7 @@ public class RouteService {
         routeHistory = getLineString(routeHistoryList);
         futureRoute = getLineString(futureRouteList);
 
-        return new RoutePlan(routeHistory, futureRoute, duration);
+        return new RoutePlanDto(routeHistory, futureRoute, duration);
     }
 
     public List<Coordinate> getCoordinates(LineString lineString) {
