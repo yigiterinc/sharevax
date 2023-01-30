@@ -70,7 +70,7 @@ public class SimulationService {
     private void resetDatabaseState() {
         // delete all deliveries
         simulationFacade.deleteAllDeliveries();
-
+        simulationFacade.deleteAllSuggestions();
         // delete all supplies
         simulationFacade.deleteAllSupplies();
 

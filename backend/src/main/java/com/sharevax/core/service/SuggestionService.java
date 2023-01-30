@@ -98,4 +98,8 @@ public class SuggestionService {
     public List<Suggestion> getSuggestionsByCountryId(Integer countryId) {
         return suggestionRepository.findRelatedSuggestions(countryId);
     }
+
+    public void deleteAllSuggestions() {
+        suggestionRepository.deleteAll();
+    }
 }

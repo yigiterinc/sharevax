@@ -78,7 +78,6 @@ public class SimulationFacade {
         return supplyService.findUnmatchedSupplies();
     }
 
-
     public void resetCountryData() {
         countryService.resetCountryData();
     }
@@ -94,4 +93,6 @@ public class SimulationFacade {
     public void deleteAllDemands() {
         demandService.deleteAll();
     }
+
+    public void deleteAllSuggestions(){ suggestionService.deleteAllSuggestions();}
 }
