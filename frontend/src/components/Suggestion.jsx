@@ -43,80 +43,6 @@ import {fetchSimulationDay} from '../services/services';
 // 		},
 // 		quantity: 100,
 // 	},
-// 	{
-// 		id: 356,
-// 		supplierStatus: 'PENDING',
-// 		demanderStatus: 'PENDING',
-// 		supply: {
-// 			id: 32,
-// 			country: {
-// 				id: 2,
-// 				name: 'Japan',
-// 				population: 12500000,
-// 				vaccinationRate: 2.0724800000000023,
-// 				dailyVaccineConsumption: 367000,
-// 				vaccineStock: 371219000,
-// 				dailyVaccineProduction: 9000000,
-// 			},
-// 			vaccineType: 'PFIZER',
-// 			quantity: 1000,
-// 			expirationDate: 1674584945000,
-// 			unitPrice: 0,
-// 		},
-// 		demand: {
-// 			id: 25,
-// 			country: {
-// 				id: 1,
-// 				name: 'China',
-// 				population: 7680000,
-// 				vaccinationRate: 1.459895833333331,
-// 				dailyVaccineConsumption: 100000,
-// 				vaccineStock: 95328241120,
-// 				dailyVaccineProduction: 2217035840,
-// 			},
-// 			vaccineType: 'BIONTECH',
-// 			quantity: 100,
-// 			urgency: 'URGENT',
-// 		},
-// 		quantity: 100,
-// 	},
-// 	{
-// 		id: 352,
-// 		supplierStatus: 'PENDING',
-// 		demanderStatus: 'PENDING',
-// 		supply: {
-// 			id: 32,
-// 			country: {
-// 				id: 5,
-// 				name: 'Japan',
-// 				population: 12500000,
-// 				vaccinationRate: 2.0724800000000023,
-// 				dailyVaccineConsumption: 367000,
-// 				vaccineStock: 371219000,
-// 				dailyVaccineProduction: 9000000,
-// 			},
-// 			vaccineType: 'PFIZER',
-// 			quantity: 1000,
-// 			expirationDate: 1774584945000,
-// 			unitPrice: 0,
-// 		},
-// 		demand: {
-// 			id: 163,
-// 			country: {
-// 				id: 4,
-// 				name: 'China',
-// 				population: 7680000,
-// 				vaccinationRate: 1.459895833333331,
-// 				dailyVaccineConsumption: 100000,
-// 				vaccineStock: 95328241120,
-// 				dailyVaccineProduction: 2217035840,
-// 			},
-// 			vaccineType: 'PFIZER',
-// 			quantity: 10,
-// 			urgency: 'NORMAL',
-// 		},
-// 		quantity: 10,
-// 	},
 // ];
 // const suggestions = [];
 
@@ -230,7 +156,7 @@ export default function Suggestion({onNextDay, setUpdated}) {
 	};
 	// console.log('DDDD', currentDate);
 
-	//determine role(supplier or demander) by matching global id with id in incoming data
+	//If the current selected country is `demander`, display the `supplier` suggestion, vice versa.
 	function supplyOrDemand(data, i) {
 		let role = '';
 		for (let i = 0; i < data.length; i++) {
@@ -241,19 +167,45 @@ export default function Suggestion({onNextDay, setUpdated}) {
 		role = role == 'supplier' ? 'supplier' : 'demander';
 		// console.log('role in supplyOrDemand:', role);
 		if (role == 'demander') {
-			// let i = 0;
 			return (
-				<div>
-					<div className='grid grid-rows-1'>
+				<div className='grid grid-rows-5 ml-[10%] mr-[-15%]'>
+					<div className='grid grid-cols-2'>
 						<div>
-							<b>Expiration Date:</b>
+							<b>Supplier:</b>
 						</div>
-						<div>{formatDate(data[i].supply.expirationDate)}</div>
+						<div>{data[i].supply.country.name}</div>
+					</div>
+					<div className='grid grid-cols-2'>
+						<b>Vaccine Type:</b> {data[i].supply.vaccineType}
+					</div>
+					<div className='grid grid-cols-2'>
+						<b>Unit Price:</b> {data[i].supply.unitPrice}
+					</div>
+					<div className='grid grid-cols-2'>
+						<b>Quantity:</b> {data[i].quantity}
+					</div>
+					<div className='grid grid-cols-2'>
+						<b>Expiration Date:</b> {formatDate(data[i].supply.expirationDate)}
 					</div>
 				</div>
 			);
 		} else {
-			return <div></div>;
+			return (
+				<div className='grid grid-rows-4 ml-[4%] mr-[-15%]'>
+					<div className='grid grid-cols-2'>
+						<b>Demander:</b> {data[i].demand.country.name}
+					</div>
+					<div className='grid grid-cols-2'>
+						<b>Vaccine Requested:</b> {data[i].demand.vaccineType}
+					</div>
+					<div className='grid grid-cols-2'>
+						<b>Quantity Requested:</b> {data[i].quantity}
+					</div>
+					<div className='grid grid-cols-2'>
+						<b>Urgency:</b> {data[i].demand.urgency}
+					</div>
+				</div>
+			);
 		}
 	}
 
@@ -261,11 +213,13 @@ export default function Suggestion({onNextDay, setUpdated}) {
 	let caseIndex = []; //store all index of supply/demand
 	function showNotification(data) {
 		let role = '';
+
 		for (let i = 0; i < data.length; i++) {
 			if (data[i].supply.country.id == id) {
 				role = 'supplier';
 			}
 		}
+
 		role = role == 'supplier' ? 'supplier' : 'demander';
 
 		if (role == 'demander') {
@@ -281,21 +235,48 @@ export default function Suggestion({onNextDay, setUpdated}) {
 				}
 			}
 		}
+
 		let caseNotEmpty = (
-			<div>
-				<div className='grid justify-items-center items-center'>You have {suggestionLength} suggestions:</div>
+			<div className='text-center py-4 lg:px-4'>
+				<div className='p-2 bg-main-50/50 items-center leading-none lg:rounded-full flex lg:inline-flex'>
+					<span className='flex rounded-full bg-main-100/75 uppercase px-2 py-1 text-xs font-bold mr-3'>
+						New Suggestion!
+					</span>
+					<span className='font-semibold mr-2 text-left flex-auto'>
+						Check it out! <b>{suggestionLength}</b> suggestions!
+					</span>
+					<svg className='fill-current opacity-75 h-4 w-4' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'>
+						<path d='M12.95 10.707l.707-.707L8 4.343 6.586 5.757 10.828 10l-4.242 4.243L8 15.657l4.95-4.95z' />
+					</svg>
+				</div>
 			</div>
 		);
-		let caseEmpty = <div className='grid justify-items-center items-center'>You have no suggestion.</div>;
-		// console.log('Role:', role, '\nCaseLength:', caseLength);
+
+		let caseEmpty = (
+			<div className='grid grid-rows-1 ml-[210%] text-center py-4 lg:px-4'>
+				<div className='grid p-2  bg-main-100/50 items-center leading-none lg:rounded-full flex lg:inline-flex'>
+					<span className='grid rounded-full bg-yellow-100 uppercase px-2 py-1 text-xs font-bold mr-3'>
+						No Suggestion Yet
+					</span>
+					<span className='grid font-semibold mr-2 text-left flex-auto'>Chill~</span>
+					<svg className='fill-current opacity-75 h-4 w-4' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'></svg>
+				</div>
+			</div>
+		);
+
 		return caseIndex.length == 0 ? caseEmpty : caseNotEmpty;
 	}
 
 	//button options: Pending or not
-	function deniedOrApproved(data, i, status) {
+	function deniedOrApproved(data, i, irole, status) {
+		//get roleCountryName
+		function roleCountryName(irole) {
+			return irole == 'supplier' ? <>{data[i].supply.country.name}</> : <>{data[i].demand.country.name}</>;
+		}
+
 		let buttons1 = (
 			<div className='grid float-right'>
-				<div className='grid justify-items-center items-center mb-1'>
+				<div className='grid text-center place-content-center p-2'>
 					<button
 						id={data[i].id + 'approveButton'}
 						type='submit'
@@ -304,10 +285,10 @@ export default function Suggestion({onNextDay, setUpdated}) {
 						value={'APPROVED'}
 						onClick={(e) => handleSubmit(e, data[i].id, 'APPROVED')}
 					>
-						Accept
+						✅ Accept
 					</button>
 				</div>
-				<div className='grid justify-items-center items-center mt-1'>
+				<div className='grid text-center place-content-center p-2'>
 					<button
 						id={data[i].id + 'denyButton'}
 						type='submit'
@@ -316,85 +297,74 @@ export default function Suggestion({onNextDay, setUpdated}) {
 						value={'DENIED'}
 						onClick={(e) => handleSubmit(e, data[i].id, 'DENIED')}
 					>
-						Decline
+						❌ Decline
 					</button>
 				</div>
 			</div>
 		);
+
 		let buttons2 = (
-			<div className='grid float-right'>
-				<div className='grid justify-items-center items-center mt-1'>
-					<div
-						id={data[i].id + 'pending'}
-						className='text-orange-500 font-bold  p-1 rounded-sm disabled'
-						value={'PENDING'}
-					>
-						Waiting...
-					</div>
-				</div>
+			<div
+				className='grid text-center place-content-center text-orange-500 font-bold  p-1 rounded-sm disabled cursor-not-allowed'
+				id={data[i].id + 'pending'}
+				value={'PENDING'}
+			>
+				⏳⏳⏳ <br />
+				Waiting for approval
+				<br />
+				from {roleCountryName(irole)}
 			</div>
 		);
+
 		return status == 'PENDING' ? buttons1 : buttons2;
 	}
 
 	//Styling Suggestion piece
 	function suggestionPiece(data, i) {
 		let role = '';
-		let roleName;
 
 		for (let i = 0; i < data.length; i++) {
 			if (data[i].supply.country.id == id) {
 				role = 'demander';
-				roleName = <div>{data[i].demand.country.name}</div>;
 			} else if (data[i].demand.country.id == id) {
 				role = 'supplier';
-				roleName = <div>{data[i].supply.country.name}</div>;
 			}
 		}
+
 		function roleStatus() {
 			return role == 'demander' ? data[i].supplierStatus : data[i].demanderStatus;
 		}
+
 		// let a = roleStatus();
 		let suggestion = (
-			<form id={data[i].id}>
-				<div className='grid grid-cols-2 border-2 border-main-100 rounded-xl p-5 m-5'>
-					<div className='grid grid-rows-flex grid-cols-1'>
-						<div className='capitalize grid grid-rows-flex'>
-							<b>{role}:</b> {roleName}
+			<div className='grid'>
+				<form id={data[i].id}>
+					<div className='grid grid-cols-2 border-0 border-main-100 bg-main-50/50 rounded-xl p-5 m-5'>
+						<div className='grid grid-rows-flex grid-cols-1'>
+							<div>{supplyOrDemand(data, i)}</div>
 						</div>
-						<div>
-							<b>Amount: </b> {data[i].quantity}
-						</div>
-						<div>{supplyOrDemand(data, i)}</div>
+						<div className='grid grid-rows-flex grid-cols-1'>{deniedOrApproved(data, i, role, roleStatus())}</div>
 					</div>
-					<div className='grid grid-rows-flex grid-cols-1'>{deniedOrApproved(data, i, roleStatus())}</div>
-				</div>
-			</form>
+				</form>
+			</div>
 		);
-
-		// if (role == 'demander' && data[i].demanderStatus == 'APPROVED') {
-		// 	deniedOrApproved(data, i, 'PENDING');
-		// } else if (role == 'supplier' && data[i].supplierStatus == 'APPROVED') {
-		// 	deniedOrApproved(data, i, 'PENDING');
-		// } else {
-		// 	deniedOrApproved(data, i, '');
-		// }
-
 		return suggestion;
 	}
 
 	//show all suggestion pieces, ps. the map function below does not work, need a fix to use map
 	function showSuggestion(data) {
 		return (
-			<>
-				{(() => {
-					const arr = [];
-					for (let i = 0; i < caseIndex.length; i++) {
-						arr.push(<div>{suggestionPiece(data, caseIndex[i])}</div>);
-					}
-					return arr;
-				})()}
-			</>
+			<div className='grid'>
+				<div className='grid grid-cols-2'>
+					{(() => {
+						const arr = [];
+						for (let i = 0; i < caseIndex.length; i++) {
+							arr.push(<div className='grid'>{suggestionPiece(data, caseIndex[i])}</div>);
+						}
+						return arr;
+					})()}
+				</div>
+			</div>
 		);
 	}
 
