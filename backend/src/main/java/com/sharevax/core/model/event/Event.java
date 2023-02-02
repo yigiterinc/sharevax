@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "delaying_event")
 @DiscriminatorColumn(name = "event_type")
-public abstract class DelayingEvent {
+public abstract class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,8 +22,13 @@ public abstract class DelayingEvent {
     @Column(name = "subject")
     protected String subject;
 
-    public DelayingEvent(String subject) {
+    public Event(String subject, int remainingDaysToStart) {
         this.subject = subject;
+        this.remainingDaysToStart = remainingDaysToStart;
+
+        if (remainingDaysToStart == 0) {
+            this.eventStatus = EventStatus.ACTIVE;
+        }
     }
 
     protected abstract String getDescriptiveMessage();
@@ -46,23 +51,18 @@ public abstract class DelayingEvent {
      */
     protected abstract void processEventEnd();
 
-    enum EventStatus {
+    public enum EventStatus {
         PENDING, // The event has not started yet
         ACTIVE, // The event is currently active, no ending message has arrived
         COMPLETED  // The event has ended, we have received ending event from user
     }
 
-    @Column
+    @Column(name = "event_status")
     @Enumerated(EnumType.STRING)
     protected EventStatus eventStatus = EventStatus.PENDING;
 
-    // Start timestamp counter
-    @Column(name = "start_time")
-    protected int startTime;
-
-    // End timestamp counter
-    @Column(name = "end_time")
-    protected int endTime;
+    @Column(name = "remaining_time")
+    protected int remainingDaysToStart;
 
     public void startEvent() {
         eventStatus = EventStatus.ACTIVE;

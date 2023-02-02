@@ -54,7 +54,7 @@ public class SimulationService {
 
     public void simulateDay() {
         DAY_COUNTER++;
-        triggerEvents();    // TODO: implement this
+        simulationFacade.processEvents();
         updateShipLocations();
 
         updateVaccineStocksAndVaccinationRates();
@@ -295,11 +295,6 @@ public class SimulationService {
         }
     }
 
-    private void triggerEvents() {
-        // TODO
-        // Check for events that should be triggered
-    }
-
     /**
      *
      * @return simulated current date according to the offset DAY_COUNTER
@@ -319,6 +314,9 @@ public class SimulationService {
         return Date.from(zonedDateTime.toInstant());
     }
 
+    public int getDayCounter() {
+        return DAY_COUNTER;
+    }
 
     private void updateShipLocations() {
 
