@@ -10,8 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
+
 import org.locationtech.jts.geom.LineString;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +41,7 @@ public class DeliveryService {
             new ArrayList<>(Arrays.asList(startHarbor.getCoordinate().getCoordinate())));
 
         // calculate the estimatedArrivalDate
-        int duration = routeService.getDeliveryDays(startHarbor, destinationHarbor);
+        int duration = routeService.getDistanceInDays(startHarbor, destinationHarbor);
         Date estimatedArrivalDate = getEstimatedArrivalDate(duration, createdAt);
 
         int remainingDaysToNextHarbor = routeService.getDaysToNextStop(routeHistory, futureRoute);

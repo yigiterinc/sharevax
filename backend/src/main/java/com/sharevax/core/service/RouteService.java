@@ -4,9 +4,6 @@ import com.sharevax.core.model.Country;
 import com.sharevax.core.model.Demand;
 import com.sharevax.core.model.Harbor;
 import com.sharevax.core.model.Supply;
-import com.sharevax.core.model.event.BlockedChannel;
-import com.sharevax.core.model.event.BlockedPassage;
-import com.sharevax.core.model.event.BlockedStrait;
 import com.sharevax.core.model.event.Event;
 import com.sharevax.core.model.route.RoutePlan;
 import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
@@ -97,47 +94,47 @@ public class RouteService {
     // update the route based on ship's velocity
     public RoutePlan adaptRoute(LineString routeHistory, LineString futureRoute) {
 
-        List<Coordinate> routeHistoryList = getCoordinates(routeHistory);
-        List<Coordinate> futureRouteList = getCoordinates(futureRoute);
+        List<Coordinate> routeHistoryCoordinates = getCoordinates(routeHistory);
+        List<Coordinate> futureRouteCoordinates = getCoordinates(futureRoute);
 
-        int duration = 0;
+        int daysToNextStop = 0;
 
-        if (futureRoute.isRing()) {    // arrive at the destination
-            Coordinate arriveAt = futureRouteList.get(0);
-            routeHistoryList.add(arriveAt);
-            futureRouteList = new CoordinateList();
-        } else {
+        while (daysToNextStop < 1) {
+            Coordinate arriveAt = futureRouteCoordinates.get(0);
+            routeHistoryCoordinates.add(arriveAt);
 
-            Coordinate start = futureRouteList.get(0);
-            while (duration < 1) {
+            boolean finalDestinationReached = futureRoute.isEmpty() || futureRoute.isRing();
+            if (finalDestinationReached) {
+                futureRouteCoordinates = new CoordinateList();
+                break;
+            }
 
-                Coordinate arriveAt = futureRouteList.get(0);
-                routeHistoryList.add(arriveAt);
-                futureRouteList.remove(0);
+            routeHistoryCoordinates.add(arriveAt);
+            futureRouteCoordinates.remove(0);
 
-                duration = getDeliveryDays(getPoint(start), getPoint(futureRouteList.get(0)));
-                if (futureRouteList.size() == 1) {
-                    // The last stop must be taken on a separately.
-                    // Extreme case:
-                    // current distance - the second last stop = 0.5 days
-                    // current position - last stop  = 10 days
-                    duration = duration > 0 ? duration : 1;
-                    break;
-                }
+            var nextStop = futureRouteCoordinates.get(0);
+
+            daysToNextStop = getDistanceInDays(getPoint(arriveAt), getPoint(nextStop));
+            if (futureRouteCoordinates.size() == 1) {
+                // The last stop must be taken on separately.
+                // Extreme case:
+                // current distance - the second last stop = 0.5 days
+                // current position - last stop  = 10 days
+                daysToNextStop = daysToNextStop > 0 ? daysToNextStop : 1;
+                break;
             }
         }
 
-        routeHistory = getLineString(routeHistoryList);
-        futureRoute = getLineString(futureRouteList);
+        routeHistory = getLineString(routeHistoryCoordinates);
+        futureRoute = getLineString(futureRouteCoordinates);
 
-        return new RoutePlan(routeHistory, futureRoute, duration);
+        return new RoutePlan(routeHistory, futureRoute, daysToNextStop);
     }
 
     public List<Coordinate> getCoordinates(LineString lineString) {
-        List<Coordinate> coordinates = new ArrayList<Coordinate>();
-        coordinates.addAll(Arrays.asList(lineString.getCoordinates()));
-        return coordinates;
+        return new ArrayList<>(Arrays.asList(lineString.getCoordinates()));
     }
+
     private Point getPoint(Coordinate coordinate) {
         return new GeometryFactory().createPoint(coordinate);
     }
@@ -147,7 +144,7 @@ public class RouteService {
             coordinates.add(coordinates.get(0));
         }
         return new GeometryFactory().createLineString(
-            coordinates.toArray(new Coordinate[coordinates.size()]));
+            coordinates.toArray(new Coordinate[0]));
     }
 
     public LineString getLineString(Harbor startHarbor, Harbor endHarbor) {
@@ -166,7 +163,7 @@ public class RouteService {
             Coordinate start = coordinates[i];
             Coordinate next = coordinates[i + 1];
             coordinatesList.add(start);
-            int duration = getDeliveryDays(getPoint(start), getPoint(next));
+            int duration = getDistanceInDays(getPoint(start), getPoint(next));
             int pointsToInsert = duration - 1;
             int j = 0;
             while (j < pointsToInsert) {
@@ -210,9 +207,9 @@ public class RouteService {
 
         // find all blocked paths
         List<Event> activeEvents = eventService.getActiveEvents();
-        Set<String> blockedStraitNames = findBlockedStraits(activeEvents);
-        Set<String> blockedPassageNames = findBlockedPassages(activeEvents);
-        Set<String> blockedChannelNames = findBlockedChannels(activeEvents);
+        Set<String> blockedStraitNames = eventService.findBlockedStraits(activeEvents);
+        Set<String> blockedPassageNames = eventService.findBlockedPassages(activeEvents);
+        Set<String> blockedChannelNames = eventService.findBlockedChannels(activeEvents);
         return seaRouting.getRoute(long1, lat1, long2, lat2,
                 blockedChannelNames.contains("SUEZ"), blockedChannelNames.contains("PANAMA"),
                 blockedStraitNames.contains("MALACCA"), blockedStraitNames.contains("GIBRALTAR"), blockedStraitNames.contains("DOVER"),
@@ -221,37 +218,10 @@ public class RouteService {
                 blockedPassageNames.contains("NORTHWEST"), blockedPassageNames.contains("NORTHEAST"));
     }
 
-    private Set<String> findBlockedStraits(List<Event> activeEvents) {
-        List<String> straitNames = Arrays.stream(BlockedStrait.StraitOption.values()).map(Enum::toString).toList();
-        return findBlocked(activeEvents, straitNames);
-    }
-
-    private Set<String> findBlockedPassages(List<Event> activeEvents) {
-        List<String> passageNames = Arrays.stream(BlockedPassage.PassageOption.values()).map(Enum::toString).toList();
-        return findBlocked(activeEvents, passageNames);
-    }
-
-    private Set<String> findBlockedChannels(List<Event> activeEvents) {
-        List<String> channelNames = Arrays.stream(BlockedChannel.ChannelOption.values()).map(Enum::toString).toList();
-        return findBlocked(activeEvents, channelNames);
-    }
-
-    private Set<String> findBlocked(List<Event> activeEvents, List<String> namesToSearchFor) {
-        var passageEvents = activeEvents.stream().filter(e -> namesToSearchFor.contains(e.getSubject())).toList();
-        Set<String> blockedPassages = new HashSet<>();
-
-        for (Event event : passageEvents) {
-            blockedPassages.add(event.getSubject());
-        }
-
-        return blockedPassages;
-    }
-
     private double getDistance(Feature route) {
         MultiLineString geometry = (MultiLineString) route.getGeometry();
         return GeoDistanceUtil.getLengthGeoKM(geometry);
     }
-
 
     public int getDaysToNextStop(LineString routeHistory, LineString futureRoute) {
         if (futureRoute.isEmpty()) {
@@ -261,7 +231,7 @@ public class RouteService {
         Point arriveAt = routeHistory.getEndPoint();
         Point nextStop = futureRoute.getStartPoint();
 
-        int duration = getDeliveryDays(arriveAt, nextStop);
+        int duration = getDistanceInDays(arriveAt, nextStop);
 
         // Automatic correction for two points being too close together
         duration = duration > 0 ? duration : 1;
@@ -269,11 +239,11 @@ public class RouteService {
         return duration;
     }
 
-    public int getDeliveryDays(Harbor harbor, Harbor harbor2) {
-        return getDeliveryDays(harbor.getCoordinate(), harbor2.getCoordinate());
+    public int getDistanceInDays(Harbor harbor, Harbor harbor2) {
+        return getDistanceInDays(harbor.getCoordinate(), harbor2.getCoordinate());
     }
 
-    public int getDeliveryDays(Point start, Point end) {
+    public int getDistanceInDays(Point start, Point end) {
         double distance = getDistance(getRoute(start, end));
         int days = (int) distance / SPEED_FACTOR;
         return days;

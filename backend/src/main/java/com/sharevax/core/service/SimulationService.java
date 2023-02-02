@@ -41,12 +41,10 @@ public class SimulationService {
 
     // Daily vaccine consumption / stock ratio to determine if the country is in need of vaccines, increase urgency
     private static final double DAILY_VAX_CONSUMPTION_TO_STOCK_FACTOR = 1;
-    private final SupplyRepository supplyRepository;
 
-    public SimulationService(SimulationFacade simulationFacade,
-                             SupplyRepository supplyRepository) {
+
+    public SimulationService(SimulationFacade simulationFacade) {
         this.simulationFacade = simulationFacade;
-        this.supplyRepository = supplyRepository;
     }
 
     public void simulateDay() {
