@@ -8,7 +8,6 @@ import com.sharevax.core.model.event.BlockedChannel;
 import com.sharevax.core.model.event.BlockedPassage;
 import com.sharevax.core.model.event.BlockedStrait;
 import com.sharevax.core.model.event.Event;
-import com.sharevax.core.model.route.RoutePlan;
 import com.sharevax.core.serializer.RoutePlanDto;
 import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
 import eu.europa.ec.eurostat.jgiscotools.util.GeoDistanceUtil;
