@@ -11,3 +11,4 @@ export const SUGGESTION = `${BASE_URL}/suggestions/`;
 export const CREATE_SUGGESTION = `${BASE_URL}/suggestions`;
 export const PROGRESS_SIMULATION = `${BASE_URL}/simulation/increment-day`;
 export const SIMULATION_DAY = `${BASE_URL}/simulation/current-day`;
+export const RESET_SIMULATION = `${BASE_URL}/simulation/reset`;

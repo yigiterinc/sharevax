@@ -6,6 +6,7 @@ import CountryDropdown from '../components/CountryDropdown';
 import NextDayButton from '../components/NextDayButton';
 import NextDaySnackbar from '../components/NextDaySnackbar';
 import WorldSummary from '../components/WorldSummary';
+import ResetButton from '../components/ResetButton';
 
 function Home() {
 	const [onNextDay, setOnNextDay] = useState(false);
@@ -26,6 +27,7 @@ function Home() {
 		<div className='flex flex-col items-center gap-12 m-6 grow'>
 			<div className='flex justify-end w-full gap-3 -mb-8'>
 				<NextDayButton onNextDay={() => setOnNextDay(true)} />
+				<ResetButton />
 				<CountryDropdown />
 			</div>
 			<NextDaySnackbar onNextDay={onNextDay} />

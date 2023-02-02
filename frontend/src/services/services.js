@@ -4,9 +4,9 @@ import {
 	SUPPLIES,
 	HARBORS,
 	ACTIVE_DELIVERIES,
-	SUGGESTION,
 	PROGRESS_SIMULATION,
 	SIMULATION_DAY,
+	RESET_SIMULATION,
 } from './endpoints';
 
 export const fetchCountries = async function () {
@@ -37,4 +37,8 @@ export const progressSimulation = async function () {
 
 export const fetchSimulationDay = async function () {
 	return await axios.get(SIMULATION_DAY);
+};
+
+export const resetSimulation = async function () {
+	return await axios.patch(RESET_SIMULATION);
 };
