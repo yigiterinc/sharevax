@@ -29,7 +29,7 @@ public class EventController {
         return ResponseEntity.ok(eventService.saveEvent(event));
     }
 
-    @PatchMapping("/finish/{id}")
+    @PostMapping("/finish/{id}")
     private ResponseEntity<Event> finishEvent(@PathVariable int id) {
         return ResponseEntity.ok(eventService.finishEvent(id));
     }
