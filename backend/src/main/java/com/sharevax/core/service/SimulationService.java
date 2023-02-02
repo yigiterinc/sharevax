@@ -309,7 +309,7 @@ public class SimulationService {
                 LineString routeHistory = delivery.getRouteHistory();
                 LineString futureRoute = delivery.getFutureRoute();
 
-                RoutePlan routePlan = simulationFacade.adaptRoute(routeHistory, futureRoute);
+                RoutePlan routePlan = simulationFacade.adaptRoute(routeHistory, futureRoute, delivery.getDestinationHarbor());
                 routeHistory = routePlan.getRouteHistory();
                 futureRoute = routePlan.getFutureRoute();
                 dayCounter = routePlan.getDuration();

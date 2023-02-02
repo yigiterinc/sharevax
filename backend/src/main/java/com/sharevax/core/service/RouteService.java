@@ -92,7 +92,7 @@ public class RouteService {
 
 
     // update the route based on ship's velocity
-    public RoutePlan adaptRoute(LineString routeHistory, LineString futureRoute) {
+    public RoutePlan adaptRoute(LineString routeHistory, LineString futureRoute, Harbor destinationHarbor) {
 
         List<Coordinate> routeHistoryCoordinates = getCoordinates(routeHistory);
         List<Coordinate> futureRouteCoordinates = getCoordinates(futureRoute);
@@ -113,6 +113,12 @@ public class RouteService {
             futureRouteCoordinates.remove(0);
             // update future routes
             var finalStop = futureRouteCoordinates.get(futureRouteCoordinates.size() - 1);
+            if (destinationHarbor.isClosed()) {
+                // if destination harbor is closed, find the closest harbor and route to it
+                destinationHarbor = findClosestOpenHarbor(destinationHarbor);
+                finalStop = destinationHarbor.getCoordinate().getCoordinate();
+            }
+
             var newFutureRoute = getRoute(getPoint(arriveAt), getPoint(finalStop));
             futureRoute = getLineString(List.of(newFutureRoute.getGeometry().getCoordinates()));
 
@@ -132,6 +138,26 @@ public class RouteService {
         futureRoute = getLineString(futureRouteCoordinates);
 
         return new RoutePlan(routeHistory, futureRoute, daysToNextStop);
+    }
+
+    private Harbor findClosestOpenHarbor(Harbor destinationHarbor) {
+        var destinationCountry = destinationHarbor.getCountry();
+        var harbors = destinationCountry.getHarbors();
+        var destinationCoordinate = destinationHarbor.getCoordinate().getCoordinate();
+        var minDistance = Integer.MAX_VALUE;
+        Harbor closestHarbor = null;
+        for (Harbor harbor : harbors) {
+            if (harbor.isClosed()) {
+                continue;
+            }
+            var harborCoordinate = harbor.getCoordinate().getCoordinate();
+            var distance = getDistanceInDays(getPoint(destinationCoordinate), getPoint(harborCoordinate));
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestHarbor = harbor;
+            }
+        }
+        return closestHarbor;
     }
 
     public List<Coordinate> getCoordinates(LineString lineString) {

@@ -67,8 +67,8 @@ public class SimulationFacade {
     }
 
 
-    public RoutePlan adaptRoute(LineString routeHistory, LineString futureRoute) {
-        return routeService.adaptRoute(routeHistory, futureRoute);
+    public RoutePlan adaptRoute(LineString routeHistory, LineString futureRoute, Harbor destinationHarbor) {
+        return routeService.adaptRoute(routeHistory, futureRoute, destinationHarbor);
     }
 
     public List<Delivery> findActiveDeliveries() {
