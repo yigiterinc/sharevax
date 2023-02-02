@@ -111,9 +111,12 @@ public class RouteService {
 
             routeHistoryCoordinates.add(arriveAt);
             futureRouteCoordinates.remove(0);
+            // update future routes
+            var finalStop = futureRouteCoordinates.get(futureRouteCoordinates.size() - 1);
+            var newFutureRoute = getRoute(getPoint(arriveAt), getPoint(finalStop));
+            futureRoute = getLineString(List.of(newFutureRoute.getGeometry().getCoordinates()));
 
             var nextStop = futureRouteCoordinates.get(0);
-
             daysToNextStop = getDistanceInDays(getPoint(arriveAt), getPoint(nextStop));
             if (futureRouteCoordinates.size() == 1) {
                 // The last stop must be taken on separately.
