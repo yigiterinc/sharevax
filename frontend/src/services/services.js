@@ -11,6 +11,7 @@ import {
 	FINISH_EVENT,
 	RESET_SIMULATION,
 	SUGGESTION,
+	POST_SUGGESTION,
 } from './endpoints';
 
 export const fetchCountries = async function () {
@@ -30,10 +31,13 @@ export const fetchActiveDeliveries = async function () {
 	return await axios.get(url);
 };
 
-export default async function fetchSuggestions(id) {
-	const url = SUGGESTION + id;
-	return await axios.get(url);
-}
+export const fetchSuggestions = async function (id) {
+	return await axios.get(SUGGESTION(id));
+};
+
+export const postSuggestion = async function (suggestionId, countryId, approvalStatus, currentDate) {
+	return await axios.post(POST_SUGGESTION, {suggestionId, countryId, approvalStatus, currentDate});
+};
 
 export const progressSimulation = async function () {
 	return await axios.patch(PROGRESS_SIMULATION);
