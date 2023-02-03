@@ -1,8 +1,7 @@
 package com.sharevax.core.facade;
 
 import com.sharevax.core.model.*;
-import com.sharevax.core.model.route.RoutePlan;
-import com.sharevax.core.repository.DeliveryRepository;
+import com.sharevax.core.model.RoutePlan;
 import com.sharevax.core.service.*;
 import org.locationtech.jts.geom.LineString;
 import org.springframework.stereotype.Service;

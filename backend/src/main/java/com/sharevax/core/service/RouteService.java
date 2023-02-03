@@ -5,7 +5,7 @@ import com.sharevax.core.model.Demand;
 import com.sharevax.core.model.Harbor;
 import com.sharevax.core.model.Supply;
 import com.sharevax.core.model.event.Event;
-import com.sharevax.core.model.route.RoutePlan;
+import com.sharevax.core.model.RoutePlan;
 import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
 import eu.europa.ec.eurostat.jgiscotools.util.GeoDistanceUtil;
 import eu.europa.ec.eurostat.searoute.SeaRouting;

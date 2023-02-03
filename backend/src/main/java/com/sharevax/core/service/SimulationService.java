@@ -6,10 +6,8 @@ import com.sharevax.core.model.Delivery;
 import com.sharevax.core.model.Delivery.DeliveryStatus;
 import com.sharevax.core.model.Demand;
 import com.sharevax.core.model.Supply;
-import com.sharevax.core.model.route.RoutePlan;
-import com.sharevax.core.repository.SupplyRepository;
+import com.sharevax.core.model.RoutePlan;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.tuple.ImmutablePair;
