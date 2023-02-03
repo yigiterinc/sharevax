@@ -110,7 +110,8 @@ public class RouteService {
             }
 
             routeHistoryCoordinates.add(arriveAt);
-            futureRouteCoordinates.remove(0);
+            futureRouteCoordinates = futureRouteCoordinates.subList(1, futureRouteCoordinates.size());
+
             // update future routes
             var finalStop = futureRouteCoordinates.get(futureRouteCoordinates.size() - 1);
             if (destinationHarbor.isClosed()) {
@@ -161,7 +162,7 @@ public class RouteService {
     }
 
     public List<Coordinate> getCoordinates(LineString lineString) {
-        return new ArrayList<>(Arrays.asList(lineString.getCoordinates()));
+        return new ArrayList<Coordinate>(Arrays.asList(lineString.getCoordinates()));
     }
 
     private Point getPoint(Coordinate coordinate) {
