@@ -313,12 +313,14 @@ public class SimulationService {
                 routeHistory = routePlan.getRouteHistory();
                 futureRoute = routePlan.getFutureRoute();
                 dayCounter = routePlan.getDuration();
+                var destinationHarbor = routePlan.getDestinationHarbor();
 
                 if (futureRoute.isEmpty()) { // arrive at the destination
                     delivery.setDeliveryStatus(Delivery.DeliveryStatus.DELIVERED);
                 }
                 delivery.setRouteHistory(routeHistory);
                 delivery.setFutureRoute(futureRoute);
+                delivery.setDestinationHarbor(destinationHarbor);
             }
 
             delivery.setRemainingDaysToNextHarbor(dayCounter);

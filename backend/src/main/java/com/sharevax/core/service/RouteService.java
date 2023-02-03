@@ -120,7 +120,7 @@ public class RouteService {
             }
 
             var newFutureRoute = getRoute(getPoint(arriveAt), getPoint(finalStop));
-            futureRoute = getLineString(List.of(newFutureRoute.getGeometry().getCoordinates()));
+            futureRouteCoordinates = List.of(newFutureRoute.getGeometry().getCoordinates());
 
             var nextStop = futureRouteCoordinates.get(0);
             daysToNextStop = getDistanceInDays(getPoint(arriveAt), getPoint(nextStop));
@@ -137,7 +137,7 @@ public class RouteService {
         routeHistory = getLineString(routeHistoryCoordinates);
         futureRoute = getLineString(futureRouteCoordinates);
 
-        return new RoutePlan(routeHistory, futureRoute, daysToNextStop);
+        return new RoutePlan(routeHistory, futureRoute, daysToNextStop, destinationHarbor);
     }
 
     private Harbor findClosestOpenHarbor(Harbor destinationHarbor) {

@@ -1,5 +1,6 @@
 package com.sharevax.core.model.route;
 
+import com.sharevax.core.model.Harbor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,10 +14,12 @@ public class RoutePlan {
 	private LineString routeHistory;
 	private LineString futureRoute;
 	private int duration;
+	private Harbor destinationHarbor;
 
-	public RoutePlan(LineString routeHistory, LineString futureRoute, int duration) {
+	public RoutePlan(LineString routeHistory, LineString futureRoute, int duration, Harbor destinationHarbor) {
 		this.routeHistory = routeHistory;
 		this.futureRoute = futureRoute;
 		this.duration = duration;
+		this.destinationHarbor = destinationHarbor;
 	}
 }
