@@ -120,8 +120,8 @@ public class RouteService {
                 finalStop = destinationHarbor.getCoordinate().getCoordinate();
             }
 
-            var newFutureRoute = getRoute(getPoint(arriveAt), getPoint(finalStop));
-            futureRouteCoordinates = List.of(newFutureRoute.getGeometry().getCoordinates());
+//            var newFutureRoute = getRoute(getPoint(arriveAt), getPoint(finalStop));
+            futureRouteCoordinates = getCoordinates(getLineString(getPoint(arriveAt), getPoint(finalStop)));
 
             var nextStop = futureRouteCoordinates.get(0);
             daysToNextStop = getDistanceInDays(getPoint(arriveAt), getPoint(nextStop));
