@@ -1,7 +1,8 @@
 package com.sharevax.core.facade;
 
 import com.sharevax.core.model.*;
-import com.sharevax.core.serializer.RoutePlanDto;
+import com.sharevax.core.model.route.RoutePlan;
+import com.sharevax.core.repository.DeliveryRepository;
 import com.sharevax.core.service.*;
 import org.locationtech.jts.geom.LineString;
 import org.springframework.stereotype.Service;
@@ -64,8 +65,8 @@ public class SimulationFacade {
     }
 
 
-    public RoutePlanDto updateShipRoute(LineString routeHistory, LineString futureRoute) {
-        return routeService.updateShipRoutes(routeHistory, futureRoute);
+    public RoutePlan adaptRoute(LineString routeHistory, LineString futureRoute, Harbor destinationHarbor) {
+        return routeService.adaptRoute(routeHistory, futureRoute, destinationHarbor);
     }
 
     public List<Delivery> findActiveDeliveries() {

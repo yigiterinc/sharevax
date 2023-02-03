@@ -9,7 +9,10 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -47,6 +50,32 @@ public class EventService {
         }
 
         return eventRepository.save(delayingEvent);
+    }
+
+    public Set<String> findBlockedPassages(List<Event> activeEvents) {
+        List<String> passageNames = Arrays.stream(BlockedPassage.PassageOption.values()).map(Enum::toString).toList();
+        return findBlocked(activeEvents, passageNames);
+    }
+
+    public Set<String> findBlockedChannels(List<Event> activeEvents) {
+        List<String> channelNames = Arrays.stream(BlockedChannel.ChannelOption.values()).map(Enum::toString).toList();
+        return findBlocked(activeEvents, channelNames);
+    }
+
+    public Set<String> findBlockedStraits(List<Event> activeEvents) {
+        List<String> straitNames = Arrays.stream(BlockedStrait.StraitOption.values()).map(Enum::toString).toList();
+        return findBlocked(activeEvents, straitNames);
+    }
+
+    private Set<String> findBlocked(List<Event> activeEvents, List<String> namesToSearchFor) {
+        var passageEvents = activeEvents.stream().filter(e -> namesToSearchFor.contains(e.getSubject())).toList();
+        Set<String> blockedPassages = new HashSet<>();
+
+        for (Event event : passageEvents) {
+            blockedPassages.add(event.getSubject());
+        }
+
+        return blockedPassages;
     }
 
     public void processEvents() {

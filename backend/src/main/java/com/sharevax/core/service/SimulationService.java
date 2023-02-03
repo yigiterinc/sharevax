@@ -6,7 +6,7 @@ import com.sharevax.core.model.Delivery;
 import com.sharevax.core.model.Delivery.DeliveryStatus;
 import com.sharevax.core.model.Demand;
 import com.sharevax.core.model.Supply;
-import com.sharevax.core.serializer.RoutePlanDto;
+import com.sharevax.core.model.route.RoutePlan;
 import com.sharevax.core.repository.SupplyRepository;
 
 import java.math.BigDecimal;
@@ -44,12 +44,10 @@ public class SimulationService {
 
     // Daily vaccine consumption / stock ratio to determine if the country is in need of vaccines, increase urgency
     private static final double DAILY_VAX_CONSUMPTION_TO_STOCK_FACTOR = 1;
-    private final SupplyRepository supplyRepository;
 
-    public SimulationService(SimulationFacade simulationFacade,
-                             SupplyRepository supplyRepository) {
+
+    public SimulationService(SimulationFacade simulationFacade) {
         this.simulationFacade = simulationFacade;
-        this.supplyRepository = supplyRepository;
     }
 
     public void simulateDay() {
@@ -174,8 +172,10 @@ public class SimulationService {
             // Match the demand to the supply
             demandToSupply.put(demand, supply);
 
+            // Remove the demand from the list of demands
             demands.remove(demand);
 
+            // Remove the supply from the list of supplies
             demandToClosestSupply.remove(demand);
         }
 
@@ -337,16 +337,18 @@ public class SimulationService {
                 LineString routeHistory = delivery.getRouteHistory();
                 LineString futureRoute = delivery.getFutureRoute();
 
-                RoutePlanDto routePlanDto = simulationFacade.updateShipRoute(routeHistory, futureRoute);
-                routeHistory = routePlanDto.getRouteHistory();
-                futureRoute = routePlanDto.getFutureRoute();
-                dayCounter = routePlanDto.getDuration();
+                RoutePlan routePlan = simulationFacade.adaptRoute(routeHistory, futureRoute, delivery.getDestinationHarbor());
+                routeHistory = routePlan.getRouteHistory();
+                futureRoute = routePlan.getFutureRoute();
+                dayCounter = routePlan.getDuration();
+                var destinationHarbor = routePlan.getDestinationHarbor();
 
                 if (futureRoute.isEmpty()) { // arrive at the destination
                     delivery.setDeliveryStatus(Delivery.DeliveryStatus.DELIVERED);
                 }
                 delivery.setRouteHistory(routeHistory);
                 delivery.setFutureRoute(futureRoute);
+                delivery.setDestinationHarbor(destinationHarbor);
             }
 
             delivery.setRemainingDaysToNextHarbor(dayCounter);
