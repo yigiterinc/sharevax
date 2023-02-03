@@ -3,10 +3,12 @@ import {useGlobalState} from '../state/index';
 import {fetchSimulationDay, fetchSuggestions, postSuggestion} from '../services/services';
 import {millisecondsToDate} from '../utils/utils';
 import {useSnackbar} from 'notistack';
+import LoadingSpinner from './LoadingSpinner';
 
 export default function Suggestion() {
 	const [countryId] = useGlobalState('id');
 	const [suggestionData, setSuggestionData] = useState([]);
+	const [suggestionDataLoading, setSuggestionDataLoading] = useState(true);
 	const [currentDate, setCurrentDate] = useState([]);
 
 	const {enqueueSnackbar} = useSnackbar();
@@ -23,6 +25,7 @@ export default function Suggestion() {
 	const fetchSuggestionData = async () => {
 		const result = await fetchSuggestions(countryId);
 		setSuggestionData(result.data);
+		setSuggestionDataLoading(false);
 	};
 
 	const fetchCurrentDate = async () => {
@@ -33,19 +36,23 @@ export default function Suggestion() {
 	const handleSubmit = async (event, suggestionId, status) => {
 		event.preventDefault();
 		try {
+			setSuggestionDataLoading(true);
 			await postSuggestion(suggestionId, countryId, status, new Date(currentDate).toISOString());
 			fetchSuggestionData();
 			enqueueSnackbar('Success!', {
 				variant: 'success',
-				autoHideDuration: 2500,
+				autoHideDuration: 2000,
 				anchorOrigin: {vertical: 'top', horizontal: 'right'},
+				style: {marginTop: '60px'},
 			});
 		} catch (e) {
 			console.log(e);
+			setSuggestionDataLoading(false);
 			enqueueSnackbar('Something went wrong!', {
 				variant: 'error',
-				autoHideDuration: 2500,
+				autoHideDuration: 2000,
 				anchorOrigin: {vertical: 'top', horizontal: 'right'},
+				style: {marginTop: '60px'},
 			});
 		}
 	};
@@ -154,7 +161,11 @@ export default function Suggestion() {
 			return irole == 'supplier' ? <>{data[i].supply.country.name}</> : <>{data[i].demand.country.name}</>;
 		}
 
-		let buttons1 = (
+		let buttons1 = suggestionDataLoading ? (
+			<div className='grid grid-rows-1 items-center justify-center'>
+				<LoadingSpinner />
+			</div>
+		) : (
 			<div className='grid grid-rows-2 items-center justify-end mr-6'>
 				<div className='grid-rows-1 text-center'>
 					<button

@@ -82,9 +82,7 @@ export default function OverviewTable({onNextDay, setUpdated}) {
 
 	return (
 		<Paper sx={{width: '100%', overflow: 'hidden'}}>
-			<div className='text-bg text-white p-2 bg-main-100 font-bold text-lg text-center'>
-				Worldwide Vaccines Shipment
-			</div>
+			<div className='text-bg text-white p-2 bg-main-100 font-bold text-lg'>Worldwide Vaccine Shipment</div>
 			<TableContainer sx={{maxHeight: 260}}>
 				<Table stickyHeader aria-label='sticky table'>
 					<TableHead>
