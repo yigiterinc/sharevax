@@ -16,6 +16,10 @@ export default function Suggestion() {
 		fetchSuggestionData();
 	}, []);
 
+	useEffect(() => {
+		fetchSuggestionData();
+	}, [countryId]);
+
 	const fetchSuggestionData = async () => {
 		const result = await fetchSuggestions(countryId);
 		setSuggestionData(result.data);
@@ -181,7 +185,7 @@ export default function Suggestion() {
 
 		let buttons2 = (
 			<div
-				className='grid text-center place-content-center text-orange-500 font-bold  p-1 rounded-sm disabled cursor-not-allowed'
+				className='grid text-center place-content-center text-orange-500 font-semibold p-1 rounded-sm disabled cursor-not-allowed'
 				id={data[i].id + 'pending'}
 				value={'PENDING'}
 			>
@@ -214,7 +218,7 @@ export default function Suggestion() {
 		let suggestion = (
 			<div className='grid'>
 				<form id={data[i].id}>
-					<div className='grid grid-cols-2 bg-[#ecfaff] rounded-lg border drop-shadow-lg border-main-100 p-5 mt-6'>
+					<div className='grid grid-cols-2 bg-[#ecfaff] rounded-lg border drop-shadow-lg border-main-100 p-5'>
 						<div className='grid grid-rows-flex grid-cols-1'>
 							<div>{supplyOrDemand(data, i)}</div>
 						</div>
@@ -228,7 +232,7 @@ export default function Suggestion() {
 
 	function showSuggestion(data) {
 		return (
-			<div className='grid'>
+			<div className='grid mt-6'>
 				<div className='grid grid-cols-2 gap-4'>
 					{caseIndex.map((i) => (
 						<div key={i} className='grid'>
