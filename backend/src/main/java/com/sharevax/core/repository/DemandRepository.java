@@ -11,6 +11,6 @@ import java.util.List;
 public interface DemandRepository extends JpaRepository<Demand, Integer> {
 
     // An unmatched demand is a demand which is not present in the delivery table
-    @Query("SELECT d FROM Demand d WHERE d.id NOT IN (SELECT suggestion.demand.id FROM Suggestion suggestion)")
+    @Query("SELECT d FROM Demand d WHERE d.quantity>0 and d.id NOT IN (SELECT suggestion.demand.id FROM Suggestion suggestion)")
     List<Demand> findUnmatchedDemands();
 }
