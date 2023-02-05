@@ -19,7 +19,7 @@ import java.util.*;
 @Service
 public class RouteService {
 
-    private final int SPEED_FACTOR = 2000;
+    private final int SPEED_FACTOR = 500;
     private final SeaRouting seaRouting;
     private final EventService eventService;
 
@@ -100,7 +100,17 @@ public class RouteService {
         List<Coordinate> futureRouteCoordinates = getCoordinates(futureRoute);
 
         Coordinate arriveAt = futureRouteCoordinates.get(0);
-        futureRouteCoordinates.remove(0);
+        while(true && futureRouteCoordinates.size()>0){
+            double duration = 0;
+            duration += (arriveAt.distance(futureRouteCoordinates.get(0)) * 1000)/SPEED_FACTOR;
+            arriveAt = futureRouteCoordinates.get(0);
+            routeHistoryCoordinates.add(arriveAt);
+            futureRouteCoordinates.remove(0);
+            if(duration >= 1) {
+                break;
+            }
+        }
+//        futureRouteCoordinates.remove(0);
         routeHistoryCoordinates.add(arriveAt);
         var daysToNextStop = 1;
         boolean finalDestinationReached = futureRoute.isEmpty() || futureRoute.isRing();
