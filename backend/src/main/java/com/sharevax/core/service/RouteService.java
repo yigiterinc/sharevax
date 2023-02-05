@@ -118,6 +118,7 @@ public class RouteService {
             }
 
             futureRouteCoordinates = getCoordinates(getLineString(getPoint(arriveAt),getPoint(finalStop)));
+            futureRouteCoordinates = futureRouteCoordinates.stream().filter(c -> !routeHistoryCoordinates.contains(c)).toList();
         }
 
         futureRoute = getLineString(futureRouteCoordinates);
@@ -194,12 +195,12 @@ public class RouteService {
 
     private Coordinate getMiddlePoint(Coordinate start, Coordinate end, int daysLeft) {
         if (daysLeft < 1) {
-            return end;
+            return start;
         }
         double totalDistance = start.distance(end) * 1000;
         int totalDay = (int) totalDistance / SPEED_FACTOR;
         if(totalDay < 1) {
-            return end;
+            return start;
         }
         double x = (end.getX() - start.getX()) * (totalDay - daysLeft) / totalDay + start.getX();
         double y = (end.getY() - start.getY()) * (totalDay - daysLeft) / totalDay + start.getY();
