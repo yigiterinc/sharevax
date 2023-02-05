@@ -3,6 +3,7 @@ package com.sharevax.core.service;
 import com.sharevax.core.model.Delivery;
 import com.sharevax.core.model.Demand;
 import com.sharevax.core.model.Harbor;
+import com.sharevax.core.model.RoutePlan;
 import com.sharevax.core.model.Suggestion;
 import com.sharevax.core.model.Supply;
 import com.sharevax.core.model.dto.DeliveryDto;
@@ -66,33 +67,39 @@ public class DeliveryService {
         return deliveryRepository.save(delivery);
     }
 
+    private List<DeliveryDto> getDeliveryDtos(List<Delivery> deliveries){
+        var deliveryDtos = deliveries.stream().map(delivery -> {
+            LineString newRouteHistory= routeService.insertHistoryPoint(delivery.getRouteHistory(), delivery.getFutureRoute(), delivery.getRemainingDaysToNextHarbor());
+            delivery.setRouteHistory(newRouteHistory);
+            return DeliveryDto.from(delivery);
+        }).toList();
+        return deliveryDtos;
+    }
+
     public List<DeliveryDto> getAllDeliveries() {
         var deliveries =  deliveryRepository.findAll();
-        var deliveryDtos = deliveries.stream().map(DeliveryDto::from).toList();
-        return deliveryDtos;
+        return getDeliveryDtos(deliveries);
     }
 
     public List<DeliveryDto> getActiveDeliveries() {
         var deliveries =  deliveryRepository.findActiveDeliveries();
-        var deliveryDtos = deliveries.stream().map(DeliveryDto::from).toList();
-        return deliveryDtos;
+        return getDeliveryDtos(deliveries);
     }
 
     public DeliveryDto getDelivery(Integer deliveryId) {
-        Delivery d = deliveryRepository.findById(deliveryId).orElseThrow(() -> new RuntimeException("Delivery not found"));
-        return DeliveryDto.from(d);
+        Delivery delivery = deliveryRepository.findById(deliveryId).orElseThrow(() -> new RuntimeException("Delivery not found"));
+        LineString newRouteHistory= routeService.insertHistoryPoint(delivery.getRouteHistory(), delivery.getFutureRoute(), delivery.getRemainingDaysToNextHarbor());
+        delivery.setRouteHistory(newRouteHistory);
+        return DeliveryDto.from(delivery);
     }
 
     public List<DeliveryDto> getDeliveriesByCountry(Integer countryId) {
 
-        var deliveries =  deliveryRepository.findAll();
-
-        var deliveryDtos = deliveries
+        var deliveries =  deliveryRepository.findAll()
             .stream()
-            .filter(delivery -> isRelated(countryId, delivery))
-            .map(DeliveryDto::from).toList();
+            .filter(delivery -> isRelated(countryId, delivery)).toList();
 
-        return deliveryDtos;
+        return getDeliveryDtos(deliveries);
     }
 
     public List<Delivery> findActiveDeliveries() {

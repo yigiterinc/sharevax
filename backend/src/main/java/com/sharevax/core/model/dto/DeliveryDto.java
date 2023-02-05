@@ -3,12 +3,18 @@ package com.sharevax.core.model.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.sharevax.core.model.Delivery;
+import com.sharevax.core.model.RoutePlan;
 import com.sharevax.core.serializer.LineStringSerializer;
+import com.sharevax.core.service.RouteService;
+import java.util.List;
 import lombok.*;
+import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
 
 import java.math.BigInteger;
 import java.util.Date;
+import org.locationtech.jts.geom.Point;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Builder
 @Getter
