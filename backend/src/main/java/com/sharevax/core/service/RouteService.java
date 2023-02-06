@@ -97,8 +97,8 @@ public class RouteService {
         List<Coordinate> futureRouteCoordinates = getCoordinates(futureRoute);
 
         Coordinate arriveAt = futureRouteCoordinates.get(0);
+        double duration = 0;
         while (futureRouteCoordinates.size() > 0) {
-            double duration = 0;
             duration += (arriveAt.distance(futureRouteCoordinates.get(0)) * 1000) / SPEED_FACTOR;
             arriveAt = futureRouteCoordinates.get(0);
             routeHistoryCoordinates.add(arriveAt);
@@ -138,7 +138,7 @@ public class RouteService {
     public LineString getLineWithAddedPoints(LineString routeHistory, Coordinate startCoordinate,
                                              LineString futureRoute, int daysToNextStop) {
         List<Coordinate> historyCoordinates = new ArrayList<>();
-        if (routeHistory != null) {
+        if (!routeHistory.isEmpty()) {
             historyCoordinates.addAll(getCoordinates(routeHistory));
         } else {
             historyCoordinates.add(startCoordinate);
@@ -191,8 +191,11 @@ public class RouteService {
     }
 
     public LineString getLineString(List<Coordinate> coordinates) {
+        if (coordinates.size() == 1) {    // LineString (size must be 0 or >= 2)
+            coordinates.add(coordinates.get(0));
+        }
         return new GeometryFactory().createLineString(
-                coordinates.toArray(new Coordinate[0]));
+            coordinates.toArray(new Coordinate[0]));
     }
 
     private Coordinate getMiddlePoint(Coordinate start, Coordinate end, int daysLeft) {
@@ -256,7 +259,7 @@ public class RouteService {
 
     public int getDaysToNextPoint(Point p1, Point p2) {
         double distance = getDistance(p1, p2);
-        return (int) (distance * 1000 / SPEED_FACTOR);
+        return (int) (distance / SPEED_FACTOR);
     }
 
     public int getDaysToNextStop(LineString routeHistory, LineString futureRoute) {
