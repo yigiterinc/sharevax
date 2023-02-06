@@ -46,7 +46,7 @@ public class DeliveryService {
         int duration = routeService.getDistanceInDays(startHarbor, destinationHarbor);
         Date estimatedArrivalDate = getEstimatedArrivalDate(duration, createdAt);
 
-        int remainingDaysToNextHarbor = routeService.getDaysToNextStop(routeHistory, futureRoute);
+        int daysToNextPoint = routeService.getDaysToNextStop(routeHistory, futureRoute);
 
         Delivery delivery = Delivery.builder()
                 .startHarbor(startHarbor)
@@ -58,7 +58,7 @@ public class DeliveryService {
                 .demand(suggestion.getDemand())
                 .routeHistory(routeHistory)
                 .futureRoute(futureRoute)
-                .remainingDaysToNextHarbor(remainingDaysToNextHarbor)
+                .daysToNextPoint(daysToNextPoint)
                 .updatedAt(createdAt)
                 .quantity(suggestion.getQuantity())
                 .build();
@@ -111,7 +111,7 @@ public class DeliveryService {
     private Date getEstimatedArrivalDate(int deliveryDays, Date today) {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(today);
-        calendar.add(calendar.DATE, deliveryDays + 1);
+        calendar.add(Calendar.DATE, deliveryDays + 1);
         return calendar.getTime();
     }
 

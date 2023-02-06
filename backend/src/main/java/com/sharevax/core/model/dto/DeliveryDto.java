@@ -48,7 +48,7 @@ public class DeliveryDto {
                 .vaccineType(delivery.getSupply().getVaccineType().toString())
                 .estimatedArrivalDate(delivery.getEstimatedArrivalDate())
                 .updatedAt(delivery.getUpdatedAt())
-                .remainingDaysToNextHarbor(delivery.getRemainingDaysToNextHarbor())
+                .remainingDaysToNextHarbor(delivery.getDaysToNextPoint())
                 .routeHistory(delivery.getRouteHistory())
                 .futureRoute(delivery.getFutureRoute())
                 .build();

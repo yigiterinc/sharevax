@@ -193,6 +193,8 @@ public class RouteService {
             Coordinate start = coordinates[i];
             Coordinate next = coordinates[i + 1];
             coordinatesList.add(start);
+
+            // TODO: THIS FUCKS US UP
             int duration = getDistanceInDays(getPoint(start), getPoint(next));
             int pointsToInsert = duration - 1;
             int j = 0;

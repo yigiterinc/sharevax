@@ -322,7 +322,7 @@ public class SimulationService {
 
         for (Delivery delivery : deliveries) {
 
-            int dayCounter = delivery.getRemainingDaysToNextHarbor();
+            int dayCounter = delivery.getDaysToNextPoint();
             dayCounter--;
 
             if (isDelayed(delivery.getEstimatedArrivalDate())) {
@@ -349,7 +349,7 @@ public class SimulationService {
                 delivery.setDestinationHarbor(destinationHarbor);
             }
 
-            delivery.setRemainingDaysToNextHarbor(dayCounter);
+            delivery.setDaysToNextPoint(dayCounter);
             delivery.setUpdatedAt(getCurrentDate());
 
             simulationFacade.saveDelivery(delivery);
