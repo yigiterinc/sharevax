@@ -71,8 +71,9 @@ public class SimulationFacade {
     }
 
 
-    public RoutePlan adaptRoute(LineString routeHistory, LineString futureRoute, Harbor destinationHarbor) {
-        return routeService.adaptRoute(routeHistory, futureRoute, destinationHarbor);
+    public RoutePlan adaptRoute(LineString routeHistory, LineString futureRoute, Harbor destinationHarbor,
+                                Date estimatedArrivalDate, Date currentDay, Country arriveCountry) {
+        return routeService.adaptRoute(routeHistory, futureRoute, destinationHarbor, estimatedArrivalDate, currentDay, arriveCountry);
     }
 
     public List<Delivery> findActiveDeliveries() {

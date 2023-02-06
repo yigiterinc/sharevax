@@ -37,6 +37,8 @@ public class EventService {
             Harbor harbor = null;
             try {
                 harbor = harborRepository.findHarborByName(event.getSubject());
+                harbor.setStatus(Harbor.HarborStatus.CLOSED);
+                harborRepository.save(harbor);
             } catch (Exception e) {
                 throw new RuntimeException("Harbor with supplied country name not found while creating event");
             }
@@ -105,6 +107,12 @@ public class EventService {
     public Event finishEvent(int eventId) {
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new RuntimeException("Event with supplied id not found"));
         event.setEventStatus(Event.EventStatus.COMPLETED);
+
+        if (event instanceof BlockedHarbor) {
+            var harbor = ((BlockedHarbor) event).getHarbor();
+            harbor.setStatus(Harbor.HarborStatus.CLOSED);
+            harborRepository.save(harbor);
+        }
         return eventRepository.save(event);
     }
 }

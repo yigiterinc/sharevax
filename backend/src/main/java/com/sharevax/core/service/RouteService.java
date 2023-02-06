@@ -6,6 +6,7 @@ import com.sharevax.core.model.Harbor;
 import com.sharevax.core.model.Supply;
 import com.sharevax.core.model.event.Event;
 import com.sharevax.core.model.RoutePlan;
+import com.sharevax.core.repository.HarborRepository;
 import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
 import eu.europa.ec.eurostat.jgiscotools.util.GeoDistanceUtil;
 import eu.europa.ec.eurostat.searoute.SeaRouting;
@@ -21,10 +22,12 @@ public class RouteService {
     private final int SPEED_FACTOR = 500;
     private final SeaRouting seaRouting;
     private final EventService eventService;
+    private final HarborRepository harborRepository;
 
-    public RouteService(EventService eventService) {
+    public RouteService(EventService eventService, HarborRepository harborRepository) {
         this.seaRouting = new SeaRouting();
         this.eventService = eventService;
+        this.harborRepository = harborRepository;
     }
 
     public double findShortestDistanceBetweenDemandAndSupply(Demand demand, Supply supply) {
@@ -91,7 +94,8 @@ public class RouteService {
         return getDistance(route);
     }
 
-    public RoutePlan adaptRoute(LineString routeHistory, LineString futureRoute, Harbor destinationHarbor) {
+    public RoutePlan adaptRoute(LineString routeHistory, LineString futureRoute, Harbor destinationHarbor, Date estimatedArrivalDate,
+                                Date currentDay, Country destinationCountry) {
 
         List<Coordinate> routeHistoryCoordinates = getCoordinates(routeHistory);
         List<Coordinate> futureRouteCoordinates = getCoordinates(futureRoute);
@@ -115,10 +119,23 @@ public class RouteService {
             futureRouteCoordinates = new CoordinateList();
         } else {
             var finalStop = futureRoute.getEndPoint().getCoordinate();
-            if (destinationHarbor.isClosed()) {
+
+            var remainingDayThreshold = 5;
+            var daysInMs = remainingDayThreshold * 24 * 60 * 60 * 1000;
+            // if currentDay is in 5 days before estimated arrival date, it should be affected
+            boolean blockageShouldAffect = estimatedArrivalDate.getTime() - currentDay.getTime() < daysInMs;
+            if (destinationHarbor.isClosed() && blockageShouldAffect) {
                 // if destination harbor is closed, find the closest harbor and route to it
                 destinationHarbor = findClosestOpenHarbor(destinationHarbor);
                 finalStop = destinationHarbor.getCoordinate().getCoordinate();
+            }
+
+            var originalDestinationCountryHarbor = destinationCountry.getHarbors().get(0);
+            // Original dst is available again
+            if (!destinationHarbor.getCountry().equals(destinationCountry)
+                    && originalDestinationCountryHarbor.isAvailable()) {
+                destinationHarbor = originalDestinationCountryHarbor;
+                finalStop = originalDestinationCountryHarbor.getCoordinate().getCoordinate();
             }
 
             Feature futurePath = getRoute(getPoint(arriveAt), getPoint(finalStop));
@@ -153,8 +170,7 @@ public class RouteService {
     }
 
     private Harbor findClosestOpenHarbor(Harbor destinationHarbor) {
-        var destinationCountry = destinationHarbor.getCountry();
-        var harbors = destinationCountry.getHarbors();
+        var harbors = harborRepository.findAll();
         var destinationCoordinate = destinationHarbor.getCoordinate().getCoordinate();
         var minDistance = Integer.MAX_VALUE;
         Harbor closestHarbor = null;
@@ -163,7 +179,7 @@ public class RouteService {
                 continue;
             }
             var harborCoordinate = harbor.getCoordinate().getCoordinate();
-            var distance = getDistanceInDays(getPoint(destinationCoordinate), getPoint(harborCoordinate));
+            var distance = (int) getDistance(destinationCoordinate, harborCoordinate);
             if (distance < minDistance) {
                 minDistance = distance;
                 closestHarbor = harbor;

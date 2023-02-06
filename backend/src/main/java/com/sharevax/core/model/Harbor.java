@@ -44,6 +44,10 @@ public class Harbor {
     @JsonBackReference
     private List<Delivery> incomingDeliveries;
 
+    public void setStatus(HarborStatus status) {
+        this.status = status;
+    }
+
     public enum HarborStatus {
         AVAILABLE,
         CLOSED,
