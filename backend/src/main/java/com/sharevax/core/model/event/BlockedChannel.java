@@ -4,15 +4,35 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.*;
+import java.util.Arrays;
+
 @Getter
 @Setter
 @NoArgsConstructor
-public class BlockedChannel extends DelayingEvent {
+@Entity
+@DiscriminatorValue("BLOCKED_CHANNEL")
+public class BlockedChannel extends Event {
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "channel_name")
     private ChannelOption channelOption;
 
-    public BlockedChannel(ChannelOption channelOption) {
-        super(channelOption.name());
+    public BlockedChannel(ChannelOption channelOption, int startTime) {
+        super(channelOption.name(), startTime);
         this.channelOption = channelOption;
+        super.setRemainingDaysToStart(startTime);
+    }
+
+    public BlockedChannel(String channelOption, int startTime) {
+        super(channelOption, startTime);
+
+        String[] channelOptions = Arrays.stream(ChannelOption.values()).map(Enum::name).toArray(String[]::new);
+        if (Arrays.stream(channelOptions).noneMatch(channelOption::equals)) {
+            throw new IllegalArgumentException("Invalid channel option");
+        }
+
+        this.channelOption = ChannelOption.valueOf(channelOption);
     }
 
     @Override
@@ -22,9 +42,8 @@ public class BlockedChannel extends DelayingEvent {
 
     @Override
     protected void processEventStart() {
-        // TODO Auto-generated method stub
-        // Update event status to active
-        // Update channel if necessary
+        eventStatus = EventStatus.ACTIVE;
+        System.out.printf("Blocked channel event for channel %s is now active\n", subject);
     }
 
     @Override
@@ -34,7 +53,7 @@ public class BlockedChannel extends DelayingEvent {
         // Unblock the channel and update channel status and route as necessary
     }
 
-    enum ChannelOption {
+    public enum ChannelOption {
         SUEZ,
         PANAMA,
         KIEL,

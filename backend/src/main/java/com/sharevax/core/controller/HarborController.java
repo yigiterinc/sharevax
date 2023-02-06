@@ -25,13 +25,6 @@ public class HarborController {
         this.harborRepository = harborRepository;
         this.countryService = countryService;
     }
-//
-//    @GetMapping("/test-serialization")
-//    public ResponseEntity<Point> testSerialization() {
-//        GeometryFactory geometryFactory = new GeometryFactory();
-//        Point point = geometryFactory.createPoint(new Coordinate(1, 2));
-//        return ResponseEntity.ok(point);
-//    }
 
     @Operation(summary = "Get a list of all harbors")
     @GetMapping

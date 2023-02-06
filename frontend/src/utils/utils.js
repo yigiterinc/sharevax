@@ -67,3 +67,27 @@ export const millisecondsToDate = (milliseconds) => {
 		day: 'numeric',
 	});
 };
+
+// convert milliseconds to YYYY-MM-DD
+export const millisecondsToYYYYMMDD = (milliseconds) => {
+	var date = new Date(milliseconds); // Date 2011-05-09T06:08:45.178Z
+	var year = date.getFullYear();
+	var month = ('0' + (date.getMonth() + 1)).slice(-2);
+	var day = ('0' + date.getDate()).slice(-2);
+
+	return `${year}-${month}-${day}`; // 2011-05-09
+};
+
+export const daysBetween = (date1, date2) => {
+	const oneDay = 24 * 60 * 60 * 1000;
+
+	const newDate1 = new Date(date1);
+	newDate1.setHours(0, 0, 0, 0);
+
+	const newDate2 = new Date(date2);
+	newDate2.setHours(0, 0, 0, 0);
+
+	const differenceInMs = Math.abs(newDate2 - newDate1);
+
+	return Math.round(differenceInMs / oneDay);
+};

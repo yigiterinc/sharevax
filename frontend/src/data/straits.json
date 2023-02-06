@@ -1,0 +1,26 @@
+[
+	{
+		"name": "Malacca",
+		"coordinate": [2.196341, 102.249003]
+	},
+	{
+		"name": "Gibraltar",
+		"coordinate": [36.140834, -5.353585]
+	},
+	{
+		"name": "Dover",
+		"coordinate": [51.126441, 1.326855]
+	},
+	{
+		"name": "Bering",
+		"coordinate": [55.347828, -166.366778]
+	},
+	{
+		"name": "Magellan",
+		"coordinate": [-53.1167, -70.9833]
+	},
+	{
+		"name": "Bab-el-Mandeb",
+		"coordinate": [13.4, 42.9]
+	}
+]
