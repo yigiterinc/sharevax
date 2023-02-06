@@ -138,8 +138,7 @@ public class RouteService {
         return new RoutePlan(routeHistory, futureRoute, daysToNextStop, destinationHarbor);
     }
 
-    public LineString insertHistoryPoint(LineString routeHistory, LineString futureRoute,
-        int daysToNextStop) {
+    public LineString insertHistoryPoint(LineString routeHistory, LineString futureRoute, int daysToNextStop) {
         // insert points
         List<Coordinate> historyCoordinates = getCoordinates(routeHistory);
 
@@ -199,6 +198,7 @@ public class RouteService {
         if (coordinates.size() == 1) {
             coordinates.add(coordinates.get(0));
         }
+
         return new GeometryFactory().createLineString(
             coordinates.toArray(new Coordinate[0]));
     }
@@ -209,7 +209,7 @@ public class RouteService {
         }
         double totalDistance = start.distance(end) * 1000;
         int totalDay = (int) totalDistance / SPEED_FACTOR;
-        if(totalDay < 1) {
+        if (totalDay < 1) {
             return start;
         }
         double x = (end.getX() - start.getX()) * (totalDay - daysLeft) / totalDay + start.getX();
