@@ -225,13 +225,13 @@ public class RouteService {
         Set<String> blockedPassageNames = eventService.findBlockedPassages(activeEvents);
         Set<String> blockedChannelNames = eventService.findBlockedChannels(activeEvents);
         Feature route = seaRouting.getRoute(long1, lat1, long2, lat2,
-                blockedChannelNames.contains("SUEZ"), blockedChannelNames.contains("PANAMA"),
-                blockedStraitNames.contains("MALACCA"), blockedStraitNames.contains("GIBRALTAR"),
-                blockedStraitNames.contains("DOVER"),
-                blockedStraitNames.contains("BERING"), blockedStraitNames.contains("MAGELLAN"),
-                blockedStraitNames.contains("BAB_EL_MANDEB"),
-                blockedChannelNames.contains("KIEL"), blockedChannelNames.contains("CORINTH"),
-                blockedPassageNames.contains("NORTHWEST"), blockedPassageNames.contains("NORTHEAST"));
+                !blockedChannelNames.contains("SUEZ"), !blockedChannelNames.contains("PANAMA"),
+                !blockedStraitNames.contains("MALACCA"), !blockedStraitNames.contains("GIBRALTAR"),
+                !blockedStraitNames.contains("DOVER"),
+                !blockedStraitNames.contains("BERING"), !blockedStraitNames.contains("MAGELLAN"),
+                !blockedStraitNames.contains("BAB_EL_MANDEB"),
+                !blockedChannelNames.contains("KIEL"), !blockedChannelNames.contains("CORINTH"),
+                !blockedPassageNames.contains("NORTHWEST"), !blockedPassageNames.contains("NORTHEAST"));
 
         Geometry geometry = route.getGeometry();
         Coordinate s = geometry.getCoordinate();
