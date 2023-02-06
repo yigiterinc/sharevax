@@ -9,6 +9,7 @@ import {
 	CREATE_EVENT,
 	GET_EVENTS,
 	FINISH_EVENT,
+    RESET_SIMULATION,
 } from './endpoints';
 
 export const fetchCountries = async function () {
@@ -34,16 +35,4 @@ export const progressSimulation = async function () {
 
 export const fetchSimulationDay = async function () {
 	return await axios.get(SIMULATION_DAY);
-};
-
-export const createEvent = async function (type, subject, remainingDaysToStart) {
-	return await axios.post(CREATE_EVENT, {type, subject, remainingDaysToStart});
-};
-
-export const fetchEvents = async function () {
-	return await axios.get(GET_EVENTS);
-};
-
-export const finishEvent = async function (eventId) {
-	return await axios.post(FINISH_EVENT(eventId));
 };
