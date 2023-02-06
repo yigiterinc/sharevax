@@ -11,7 +11,6 @@ import eu.europa.ec.eurostat.jgiscotools.util.GeoDistanceUtil;
 import eu.europa.ec.eurostat.searoute.SeaRouting;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.locationtech.jts.geom.*;
-import org.locationtech.jts.operation.distance.DistanceOp;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -38,6 +37,7 @@ public class RouteService {
 
     /**
      * Returns the distance between two closest harbors of all demanding and supplying country pairs
+     *
      * @param demandingCountries
      * @param providingCountries
      * @return
@@ -91,35 +91,29 @@ public class RouteService {
         return getDistance(route);
     }
 
-
-    // update the route based on ship's velocity
-    public RoutePlan adaptRoute(LineString routeHistory, LineString futureRoute,
-        Harbor destinationHarbor) {
+    public RoutePlan adaptRoute(LineString routeHistory, LineString futureRoute, Harbor destinationHarbor) {
 
         List<Coordinate> routeHistoryCoordinates = getCoordinates(routeHistory);
         List<Coordinate> futureRouteCoordinates = getCoordinates(futureRoute);
 
         Coordinate arriveAt = futureRouteCoordinates.get(0);
-        while(true && futureRouteCoordinates.size()>0){
+        while (futureRouteCoordinates.size() > 0) {
             double duration = 0;
-            duration += (arriveAt.distance(futureRouteCoordinates.get(0)) * 1000)/SPEED_FACTOR;
+            duration += (arriveAt.distance(futureRouteCoordinates.get(0)) * 1000) / SPEED_FACTOR;
             arriveAt = futureRouteCoordinates.get(0);
             routeHistoryCoordinates.add(arriveAt);
             futureRouteCoordinates.remove(0);
-            if(duration >= 1) {
+            if (duration >= 1) {
                 break;
             }
         }
-//        futureRouteCoordinates.remove(0);
+
         routeHistoryCoordinates.add(arriveAt);
         var daysToNextStop = 1;
         boolean finalDestinationReached = futureRoute.isEmpty() || futureRoute.isRing();
         if (finalDestinationReached) {
             futureRouteCoordinates = new CoordinateList();
-        }
-        else {
-
-            // update future routes
+        } else {
             var finalStop = futureRoute.getEndPoint().getCoordinate();
             if (destinationHarbor.isClosed()) {
                 // if destination harbor is closed, find the closest harbor and route to it
@@ -127,8 +121,11 @@ public class RouteService {
                 finalStop = destinationHarbor.getCoordinate().getCoordinate();
             }
 
-            futureRouteCoordinates = getCoordinates(getLineString(getPoint(arriveAt),getPoint(finalStop)));
-            futureRouteCoordinates = futureRouteCoordinates.stream().filter(c -> !routeHistoryCoordinates.contains(c)).toList();
+            Feature futurePath = getRoute(getPoint(arriveAt), getPoint(finalStop));
+            Coordinate[] coordinates = futurePath.getGeometry().getCoordinates();
+            futureRouteCoordinates = Arrays.asList(coordinates).subList(1, coordinates.length);
+            futureRouteCoordinates = futureRouteCoordinates.stream()
+                    .filter(c -> !routeHistoryCoordinates.contains(c)).toList();
         }
 
         futureRoute = getLineString(futureRouteCoordinates);
@@ -138,14 +135,14 @@ public class RouteService {
         return new RoutePlan(routeHistory, futureRoute, daysToNextStop, destinationHarbor);
     }
 
-    public LineString insertHistoryPoint(LineString routeHistory, LineString futureRoute, int daysToNextStop) {
+    public LineString getLineWithAddedPoints(LineString routeHistory, LineString futureRoute, int daysToNextStop) {
         // insert points
         List<Coordinate> historyCoordinates = getCoordinates(routeHistory);
 
         Point start = routeHistory.getEndPoint();
         Point nextStop = futureRoute.getStartPoint();
         Coordinate coordinate = getMiddlePoint(start.getCoordinate(), nextStop.getCoordinate(),
-            daysToNextStop);
+                daysToNextStop);
         historyCoordinates.add(coordinate);
         return getLineString(historyCoordinates);
     }
@@ -167,6 +164,7 @@ public class RouteService {
                 closestHarbor = harbor;
             }
         }
+
         return closestHarbor;
     }
 
@@ -179,19 +177,16 @@ public class RouteService {
     }
 
 
-    public LineString getLineString(Harbor startHarbor, Harbor endHarbor) {
-        return getLineString(startHarbor.getCoordinate(), endHarbor.getCoordinate());
+    public LineString findPathBetweenHarbors(Harbor startHarbor, Harbor endHarbor) {
+        Point start = startHarbor.getCoordinate();
+        Point end = endHarbor.getCoordinate();
+        Feature route = getRoute(start, end);
+        return getLineString(route);
     }
 
-    public LineString getLineString(Point p1, Point p2) {
-
-        // turn the Route into LineString
-        Feature route = getRoute(p1, p2);
+    public LineString getLineString(Feature route) {
         Coordinate[] coordinates = route.getGeometry().getCoordinates();
-        List<Coordinate> coordinatesList = new ArrayList<Coordinate>();
-        coordinatesList.addAll(Arrays.asList(coordinates));
-        coordinatesList.remove(0);
-        return getLineString(coordinatesList);
+        return getLineString(List.of(coordinates));
     }
 
     public LineString getLineString(List<Coordinate> coordinates) {
@@ -200,7 +195,7 @@ public class RouteService {
         }
 
         return new GeometryFactory().createLineString(
-            coordinates.toArray(new Coordinate[0]));
+                coordinates.toArray(new Coordinate[0]));
     }
 
     private Coordinate getMiddlePoint(Coordinate start, Coordinate end, int daysLeft) {
@@ -230,13 +225,13 @@ public class RouteService {
         Set<String> blockedPassageNames = eventService.findBlockedPassages(activeEvents);
         Set<String> blockedChannelNames = eventService.findBlockedChannels(activeEvents);
         Feature route = seaRouting.getRoute(long1, lat1, long2, lat2,
-            blockedChannelNames.contains("SUEZ"), blockedChannelNames.contains("PANAMA"),
-            blockedStraitNames.contains("MALACCA"), blockedStraitNames.contains("GIBRALTAR"),
-            blockedStraitNames.contains("DOVER"),
-            blockedStraitNames.contains("BERING"), blockedStraitNames.contains("MAGELLAN"),
-            blockedStraitNames.contains("BAB_EL_MANDEB"),
-            blockedChannelNames.contains("KIEL"), blockedChannelNames.contains("CORINTH"),
-            blockedPassageNames.contains("NORTHWEST"), blockedPassageNames.contains("NORTHEAST"));
+                blockedChannelNames.contains("SUEZ"), blockedChannelNames.contains("PANAMA"),
+                blockedStraitNames.contains("MALACCA"), blockedStraitNames.contains("GIBRALTAR"),
+                blockedStraitNames.contains("DOVER"),
+                blockedStraitNames.contains("BERING"), blockedStraitNames.contains("MAGELLAN"),
+                blockedStraitNames.contains("BAB_EL_MANDEB"),
+                blockedChannelNames.contains("KIEL"), blockedChannelNames.contains("CORINTH"),
+                blockedPassageNames.contains("NORTHWEST"), blockedPassageNames.contains("NORTHEAST"));
 
         Geometry geometry = route.getGeometry();
         Coordinate s = geometry.getCoordinate();

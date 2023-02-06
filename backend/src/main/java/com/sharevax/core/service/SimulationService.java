@@ -321,7 +321,6 @@ public class SimulationService {
         List<Delivery> deliveries = simulationFacade.findActiveDeliveries();
 
         for (Delivery delivery : deliveries) {
-
             int dayCounter = delivery.getRemainingDaysToNextHarbor();
             dayCounter--;
 
@@ -364,9 +363,6 @@ public class SimulationService {
         long millisecondDiff = todayMillisecond - estimatedArrivalMillisecond;
         int dayDiff = (int) TimeUnit.MILLISECONDS.toDays(millisecondDiff);
 
-        if (dayDiff > 1) {
-            return true;
-        }
-        return false;
+        return dayDiff > 1;
     }
 }
