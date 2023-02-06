@@ -69,6 +69,9 @@ public class SimulationService {
         // reset country data
         simulationFacade.resetCountryData();
 
+        //reset events
+        simulationFacade.resetEvents();
+
         var supplyFromIndia = new Supply();
         var countries = simulationFacade.getAllCountries();
         supplyFromIndia.setCountry(countries.stream().filter(c -> c.getName().equals("India")).findFirst().get());

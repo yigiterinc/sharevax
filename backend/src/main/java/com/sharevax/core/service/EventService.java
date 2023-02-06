@@ -115,4 +115,13 @@ public class EventService {
         }
         return eventRepository.save(event);
     }
+
+    public void resetEvents() {
+        eventRepository.deleteAll();
+        var allHarbors = harborRepository.findAll();
+        for (Harbor harbor : allHarbors) {
+            harbor.setStatus(Harbor.HarborStatus.AVAILABLE);
+            harborRepository.save(harbor);
+        }
+    }
 }
