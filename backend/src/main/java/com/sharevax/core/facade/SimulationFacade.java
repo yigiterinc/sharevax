@@ -114,4 +114,8 @@ public class SimulationFacade {
     public void wipeOutSuggestions() {
         suggestionService.wipeOutSuggestions();
     }
+
+    public void resetEvents() {
+        eventService.resetEvents();
+    }
 }
