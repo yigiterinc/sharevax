@@ -33,9 +33,11 @@ public class DeliveryService {
 
         Feature path = routeService.getRoute(startHarbor.getCoordinate(), destinationHarbor.getCoordinate());
         List<Coordinate> coordinates = Arrays.stream(path.getGeometry().getCoordinates()).toList();
+
         // remove first because its coordinate of start harbor
         LineString futureRoute = routeService.getLineString(coordinates.subList(1, coordinates.size()));
-        LineString routeHistory = null;
+        LineString routeHistory =  routeService.getLineString(
+            new ArrayList<>(Arrays.asList(startHarbor.getCoordinate().getCoordinate())));
 
         // calculate the estimatedArrivalDate
         int duration = routeService.getDistanceInDays(path);
