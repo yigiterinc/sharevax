@@ -44,6 +44,7 @@ public class SimulationService {
         DAY_COUNTER++;
         simulationFacade.processEvents();
         updateShipLocations();
+        simulationFacade.wipeOutSuggestions();
 
         updateVaccineStocksAndVaccinationRates();
 

@@ -11,6 +11,8 @@ import com.sharevax.core.repository.SupplyRepository;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -49,10 +51,10 @@ public class SuggestionService {
             return true;
         }
         if (response.getApprovalStatus().equals(ApprovalStatus.APPROVED)) {
-            Boolean isDemander =
-                suggestion.getDemand().getCountry().getId() == response.getCountryId();
-            Boolean isSupplier =
-                suggestion.getSupply().getCountry().getId() == response.getCountryId();
+            boolean isDemander =
+                    Objects.equals(suggestion.getDemand().getCountry().getId(), response.getCountryId());
+            boolean isSupplier =
+                    Objects.equals(suggestion.getSupply().getCountry().getId(), response.getCountryId());
             if (isSupplier) {
                 suggestion.setSupplierStatus(response.getApprovalStatus());
             } else if (isDemander) {
@@ -101,6 +103,10 @@ public class SuggestionService {
     }
 
     public void deleteAllSuggestions() {
+        suggestionRepository.deleteAll();
+    }
+
+    public void wipeOutSuggestions() {
         suggestionRepository.deleteAll();
     }
 }

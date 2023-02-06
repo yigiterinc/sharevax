@@ -109,4 +109,8 @@ public class SimulationFacade {
     }
 
     public void deleteAllSuggestions(){ suggestionService.deleteAllSuggestions();}
+
+    public void wipeOutSuggestions() {
+        suggestionService.wipeOutSuggestions();
+    }
 }
