@@ -33,6 +33,10 @@ public class DemandService {
         return demandRepository.save(demand);
     }
 
+    public void saveDemand(Demand demand) {
+        demandRepository.save(demand);
+    }
+
     public Demand getDemandById(Integer id) {
         return demandRepository.findById(id).orElseThrow(() -> new RuntimeException("Demand not found"));
     }

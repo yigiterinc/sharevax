@@ -9,6 +9,7 @@ import com.sharevax.core.repository.DeliveryRepository;
 import java.util.*;
 
 import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
+import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
 import org.springframework.stereotype.Service;
 
@@ -31,15 +32,16 @@ public class DeliveryService {
                                     Date createdAt, Suggestion suggestion) {
 
         Feature path = routeService.getRoute(startHarbor.getCoordinate(), destinationHarbor.getCoordinate());
-        LineString futureRoute = routeService.getLineString(path);
-        LineString routeHistory = routeService.getLineString(
-            new ArrayList<>(Arrays.asList(startHarbor.getCoordinate().getCoordinate())));
+        List<Coordinate> coordinates = Arrays.stream(path.getGeometry().getCoordinates()).toList();
+        // remove first because its coordinate of start harbor
+        LineString futureRoute = routeService.getLineString(coordinates.subList(1, coordinates.size()));
+        LineString routeHistory = null;
 
         // calculate the estimatedArrivalDate
         int duration = routeService.getDistanceInDays(path);
         Date estimatedArrivalDate = getEstimatedArrivalDate(duration, createdAt);
 
-        int daysToNextStop = routeService.getDaysToNextPoint(routeHistory.getEndPoint(), futureRoute.getStartPoint());
+        int daysToNextStop = routeService.getDaysToNextPoint(startHarbor.getCoordinate(), futureRoute.getStartPoint());
 
         Delivery delivery = Delivery.builder()
                 .startHarbor(startHarbor)
@@ -78,6 +80,7 @@ public class DeliveryService {
         var updated = deliveries.stream().peek(delivery -> {
             LineString newRouteHistory = routeService.getLineWithAddedPoints(
                     delivery.getRouteHistory(),
+                    delivery.getStartHarbor().getCoordinate().getCoordinate(),
                     delivery.getFutureRoute(),
                     delivery.getDaysToNextStop());
 

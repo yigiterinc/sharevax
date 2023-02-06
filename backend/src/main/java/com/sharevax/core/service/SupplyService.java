@@ -34,6 +34,10 @@ public class SupplyService {
         return supply;
     }
 
+    public void saveSupply(Supply supply) {
+        supplyRepository.save(supply);
+    }
+
     public List<Supply> getAllSupplies() {
         return supplyRepository.findAll();
     }

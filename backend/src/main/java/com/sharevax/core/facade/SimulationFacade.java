@@ -60,6 +60,12 @@ public class SimulationFacade {
         return routeService.findShortestDistanceBetweenDemandAndSupply(demand, supply);
     }
 
+    public void saveInitialSuggestion(Demand d, Supply s) {
+        demandService.saveDemand(d);
+        supplyService.saveSupply(s);
+        suggestionService.createSuggestion(s, d);
+    }
+
     public List<Demand> getUnmatchedDemands() {
         return demandService.findUnmatchedDemands();
     }

@@ -1,12 +1,8 @@
 package com.sharevax.core.service;
 
 import com.sharevax.core.facade.SimulationFacade;
-import com.sharevax.core.model.Country;
-import com.sharevax.core.model.Delivery;
+import com.sharevax.core.model.*;
 import com.sharevax.core.model.Delivery.DeliveryStatus;
-import com.sharevax.core.model.Demand;
-import com.sharevax.core.model.Supply;
-import com.sharevax.core.model.RoutePlan;
 
 import java.math.BigInteger;
 import java.util.*;
@@ -40,7 +36,6 @@ public class SimulationService {
     // Daily vaccine consumption / stock ratio to determine if the country is in need of vaccines, increase urgency
     private static final double DAILY_VAX_CONSUMPTION_TO_STOCK_FACTOR = 1;
 
-
     public SimulationService(SimulationFacade simulationFacade) {
         this.simulationFacade = simulationFacade;
     }
@@ -72,6 +67,22 @@ public class SimulationService {
 
         // reset country data
         simulationFacade.resetCountryData();
+
+        var supplyFromIndia = new Supply();
+        var countries = simulationFacade.getAllCountries();
+        supplyFromIndia.setCountry(countries.stream().filter(c -> c.getName().equals("India")).findFirst().get());
+        supplyFromIndia.setQuantity(BigInteger.valueOf(1000));
+        supplyFromIndia.setVaccineType(VaccineType.BIONTECH);
+        Date fiftyDaysFromNow = Date.from(ZonedDateTime.now().plusDays(50).toInstant());
+        supplyFromIndia.setExpirationDate(fiftyDaysFromNow);
+
+        var demandFromJapan = new Demand();
+        demandFromJapan.setVaccineType(VaccineType.BIONTECH);
+        demandFromJapan.setCountry(countries.stream().filter(c -> c.getName().equals("Japan")).findFirst().get());
+        demandFromJapan.setQuantity(BigInteger.valueOf(1000));
+        demandFromJapan.setUrgency(Demand.Urgency.URGENT);
+
+        simulationFacade.saveInitialSuggestion(demandFromJapan, supplyFromIndia);
     }
 
     public void matchSupplyAndDemand() {

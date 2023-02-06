@@ -135,13 +135,18 @@ public class RouteService {
         return new RoutePlan(routeHistory, futureRoute, daysToNextStop, destinationHarbor);
     }
 
-    public LineString getLineWithAddedPoints(LineString routeHistory, LineString futureRoute, int daysToNextStop) {
-        // insert points
-        List<Coordinate> historyCoordinates = getCoordinates(routeHistory);
+    public LineString getLineWithAddedPoints(LineString routeHistory, Coordinate startCoordinate,
+                                             LineString futureRoute, int daysToNextStop) {
+        List<Coordinate> historyCoordinates = new ArrayList<>();
+        if (routeHistory != null) {
+            historyCoordinates.addAll(getCoordinates(routeHistory));
+        } else {
+            historyCoordinates.add(startCoordinate);
+        }
 
-        Point start = routeHistory.getEndPoint();
+        Coordinate start = historyCoordinates.get(historyCoordinates.size() - 1);
         Point nextStop = futureRoute.getStartPoint();
-        Coordinate coordinate = getMiddlePoint(start.getCoordinate(), nextStop.getCoordinate(),
+        Coordinate coordinate = getMiddlePoint(start, nextStop.getCoordinate(),
                 daysToNextStop);
         historyCoordinates.add(coordinate);
         return getLineString(historyCoordinates);
@@ -169,6 +174,10 @@ public class RouteService {
     }
 
     public List<Coordinate> getCoordinates(LineString lineString) {
+        if (lineString == null) {
+            return new ArrayList<>();
+        }
+
         return new ArrayList<>(Arrays.asList(lineString.getCoordinates()));
     }
 
@@ -182,10 +191,6 @@ public class RouteService {
     }
 
     public LineString getLineString(List<Coordinate> coordinates) {
-        if (coordinates.size() == 1) {
-            coordinates.add(coordinates.get(0));
-        }
-
         return new GeometryFactory().createLineString(
                 coordinates.toArray(new Coordinate[0]));
     }
