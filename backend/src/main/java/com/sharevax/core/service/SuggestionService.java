@@ -90,7 +90,7 @@ public class SuggestionService {
     }
 
     private void createDelivery(Suggestion suggestion, Date currentDate) {
-        Delivery delivery = deliveryService.createDelivery(
+         Delivery delivery = deliveryService.createDelivery(
             suggestion.getSupply().getCountry().getHarbors().get(0), // TODO use closest harbor
             suggestion.getDemand().getCountry().getHarbors().get(0), // TODO use closest harbor
             currentDate,
