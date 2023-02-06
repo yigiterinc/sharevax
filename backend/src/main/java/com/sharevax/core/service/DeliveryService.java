@@ -8,6 +8,7 @@ import com.sharevax.core.repository.DeliveryRepository;
 
 import java.util.*;
 
+import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
 import org.locationtech.jts.geom.LineString;
 import org.springframework.stereotype.Service;
 
@@ -29,15 +30,16 @@ public class DeliveryService {
     public Delivery createDelivery(Harbor startHarbor, Harbor destinationHarbor,
                                     Date createdAt, Suggestion suggestion) {
 
-        LineString futureRoute = routeService.findPathBetweenHarbors(startHarbor, destinationHarbor);
+        Feature path = routeService.getRoute(startHarbor.getCoordinate(), destinationHarbor.getCoordinate());
+        LineString futureRoute = routeService.getLineString(path);
         LineString routeHistory = routeService.getLineString(
             new ArrayList<>(Arrays.asList(startHarbor.getCoordinate().getCoordinate())));
 
         // calculate the estimatedArrivalDate
-        int duration = routeService.getDistanceInDays(startHarbor, destinationHarbor);
+        int duration = routeService.getDistanceInDays(path);
         Date estimatedArrivalDate = getEstimatedArrivalDate(duration, createdAt);
 
-        int remainingDaysToNextHarbor = routeService.getDaysToNextStop(routeHistory, futureRoute);
+        int daysToNextStop = routeService.getDaysToNextPoint(routeHistory.getEndPoint(), futureRoute.getStartPoint());
 
         Delivery delivery = Delivery.builder()
                 .startHarbor(startHarbor)
@@ -49,7 +51,7 @@ public class DeliveryService {
                 .demand(suggestion.getDemand())
                 .routeHistory(routeHistory)
                 .futureRoute(futureRoute)
-                .remainingDaysToNextHarbor(remainingDaysToNextHarbor)
+                .daysToNextStop(daysToNextStop)
                 .updatedAt(createdAt)
                 .quantity(suggestion.getQuantity())
                 .build();
@@ -77,7 +79,7 @@ public class DeliveryService {
             LineString newRouteHistory = routeService.getLineWithAddedPoints(
                     delivery.getRouteHistory(),
                     delivery.getFutureRoute(),
-                    delivery.getRemainingDaysToNextHarbor());
+                    delivery.getDaysToNextStop());
 
             delivery.setRouteHistory(newRouteHistory);
         }).toList();

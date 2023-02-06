@@ -130,7 +130,7 @@ public class RouteService {
 
         futureRoute = getLineString(futureRouteCoordinates);
         routeHistory = getLineString(routeHistoryCoordinates);
-        daysToNextStop = getDaysToNextStop(routeHistory, futureRoute);
+        daysToNextStop = getDaysToNextPoint(routeHistory.getEndPoint(), futureRoute.getStartPoint());
 
         return new RoutePlan(routeHistory, futureRoute, daysToNextStop, destinationHarbor);
     }
@@ -169,19 +169,11 @@ public class RouteService {
     }
 
     public List<Coordinate> getCoordinates(LineString lineString) {
-        return new ArrayList<Coordinate>(Arrays.asList(lineString.getCoordinates()));
+        return new ArrayList<>(Arrays.asList(lineString.getCoordinates()));
     }
 
     private Point getPoint(Coordinate coordinate) {
         return new GeometryFactory().createPoint(coordinate);
-    }
-
-
-    public LineString findPathBetweenHarbors(Harbor startHarbor, Harbor endHarbor) {
-        Point start = startHarbor.getCoordinate();
-        Point end = endHarbor.getCoordinate();
-        Feature route = getRoute(start, end);
-        return getLineString(route);
     }
 
     public LineString getLineString(Feature route) {
@@ -212,7 +204,7 @@ public class RouteService {
         return new Coordinate(x, y);
     }
 
-    private Feature getRoute(Point start, Point end) {
+    public Feature getRoute(Point start, Point end) {
         double long1 = start.getX();
         double lat1 = start.getY();
 
@@ -242,27 +234,44 @@ public class RouteService {
         return route;
     }
 
-
     private double getDistance(Feature route) {
         MultiLineString geometry = (MultiLineString) route.getGeometry();
         return GeoDistanceUtil.getLengthGeoKM(geometry);
     }
 
+    private double getDistance(Point start, Point end) {
+        LineString lineString = getLineString(List.of(start.getCoordinate(), end.getCoordinate()));
+        return GeoDistanceUtil.getLengthGeoKM(lineString);
+    }
+
+    private double getDistance(Coordinate start, Coordinate end) {
+        LineString lineString = getLineString(List.of(start, end));
+        return GeoDistanceUtil.getLengthGeoKM(lineString);
+    }
+
+    public int getDaysToNextPoint(Point p1, Point p2) {
+        double distance = getDistance(p1, p2);
+        return (int) (distance * 1000 / SPEED_FACTOR);
+    }
 
     public int getDaysToNextStop(LineString routeHistory, LineString futureRoute) {
         if (futureRoute.isEmpty()) {
             return 0;
         }
 
-        Point arriveAt = routeHistory.getEndPoint();
-        Point nextStop = futureRoute.getStartPoint();
+        Point current = routeHistory.getEndPoint();
+        Point next = futureRoute.getStartPoint();
 
-        int duration = getDistanceInDays(arriveAt, nextStop);
+        int duration = getDistanceInDays(current, next);
 
-        // Automatic correction for two points being too close together
+        // correction for two points being too close together
         duration = duration > 0 ? duration : 1;
 
         return duration;
+    }
+
+    public int getDistanceInDays(Feature route) {
+        return (int) (getDistance(route) / SPEED_FACTOR);
     }
 
     public int getDistanceInDays(Harbor harbor, Harbor harbor2) {

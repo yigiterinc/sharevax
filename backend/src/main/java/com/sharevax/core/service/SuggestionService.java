@@ -70,6 +70,7 @@ public class SuggestionService {
         } else {
             suggestionRepository.save(suggestion);
         }
+
         return true;
     }
 

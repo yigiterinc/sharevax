@@ -1,8 +1,6 @@
 package com.sharevax.core.controller;
 
 import com.sharevax.core.model.Suggestion;
-import com.sharevax.core.model.Supply;
-import com.sharevax.core.model.dto.CreateSupplyDto;
 import com.sharevax.core.model.dto.SuggestionResponseDto;
 import com.sharevax.core.service.SuggestionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,7 +32,7 @@ public class SuggestionController {
 
     @Operation(summary = "set approval status")
     @PostMapping
-    public ResponseEntity<Boolean> response(@RequestBody final SuggestionResponseDto responseDto) {
+    public ResponseEntity<Boolean> respondToSuggestion(@RequestBody final SuggestionResponseDto responseDto) {
         return ResponseEntity.ok(suggestionService.setApprovalStatus(responseDto));
     }
 }

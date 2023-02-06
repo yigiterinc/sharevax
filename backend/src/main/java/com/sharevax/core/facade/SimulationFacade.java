@@ -35,6 +35,7 @@ public class SimulationFacade {
     public Suggestion createSuggestion(Supply supply, Demand demand) {
         return suggestionService.createSuggestion(supply, demand);
     }
+
     public List<Supply> getAllSupplies() {
         return supplyService.getAllSupplies();
     }
