@@ -19,13 +19,13 @@ Pandemic hasn’t gone yet, and we noticed one piece of CDC news about vaccine s
 ![iShot_2023-02-06_21 38 06](https://user-images.githubusercontent.com/33310255/217081121-7ad63ee5-41a8-41be-a24a-81eb459f48f6.jpg)
 
 # Project Objectives
-  1. Provide Suggestions to Demander/Supplier through Share Match
+  1. Provide Suggestions to Demander/Supplier through Matching Algorithm
   2. Mutual Approval between Supplier and Demander 
-  3. Deliver Vaccines with the most Opportune Route 
+  3. Deliver Vaccines with the most Appropriate Route 
   4. React to Unexpected Events
 # Sharevax API
 ![Sharevax Swagger](https://user-images.githubusercontent.com/33310255/217095378-0401fa55-000e-4b42-a6df-9bdb49fe6203.jpg)
 
-# Methodology
+# Tech Stack
 - Frontend: [React](https://reactjs.org/), [Leaflet](https://leafletjs.com/), [Tailwind CSS](https://tailwindcss.com/).
 - Backend: [Spring](https://spring.io/), [PostgreSQL](https://www.postgresql.org/).
