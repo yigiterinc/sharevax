@@ -23,6 +23,8 @@ Pandemic hasn’t gone yet, and we noticed one piece of CDC news about vaccine s
   2. Mutual Approval between Supplier and Demander 
   3. Deliver Vaccines with the most Opportune Route 
   4. React to Unexpected Events
+# Sharevax API
+![Sharevax Swagger](https://user-images.githubusercontent.com/33310255/217095378-0401fa55-000e-4b42-a6df-9bdb49fe6203.jpg)
 
 # Methodology
 - Frontend: [React](https://reactjs.org/), [Leaflet](https://leafletjs.com/), [Tailwind CSS](https://tailwindcss.com/).
