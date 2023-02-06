@@ -130,14 +130,6 @@ public class RouteService {
                 finalStop = destinationHarbor.getCoordinate().getCoordinate();
             }
 
-            var originalDestinationCountryHarbor = destinationCountry.getHarbors().get(0);
-            // Original dst is available again
-            if (!destinationHarbor.getCountry().equals(destinationCountry)
-                    && originalDestinationCountryHarbor.isAvailable()) {
-                destinationHarbor = originalDestinationCountryHarbor;
-                finalStop = originalDestinationCountryHarbor.getCoordinate().getCoordinate();
-            }
-
             Feature futurePath = getRoute(getPoint(arriveAt), getPoint(finalStop));
             Coordinate[] coordinates = futurePath.getGeometry().getCoordinates();
             futureRouteCoordinates = Arrays.asList(coordinates).subList(1, coordinates.length);
