@@ -1,23 +1,17 @@
 package com.sharevax.core.service;
 
 import com.sharevax.core.model.Delivery;
-import com.sharevax.core.model.Demand;
 import com.sharevax.core.model.Harbor;
 import com.sharevax.core.model.Suggestion;
-import com.sharevax.core.model.Supply;
 import com.sharevax.core.model.dto.DeliveryDto;
 import com.sharevax.core.repository.DeliveryRepository;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
+import java.util.*;
+
+import eu.europa.ec.eurostat.jgiscotools.feature.Feature;
+import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.List;
 
 @Service
 public class DeliveryService {
@@ -37,16 +31,19 @@ public class DeliveryService {
     public Delivery createDelivery(Harbor startHarbor, Harbor destinationHarbor,
                                     Date createdAt, Suggestion suggestion) {
 
+        Feature path = routeService.getRoute(startHarbor.getCoordinate(), destinationHarbor.getCoordinate());
+        List<Coordinate> coordinates = Arrays.stream(path.getGeometry().getCoordinates()).toList();
 
-        LineString futureRoute = routeService.getLineString(startHarbor, destinationHarbor);
-        LineString routeHistory = routeService.getLineString(
+        // remove first because its coordinate of start harbor
+        LineString futureRoute = routeService.getLineString(coordinates.subList(1, coordinates.size()));
+        LineString routeHistory =  routeService.getLineString(
             new ArrayList<>(Arrays.asList(startHarbor.getCoordinate().getCoordinate())));
 
         // calculate the estimatedArrivalDate
-        int duration = routeService.getDistanceInDays(startHarbor, destinationHarbor);
+        int duration = routeService.getDistanceInDays(path);
         Date estimatedArrivalDate = getEstimatedArrivalDate(duration, createdAt);
 
-        int daysToNextPoint = routeService.getDaysToNextStop(routeHistory, futureRoute);
+        int daysToNextStop = routeService.getDaysToNextPoint(startHarbor.getCoordinate(), futureRoute.getStartPoint());
 
         Delivery delivery = Delivery.builder()
                 .startHarbor(startHarbor)
@@ -58,7 +55,7 @@ public class DeliveryService {
                 .demand(suggestion.getDemand())
                 .routeHistory(routeHistory)
                 .futureRoute(futureRoute)
-                .daysToNextPoint(daysToNextPoint)
+                .daysToNextStop(daysToNextStop)
                 .updatedAt(createdAt)
                 .quantity(suggestion.getQuantity())
                 .build();
@@ -66,33 +63,46 @@ public class DeliveryService {
         return deliveryRepository.save(delivery);
     }
 
+    private List<DeliveryDto> mapToDto(List<Delivery> deliveries){
+        return deliveries.stream().map(DeliveryDto::from).toList();
+    }
+
     public List<DeliveryDto> getAllDeliveries() {
         var deliveries =  deliveryRepository.findAll();
-        var deliveryDtos = deliveries.stream().map(DeliveryDto::from).toList();
-        return deliveryDtos;
+
+        return mapToDto(getDeliveriesWithPointAddedRouteHistory(deliveries));
     }
 
     public List<DeliveryDto> getActiveDeliveries() {
-        var deliveries =  deliveryRepository.findActiveDeliveries();
-        var deliveryDtos = deliveries.stream().map(DeliveryDto::from).toList();
-        return deliveryDtos;
+        return getDeliveriesWithPointAddedRouteHistory(deliveryRepository.findActiveDeliveries())
+                .stream().map(DeliveryDto::from).toList();
+    }
+
+    public List<Delivery> getDeliveriesWithPointAddedRouteHistory(List<Delivery> deliveries) {
+        var updated = deliveries.stream().peek(delivery -> {
+            LineString newRouteHistory = routeService.getLineWithAddedPoints(
+                    delivery.getRouteHistory(),
+                    delivery.getStartHarbor().getCoordinate().getCoordinate(),
+                    delivery.getFutureRoute(),
+                    delivery.getDaysToNextStop());
+
+            delivery.setRouteHistory(newRouteHistory);
+        }).toList();
+
+        return updated;
     }
 
     public DeliveryDto getDelivery(Integer deliveryId) {
-        Delivery d = deliveryRepository.findById(deliveryId).orElseThrow(() -> new RuntimeException("Delivery not found"));
-        return DeliveryDto.from(d);
+        Delivery delivery = deliveryRepository.findById(deliveryId).orElseThrow(() -> new RuntimeException("Delivery not found"));
+        return mapToDto(getDeliveriesWithPointAddedRouteHistory(List.of(delivery))).stream().findFirst().orElseThrow();
     }
 
     public List<DeliveryDto> getDeliveriesByCountry(Integer countryId) {
-
-        var deliveries =  deliveryRepository.findAll();
-
-        var deliveryDtos = deliveries
+        var deliveries =  deliveryRepository.findAll()
             .stream()
-            .filter(delivery -> isRelated(countryId, delivery))
-            .map(DeliveryDto::from).toList();
+            .filter(delivery -> isCountrySenderOrReceiver(countryId, delivery)).toList();
 
-        return deliveryDtos;
+        return mapToDto(getDeliveriesWithPointAddedRouteHistory(deliveries));
     }
 
     public List<Delivery> findActiveDeliveries() {
@@ -103,9 +113,9 @@ public class DeliveryService {
         deliveryRepository.save(delivery);
     }
 
-    private boolean isRelated(Integer countryId, Delivery delivery) {
-        return delivery.getSupply().getId() == countryId ||
-            delivery.getDemand().getId() == countryId;
+    private boolean isCountrySenderOrReceiver(Integer countryId, Delivery delivery) {
+        return Objects.equals(delivery.getSupply().getId(), countryId) ||
+                Objects.equals(delivery.getDemand().getId(), countryId);
     }
 
     private Date getEstimatedArrivalDate(int deliveryDays, Date today) {

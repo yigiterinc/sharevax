@@ -72,6 +72,7 @@ public class SuggestionService {
         } else {
             suggestionRepository.save(suggestion);
         }
+
         return true;
     }
 
@@ -102,6 +103,10 @@ public class SuggestionService {
     }
 
     public void deleteAllSuggestions() {
+        suggestionRepository.deleteAll();
+    }
+
+    public void wipeOutSuggestions() {
         suggestionRepository.deleteAll();
     }
 }

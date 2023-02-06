@@ -1,14 +1,11 @@
 package com.sharevax.core.service;
 
 import com.sharevax.core.facade.SimulationFacade;
-import com.sharevax.core.model.Country;
-import com.sharevax.core.model.Delivery;
+import com.sharevax.core.model.*;
 import com.sharevax.core.model.Delivery.DeliveryStatus;
-import com.sharevax.core.model.Demand;
-import com.sharevax.core.model.Supply;
-import com.sharevax.core.model.RoutePlan;
 
 import java.math.BigInteger;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.locationtech.jts.geom.LineString;
@@ -17,10 +14,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class SimulationService {
@@ -43,7 +36,6 @@ public class SimulationService {
     // Daily vaccine consumption / stock ratio to determine if the country is in need of vaccines, increase urgency
     private static final double DAILY_VAX_CONSUMPTION_TO_STOCK_FACTOR = 1;
 
-
     public SimulationService(SimulationFacade simulationFacade) {
         this.simulationFacade = simulationFacade;
     }
@@ -52,6 +44,7 @@ public class SimulationService {
         DAY_COUNTER++;
         simulationFacade.processEvents();
         updateShipLocations();
+        simulationFacade.wipeOutSuggestions();
 
         updateVaccineStocksAndVaccinationRates();
 
@@ -75,6 +68,22 @@ public class SimulationService {
 
         // reset country data
         simulationFacade.resetCountryData();
+
+        var supplyFromIndia = new Supply();
+        var countries = simulationFacade.getAllCountries();
+        supplyFromIndia.setCountry(countries.stream().filter(c -> c.getName().equals("India")).findFirst().get());
+        supplyFromIndia.setQuantity(BigInteger.valueOf(1000));
+        supplyFromIndia.setVaccineType(VaccineType.BIONTECH);
+        Date fiftyDaysFromNow = Date.from(ZonedDateTime.now().plusDays(50).toInstant());
+        supplyFromIndia.setExpirationDate(fiftyDaysFromNow);
+
+        var demandFromJapan = new Demand();
+        demandFromJapan.setVaccineType(VaccineType.BIONTECH);
+        demandFromJapan.setCountry(countries.stream().filter(c -> c.getName().equals("Japan")).findFirst().get());
+        demandFromJapan.setQuantity(BigInteger.valueOf(1000));
+        demandFromJapan.setUrgency(Demand.Urgency.URGENT);
+
+        simulationFacade.saveInitialSuggestion(demandFromJapan, supplyFromIndia);
     }
 
     public void matchSupplyAndDemand() {
@@ -121,7 +130,7 @@ public class SimulationService {
         for (var demand : matchedBestPairs.keySet()) {
             var supply = matchedBestPairs.get(demand);
             if (supply != null) {
-                boolean isSameCountry = supply.getCountry().getId() == demand.getCountry().getId();
+                boolean isSameCountry = Objects.equals(supply.getCountry().getId(), demand.getCountry().getId());
                 if (!isSameCountry) {
                     System.out.println("Matched " + demand + " with " + supply);
                     simulationFacade.createSuggestion(supply, demand);
@@ -298,7 +307,6 @@ public class SimulationService {
      * @return simulated current date according to the offset DAY_COUNTER
      */
     public Date getCurrentDate() {
-
         // get real date
         LocalDateTime realTodayDate = LocalDateTime.now();
 
@@ -317,12 +325,10 @@ public class SimulationService {
     }
 
     private void updateShipLocations() {
-
         List<Delivery> deliveries = simulationFacade.findActiveDeliveries();
 
         for (Delivery delivery : deliveries) {
-
-            int dayCounter = delivery.getDaysToNextPoint();
+            int dayCounter = delivery.getDaysToNextStop();
             dayCounter--;
 
             if (isDelayed(delivery.getEstimatedArrivalDate())) {
@@ -349,7 +355,7 @@ public class SimulationService {
                 delivery.setDestinationHarbor(destinationHarbor);
             }
 
-            delivery.setDaysToNextPoint(dayCounter);
+            delivery.setDaysToNextStop(dayCounter);
             delivery.setUpdatedAt(getCurrentDate());
 
             simulationFacade.saveDelivery(delivery);
@@ -364,9 +370,6 @@ public class SimulationService {
         long millisecondDiff = todayMillisecond - estimatedArrivalMillisecond;
         int dayDiff = (int) TimeUnit.MILLISECONDS.toDays(millisecondDiff);
 
-        if (dayDiff > 1) {
-            return true;
-        }
-        return false;
+        return dayDiff > 1;
     }
 }

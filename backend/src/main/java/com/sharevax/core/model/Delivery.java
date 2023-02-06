@@ -51,7 +51,7 @@ public class Delivery {
     private DeliveryStatus deliveryStatus = DeliveryStatus.IN_TIME;
 
     @Column(name = "days_to_next_harbor")
-    private int daysToNextPoint;
+    private int daysToNextStop;
 
     // store route history in coordinates
     @Column(name = "route_history")

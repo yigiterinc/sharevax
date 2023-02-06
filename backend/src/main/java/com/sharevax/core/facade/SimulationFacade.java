@@ -35,6 +35,7 @@ public class SimulationFacade {
     public Suggestion createSuggestion(Supply supply, Demand demand) {
         return suggestionService.createSuggestion(supply, demand);
     }
+
     public List<Supply> getAllSupplies() {
         return supplyService.getAllSupplies();
     }
@@ -57,6 +58,12 @@ public class SimulationFacade {
 
     public double findShortestDistanceBetweenDemandAndSupply(Demand demand, Supply supply) {
         return routeService.findShortestDistanceBetweenDemandAndSupply(demand, supply);
+    }
+
+    public void saveInitialSuggestion(Demand d, Supply s) {
+        demandService.saveDemand(d);
+        supplyService.saveSupply(s);
+        suggestionService.createSuggestion(s, d);
     }
 
     public List<Demand> getUnmatchedDemands() {
@@ -102,4 +109,8 @@ public class SimulationFacade {
     }
 
     public void deleteAllSuggestions(){ suggestionService.deleteAllSuggestions();}
+
+    public void wipeOutSuggestions() {
+        suggestionService.wipeOutSuggestions();
+    }
 }
