@@ -113,7 +113,7 @@ public class SimulationService {
         HashMap<Demand, Double> demandToVaccinationRates = new HashMap<>();
         for (Demand demand : demands) {
             demandToVaccinationRates.put(demand, demand.getCountry().getVaccinationRate());
-        } 
+        }
 
         HashMap<Demand, Double> demandToDailyVaccineConsumptionToStock = new HashMap<>();
         for (Demand demand : demands) {
@@ -178,6 +178,10 @@ public class SimulationService {
             // Get the demand with the highest cumulative score
             var demand = demands.get(0);
             var supply = demandToClosestSupply.get(demand);
+
+            if (!demand.getVaccineType().equals(supply.getVaccineType())) {
+                continue;
+            }
 
             // Match the demand to the supply
             demandToSupply.put(demand, supply);

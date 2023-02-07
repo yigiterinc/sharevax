@@ -87,9 +87,19 @@ public class SuggestionService {
         var demandRemainingQty = suggestion.getDemand().getQuantity();
         var supplyRemainingQty = suggestion.getSupply().getQuantity();
         if (demandRemainingQty.compareTo(BigInteger.ZERO) <= 0) {
-            suggestionRepository.deleteSuggestionByDemand(suggestion.getDemand().getId());
-        } else if (supplyRemainingQty.compareTo(BigInteger.ZERO) <= 0) {
-            suggestionRepository.deleteSuggestionBySupply(suggestion.getSupply().getId());
+            var allSuggestions = suggestionRepository.findAll();
+            var suggestionsForDemand = allSuggestions.stream()
+                    .filter(s -> s.getDemand().equals(suggestion.getDemand())).toList();
+
+            suggestionRepository.deleteAll(suggestionsForDemand);
+        }
+
+        if (supplyRemainingQty.compareTo(BigInteger.ZERO) <= 0) {
+            var allSuggestions = suggestionRepository.findAll();
+            var suggestionsForSupply = allSuggestions.stream()
+                    .filter(s -> s.getSupply().equals(suggestion.getSupply())).toList();
+
+            suggestionRepository.deleteAll(suggestionsForSupply);
         }
     }
 

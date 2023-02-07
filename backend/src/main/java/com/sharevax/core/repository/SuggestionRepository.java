@@ -17,13 +17,5 @@ public interface SuggestionRepository extends JpaRepository<Suggestion, Integer>
     @Query("SELECT s FROM Suggestion s WHERE s.supply.country.id = ?1 or s.demand.country.id=?1")
     List<Suggestion> findRelatedSuggestions(Integer countryId);
 
-    @Modifying
-    @Query("DELETE FROM Suggestion s WHERE s.demand.id=?1")
-    void deleteSuggestionByDemand(Integer demandId);
-
-    @Modifying
-    @Query("DELETE FROM Suggestion s WHERE s.supply.id=?1")
-    void deleteSuggestionBySupply(Integer supplyId);
-
     Optional<Suggestion> findById(Integer id);
 }
