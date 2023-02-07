@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.stream.Collectors;
 
 @Service
 public class SimulationService {
@@ -179,10 +180,6 @@ public class SimulationService {
             var demand = demands.get(0);
             var supply = demandToClosestSupply.get(demand);
 
-            if (!demand.getVaccineType().equals(supply.getVaccineType())) {
-                continue;
-            }
-
             // Match the demand to the supply
             demandToSupply.put(demand, supply);
 
@@ -191,6 +188,16 @@ public class SimulationService {
 
             // Remove the supply from the list of supplies
             demandToClosestSupply.remove(demand);
+        }
+
+        // in all pairs, delete the ones with unmatching vaccine type
+        var unmatchingVaccineTypes = demandToSupply.entrySet().stream().filter(demandSupplyEntry ->
+                !demandSupplyEntry.getKey().getVaccineType()
+                        .equals(demandSupplyEntry.getValue().getVaccineType())).toList();
+
+        for (Map.Entry<Demand, Supply> entry : unmatchingVaccineTypes) {
+            var key = entry.getKey();
+            demandToSupply.remove(key);
         }
 
         return demandToSupply;
