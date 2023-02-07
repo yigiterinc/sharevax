@@ -1,9 +1,10 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useState, createElement} from 'react';
 import {useGlobalState} from '../state/index';
 import {fetchSimulationDay, fetchSuggestions, postSuggestion} from '../services/services';
 import {millisecondsToDate} from '../utils/utils';
 import {useSnackbar} from 'notistack';
 import LoadingSpinner from './LoadingSpinner';
+import {IoClose} from 'react-icons/io5';
 
 export default function Suggestion() {
 	const [countryId] = useGlobalState('id');
@@ -11,7 +12,7 @@ export default function Suggestion() {
 	const [suggestionDataLoading, setSuggestionDataLoading] = useState(true);
 	const [currentDate, setCurrentDate] = useState([]);
 
-	const {enqueueSnackbar} = useSnackbar();
+	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
 	useEffect(() => {
 		fetchCurrentDate();
@@ -33,6 +34,16 @@ export default function Suggestion() {
 		setCurrentDate(result.data);
 	};
 
+	const action = (snackbarId) => (
+		<button
+			onClick={() => {
+				closeSnackbar(snackbarId);
+			}}
+		>
+			{createElement(IoClose, {size: '20'})}
+		</button>
+	);
+
 	const handleSubmit = async (event, suggestionId, status) => {
 		event.preventDefault();
 		try {
@@ -44,6 +55,7 @@ export default function Suggestion() {
 				autoHideDuration: 2000,
 				anchorOrigin: {vertical: 'top', horizontal: 'right'},
 				style: {marginTop: '60px'},
+				action,
 			});
 		} catch (e) {
 			console.log(e);
@@ -53,6 +65,7 @@ export default function Suggestion() {
 				autoHideDuration: 2000,
 				anchorOrigin: {vertical: 'top', horizontal: 'right'},
 				style: {marginTop: '60px'},
+				action,
 			});
 		}
 	};

@@ -1,8 +1,9 @@
 //Supply button => supply form
-import {useState} from 'react';
+import {useState, createElement} from 'react';
 import {useSnackbar} from 'notistack';
 import {CREATE_SUPPLY} from '../services/endpoints';
 import {useGlobalState} from '../state/index';
+import {IoClose} from 'react-icons/io5';
 
 const defaultValues = {
 	countryId: '',
@@ -58,9 +59,10 @@ function showVaccineType(index) {
 
 export default function Supply() {
 	const [country] = useGlobalState('country');
-	const {enqueueSnackbar} = useSnackbar();
+	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
 	const [formValues, setFormValues] = useState(defaultValues);
+
 	const handleInputChange = (e) => {
 		const {name, value} = e.target;
 		setFormValues({
@@ -69,12 +71,23 @@ export default function Supply() {
 		});
 	};
 
+	const action = (snackbarId) => (
+		<button
+			onClick={() => {
+				closeSnackbar(snackbarId);
+			}}
+		>
+			{createElement(IoClose, {size: '20'})}
+		</button>
+	);
+
 	const handleSubmitSuccess = () => {
 		enqueueSnackbar('Success! Supply Submitted!', {
 			variant: 'success',
 			autoHideDuration: 2500,
 			anchorOrigin: {vertical: 'top', horizontal: 'right'},
 			style: {marginTop: '60px'},
+			action,
 		});
 	};
 
@@ -84,6 +97,7 @@ export default function Supply() {
 			autoHideDuration: 2500,
 			anchorOrigin: {vertical: 'top', horizontal: 'right'},
 			style: {marginTop: '60px'},
+			action,
 		});
 	};
 

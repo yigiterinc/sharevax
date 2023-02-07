@@ -1,12 +1,13 @@
 import {useSnackbar} from 'notistack';
-import {useEffect, useState} from 'react';
+import {useEffect, useState, createElement} from 'react';
 import {fetchSimulationDay} from '../services/services';
 import {millisecondsToDate} from '../utils/utils';
+import {IoClose} from 'react-icons/io5';
 
 function NextDaySnackbar({onNextDay}) {
 	const [currentDay, setCurrentDay] = useState();
 	const [loading, setLoading] = useState(true);
-	const {enqueueSnackbar} = useSnackbar();
+	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
 	useEffect(() => {
 		if (onNextDay) {
@@ -30,11 +31,22 @@ function NextDaySnackbar({onNextDay}) {
 	};
 
 	const handleOnNextDay = () => {
+		const action = (snackbarId) => (
+			<button
+				onClick={() => {
+					closeSnackbar(snackbarId);
+				}}
+			>
+				{createElement(IoClose, {size: '20'})}
+			</button>
+		);
+
 		enqueueSnackbar(`Success! Today is ${millisecondsToDate(currentDay)}`, {
 			variant: 'success',
 			autoHideDuration: 2500,
 			anchorOrigin: {vertical: 'top', horizontal: 'right'},
 			style: {marginTop: '60px'},
+			action,
 		});
 	};
 }

@@ -1,8 +1,20 @@
+import {createElement} from 'react';
 import {useSnackbar} from 'notistack';
 import {finishEvent} from '../services/services';
+import {IoClose} from 'react-icons/io5';
 
 const UnblockPopup = ({id, name, type, onUnblock}) => {
-	const {enqueueSnackbar} = useSnackbar();
+	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+
+	const action = (snackbarId) => (
+		<button
+			onClick={() => {
+				closeSnackbar(snackbarId);
+			}}
+		>
+			{createElement(IoClose, {size: '20'})}
+		</button>
+	);
 
 	const onClickUnblock = async () => {
 		try {
@@ -12,6 +24,7 @@ const UnblockPopup = ({id, name, type, onUnblock}) => {
 				variant: 'success',
 				autoHideDuration: 2500,
 				anchorOrigin: {vertical: 'top', horizontal: 'right'},
+				action,
 			});
 		} catch (e) {
 			console.log(e);
@@ -19,6 +32,7 @@ const UnblockPopup = ({id, name, type, onUnblock}) => {
 				variant: 'error',
 				autoHideDuration: 2500,
 				anchorOrigin: {vertical: 'top', horizontal: 'right'},
+				action,
 			});
 		}
 	};

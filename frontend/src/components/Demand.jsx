@@ -1,8 +1,9 @@
 //Request button => request form
-import {useState} from 'react';
+import {useState, createElement} from 'react';
 import {useSnackbar} from 'notistack';
 import {CREATE_DEMAND} from '../services/endpoints';
 import {useGlobalState} from '../state/index';
+import {IoClose} from 'react-icons/io5';
 
 const defaultValues = {
 	countryId: '',
@@ -56,7 +57,7 @@ function showVaccineType(index) {
 
 export default function Demand() {
 	const [country] = useGlobalState('country');
-	const {enqueueSnackbar} = useSnackbar();
+	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
 	const [formValues, setFormValues] = useState(defaultValues);
 	const handleInputChange = (e) => {
@@ -67,12 +68,23 @@ export default function Demand() {
 		});
 	};
 
+	const action = (snackbarId) => (
+		<button
+			onClick={() => {
+				closeSnackbar(snackbarId);
+			}}
+		>
+			{createElement(IoClose, {size: '20'})}
+		</button>
+	);
+
 	const handleSubmitSuccess = () => {
 		enqueueSnackbar('Success! Demand Submitted!', {
 			variant: 'success',
 			autoHideDuration: 2500,
 			anchorOrigin: {vertical: 'top', horizontal: 'right'},
 			style: {marginTop: '60px'},
+			action,
 		});
 	};
 
@@ -82,6 +94,7 @@ export default function Demand() {
 			autoHideDuration: 2500,
 			anchorOrigin: {vertical: 'top', horizontal: 'right'},
 			style: {marginTop: '60px'},
+			action,
 		});
 	};
 
