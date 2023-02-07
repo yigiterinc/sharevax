@@ -38,4 +38,4 @@ Pandemic hasn’t gone yet, and we noticed one piece of CDC news about vaccine s
 - Backend: [Spring](https://spring.io/), [PostgreSQL](https://www.postgresql.org/).
 
 # Sponsor
-Capgemini: ![Capgemini](https://upload.wikimedia.org/wikipedia/commons/9/9d/Capgemini_201x_logo.svg)
+![Capgemini](https://upload.wikimedia.org/wikipedia/commons/9/9d/Capgemini_201x_logo.svg)
