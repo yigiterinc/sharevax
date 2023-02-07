@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface SupplyRepository extends JpaRepository<Supply, Integer> {
 
-    @Query("SELECT s FROM Supply s WHERE s.id NOT IN (SELECT delivery.supply.id FROM Delivery delivery)")
+    @Query("SELECT s FROM Supply s WHERE s.quantity > 0")
     List<Supply> findUnmatchedSupplies();
 }

@@ -7,6 +7,8 @@ export const DELIVERIES = `${BASE_URL}/deliveries`;
 export const ACTIVE_DELIVERIES = `${BASE_URL}/deliveries/active`;
 export const CREATE_SUPPLY = `${BASE_URL}/supplies`;
 export const CREATE_DEMAND = `${BASE_URL}/demands`;
+export const SUGGESTION = (suggestionId) => `${BASE_URL}/suggestions/${suggestionId}`;
+export const POST_SUGGESTION = `${BASE_URL}/suggestions`;
 export const PROGRESS_SIMULATION = `${BASE_URL}/simulation/increment-day`;
 export const SIMULATION_DAY = `${BASE_URL}/simulation/current-day`;
 export const CREATE_EVENT = `${BASE_URL}/event`;

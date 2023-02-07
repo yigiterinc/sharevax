@@ -1,14 +1,12 @@
 package com.sharevax.core.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import java.math.BigInteger;
 import lombok.*;
 import org.locationtech.jts.geom.LineString;
 
 import javax.persistence.*;
-import java.math.BigInteger;
 import java.util.Date;
 
 @NoArgsConstructor
@@ -53,7 +51,7 @@ public class Delivery {
     private DeliveryStatus deliveryStatus = DeliveryStatus.IN_TIME;
 
     @Column(name = "days_to_next_harbor")
-    private int remainingDaysToNextHarbor;
+    private int daysToNextStop;
 
     // store route history in coordinates
     @Column(name = "route_history")
