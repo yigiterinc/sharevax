@@ -6,6 +6,12 @@
 Sharevax is a web application that empowers the global health by ensuring the efficient distribution of vaccines with its smart algorithms.
 Pandemic hasn’t gone yet, and we noticed one piece of CDC news about vaccine shortages & delays, because countries are seeking for vaccines just for themselves, they are trading with each other by themselves, and trade between countries is not efficient at global scale. That’s where Sharevax sits. We will show you shortly how countries can make use of Sharevax to request or supply vaccines from others, make agreement easily, and get what they want as they request.
 
+# Features
+  1. Provide Suggestions to Demander/Supplier through Matching Algorithm
+  2. Mutual Approval between Supplier and Demander 
+  3. Deliver Vaccines with the most Appropriate Route which is computed by the Dijkstra's algorithm
+  4. React to Unexpected Events such as harbor blockage
+
 # Overview
 ## Home Page
 ![Overview - Home Page](https://user-images.githubusercontent.com/33310255/217080752-74157b5b-559f-4b18-93c9-ff87d8bc1da2.png)
@@ -23,6 +29,7 @@ Pandemic hasn’t gone yet, and we noticed one piece of CDC news about vaccine s
   2. Mutual Approval between Supplier and Demander 
   3. Deliver Vaccines with the most Appropriate Route 
   4. React to Unexpected Events
+
 # Sharevax API
 ![Sharevax Swagger](https://user-images.githubusercontent.com/33310255/217095378-0401fa55-000e-4b42-a6df-9bdb49fe6203.jpg)
 
