@@ -11,7 +11,7 @@ import {fetchActiveDeliveries} from '../services/services';
 
 const tableHeader = [
 	{id: 'startHarbor', label: 'Supplier', minWidth: 21},
-	{id: 'destinationHarbor', label: 'Demander', minWidth: 10},
+	{id: 'destinationHarbor', label: 'Destination', minWidth: 10},
 	{id: 'vaccineType', label: 'Vaccine', minWidth: 10},
 	{id: 'quantity', label: 'Quantity', minWidth: 20},
 	{id: 'createdAt', label: 'Order Date', minWidth: 21},

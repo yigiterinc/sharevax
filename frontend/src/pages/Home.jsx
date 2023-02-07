@@ -5,7 +5,7 @@ import OverviewTable from '../components/OverviewTable';
 import CountryDropdown from '../components/CountryDropdown';
 import NextDayButton from '../components/NextDayButton';
 import NextDaySnackbar from '../components/NextDaySnackbar';
-import WorldSummary from '../components/WorldSummary';
+// import WorldSummary from '../components/WorldSummary';
 import ResetButton from '../components/ResetButton';
 
 function Home() {
@@ -32,7 +32,7 @@ function Home() {
 			</div>
 			<NextDaySnackbar onNextDay={onNextDay} />
 			<OverviewMap onNextDay={onNextDay} setUpdated={setMapUpdated} />
-			<WorldSummary onNextDay={onNextDay} setUpdated={setSummaryUpdated} />
+			{/* <WorldSummary onNextDay={onNextDay} setUpdated={setSummaryUpdated} /> */}
 			<OverviewTable onNextDay={onNextDay} setUpdated={setTableUpdated} />
 		</div>
 	);
