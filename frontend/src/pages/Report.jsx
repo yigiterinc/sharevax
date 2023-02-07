@@ -10,6 +10,10 @@ function Report() {
 				<span className='text-green-500'>straits</span>, and <span className='text-orange-500'>channels</span> for a
 				specified period of time. To do this, simply click on the marker on the map representing the location you wish
 				to block, enter the starting day, and then click the <span className='text-red-500'>Block</span> button.
+				<div className='mt-2'>
+					If you want to unblock a blocked location, simply click on the marker on the map representing the blocked
+					location and click the <span className='text-green-500'>Unblock</span> button.
+				</div>
 			</div>
 			<ReportMap />
 		</div>

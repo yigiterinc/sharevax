@@ -6,6 +6,7 @@ import CountryInfo from './pages/CountryInfo';
 import OrderDetail from './pages/OrderDetail';
 import Report from './pages/Report';
 import SupplyDemandVaccine from './pages/SupplyDemandVaccine';
+import Suggestions from './pages/Suggestions';
 
 function App() {
 	return (
@@ -16,6 +17,7 @@ function App() {
 				<Route path='/country-info' element={<CountryInfo />} />
 				<Route path='/order-detail' element={<OrderDetail />} />
 				<Route path='/report' element={<Report />} />
+				<Route path='/suggestions' element={<Suggestions />} />
 				<Route path='/supply-demand-vaccine' element={<SupplyDemandVaccine />} />
 			</Routes>
 		</div>

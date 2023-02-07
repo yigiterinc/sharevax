@@ -10,8 +10,8 @@ import TableRow from '@mui/material/TableRow';
 import {fetchActiveDeliveries} from '../services/services';
 
 const tableHeader = [
-	{id: 'destinationHarbor', label: 'Destination', minWidth: 10},
-	{id: 'startHarbor', label: 'From', minWidth: 21},
+	{id: 'startHarbor', label: 'Supplier', minWidth: 21},
+	{id: 'destinationHarbor', label: 'Demander', minWidth: 10},
 	{id: 'vaccineType', label: 'Vaccine', minWidth: 10},
 	{id: 'quantity', label: 'Quantity', minWidth: 20},
 	{id: 'createdAt', label: 'Order Date', minWidth: 21},
@@ -82,7 +82,7 @@ export default function OverviewTable({onNextDay, setUpdated}) {
 
 	return (
 		<Paper sx={{width: '100%', overflow: 'hidden'}}>
-			<div className='text-bg text-white p-2 bg-main-100 font-bold text-lg'>Vaccines Currently Shipping</div>
+			<div className='text-bg text-white p-2 bg-main-100 font-bold text-lg'>Worldwide Vaccine Shipment</div>
 			<TableContainer sx={{maxHeight: 260}}>
 				<Table stickyHeader aria-label='sticky table'>
 					<TableHead>
@@ -107,8 +107,8 @@ export default function OverviewTable({onNextDay, setUpdated}) {
 							return (
 								<>
 									<TableRow key={row.deliveryId}>
-										<TableCell align='left'>{row.destinationHarbor.countryName}</TableCell>
 										<TableCell align='left'>{row.startHarbor.countryName}</TableCell>
+										<TableCell align='left'>{row.destinationHarbor.countryName}</TableCell>
 										<TableCell align='left'>{row.vaccineType}</TableCell>
 										<TableCell align='left'>{row.quantity}</TableCell>
 										<TableCell align='left'>{formatDate(row.createdAt)}</TableCell>

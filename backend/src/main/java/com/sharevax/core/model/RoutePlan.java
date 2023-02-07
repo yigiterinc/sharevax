@@ -1,5 +1,6 @@
-package com.sharevax.core.serializer;
+package com.sharevax.core.model;
 
+import com.sharevax.core.model.Harbor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,15 +9,17 @@ import org.locationtech.jts.geom.LineString;
 @Getter
 @Setter
 @NoArgsConstructor
-public class RoutePlanDto {
+public class RoutePlan {
 
 	private LineString routeHistory;
 	private LineString futureRoute;
 	private int duration;
+	private Harbor destinationHarbor;
 
-	public RoutePlanDto(LineString routeHistory, LineString futureRoute, int duration) {
+	public RoutePlan(LineString routeHistory, LineString futureRoute, int duration, Harbor destinationHarbor) {
 		this.routeHistory = routeHistory;
 		this.futureRoute = futureRoute;
 		this.duration = duration;
+		this.destinationHarbor = destinationHarbor;
 	}
 }

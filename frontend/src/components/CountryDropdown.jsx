@@ -2,15 +2,15 @@ import {setGlobalState, useGlobalState} from '../state';
 import {useNavigate} from 'react-router-dom';
 
 const countries = [
-	{name: 'China', value: 'China', flag: '🇨🇳'},
-	{name: 'Japan', value: 'Japan', flag: '🇯🇵'},
-	{name: 'India', value: 'India', flag: '🇮🇳'},
-	{name: 'United Kingdom', value: 'United Kingdom', flag: '🇬🇧'},
-	{name: 'Portugal', value: 'Portugal', flag: '🇵🇹'},
-	{name: 'USA', value: 'USA', flag: '🇺🇸'},
-	{name: 'Brazil', value: 'Brazil', flag: '🇧🇷'},
-	{name: 'South Africa', value: 'South Africa', flag: '🇿🇦'},
-	{name: 'Nigeria', value: 'Nigeria', flag: '🇳🇬'},
+	{name: 'China', id: 1, value: 'China', flag: '🇨🇳'},
+	{name: 'Japan', id: 2, value: 'Japan', flag: '🇯🇵'},
+	{name: 'India', id: 3, value: 'India', flag: '🇮🇳'},
+	{name: 'United Kingdom', id: 4, value: 'United Kingdom', flag: '🇬🇧'},
+	{name: 'Portugal', id: 5, value: 'Portugal', flag: '🇵🇹'},
+	{name: 'USA', id: 6, value: 'USA', flag: '🇺🇸'},
+	{name: 'Brazil', id: 7, value: 'Brazil', flag: '🇧🇷'},
+	{name: 'South Africa', id: 8, value: 'South Africa', flag: '🇿🇦'},
+	{name: 'Nigeria', id: 9, value: 'Nigeria', flag: '🇳🇬'},
 ];
 
 function CountryDropdown() {
@@ -21,11 +21,13 @@ function CountryDropdown() {
 		if (e.target.value === '') {
 			setGlobalState('country', '');
 			setGlobalState('flag', '');
+			setGlobalState('id', 0);
 			navigate('/');
 			return;
 		} else {
 			setGlobalState('country', e.target.value);
 			setGlobalState('flag', countries.find((c) => c.value === e.target.value).flag);
+			setGlobalState('id', countries.find((c) => c.value === e.target.value).id);
 		}
 	};
 

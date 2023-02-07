@@ -64,7 +64,7 @@ export default function WorldSummary({onNextDay, setUpdated}) {
 	return (
 		<div className='grid grid-cols-3 gap-20 w-full'>
 			<div className={blockStyle}>
-				<div className='font-bold text-main-100'>Current Transport</div>
+				<div className='font-bold text-main-100'>Worldwide Shipment</div>
 				<div className='font-bold mt-3 text-main-100'>
 					{activeDeliveriesData.length.toLocaleString(undefined, {minimumFractionDigits: 0})}
 				</div>
@@ -74,14 +74,20 @@ export default function WorldSummary({onNextDay, setUpdated}) {
 			</div>
 
 			<div className={blockStyle}>
-				<div className='font-bold text-main-100'>Daily Vaccine Production</div>
+				<div className='font-bold text-main-100'>
+					Worldwide Daily <br />
+					Vaccine Production
+				</div>
 				<div className='font-bold mt-3 text-main-100'>{countDailyVaccineProduction(countriesData)}</div>
 				<div className='row-span-2 grid justify-items-end items-center'>
 					<GiRobotGrab size={45} color={'#008db9'} />
 				</div>
 			</div>
 			<div className={blockStyle}>
-				<div className='font-bold text-main-100'>Daily Vaccine Consumption</div>
+				<div className='font-bold text-main-100'>
+					Worldwide Daily <br />
+					Vaccine Consumption
+				</div>
 				<div className='font-bold mt-3 text-main-100'>{countDailyVaccineConsumption(countriesData)}</div>
 				<div className='row-span-2 grid justify-items-end items-center'>
 					<TbVaccine size={45} color={'#008db9'} />

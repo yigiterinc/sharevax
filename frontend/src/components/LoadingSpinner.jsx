@@ -1,9 +1,9 @@
-export default function LoadingSpinner() {
+export default function LoadingSpinner({size = 'w-6 h-6'}) {
 	return (
 		<div role='status'>
 			<svg
 				aria-hidden='true'
-				className='w-6 h-6 text-gray-200 animate-spin fill-main-100'
+				className={`${size} text-gray-200 animate-spin fill-main-100`}
 				viewBox='0 0 100 101'
 				fill='none'
 				xmlns='http://www.w3.org/2000/svg'

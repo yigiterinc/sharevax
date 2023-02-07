@@ -1,12 +1,13 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useState, createElement} from 'react';
 import {useSnackbar} from 'notistack';
 import {fetchSimulationDay, createEvent} from '../services/services';
 import {millisecondsToYYYYMMDD, daysBetween} from '../utils/utils';
+import {IoClose} from 'react-icons/io5';
 
 const ReportPopup = ({name, type, onBlock, isPending, remainingDays}) => {
 	const [currentDay, setCurrentDay] = useState({todaysDate: '', formattedDate: ''});
 	const [selectedDate, setSelectedDate] = useState(new Date());
-	const {enqueueSnackbar} = useSnackbar();
+	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
 	useEffect(() => {
 		fetchCurrentDay();
@@ -18,6 +19,16 @@ const ReportPopup = ({name, type, onBlock, isPending, remainingDays}) => {
 		setSelectedDate(new Date(result.data));
 	};
 
+	const action = (snackbarId) => (
+		<button
+			onClick={() => {
+				closeSnackbar(snackbarId);
+			}}
+		>
+			{createElement(IoClose, {size: '20'})}
+		</button>
+	);
+
 	const onClickReport = async () => {
 		const formattedName = type === 'Harbor' ? name : name.toUpperCase().replace(/-/g, '_');
 		try {
@@ -27,6 +38,7 @@ const ReportPopup = ({name, type, onBlock, isPending, remainingDays}) => {
 				variant: 'success',
 				autoHideDuration: 2500,
 				anchorOrigin: {vertical: 'top', horizontal: 'right'},
+				action,
 			});
 		} catch (e) {
 			console.log(e);
@@ -34,6 +46,7 @@ const ReportPopup = ({name, type, onBlock, isPending, remainingDays}) => {
 				variant: 'error',
 				autoHideDuration: 2500,
 				anchorOrigin: {vertical: 'top', horizontal: 'right'},
+				action,
 			});
 		}
 	};

@@ -1,7 +1,7 @@
 package com.sharevax.core.facade;
 
 import com.sharevax.core.model.*;
-import com.sharevax.core.serializer.RoutePlanDto;
+import com.sharevax.core.model.RoutePlan;
 import com.sharevax.core.service.*;
 import org.locationtech.jts.geom.LineString;
 import org.springframework.stereotype.Service;
@@ -17,16 +17,23 @@ public class SimulationFacade {
     private final RouteService routeService;
     private final EventService eventService;
 
+    private final SuggestionService suggestionService;
+
     public SimulationFacade(SupplyService supplyService, DemandService demandService,
                             CountryService countryService, RouteService routeService,
-                            DeliveryService deliveryService, EventService eventService) {
+                            DeliveryService deliveryService, SuggestionService suggestionService, EventService eventService) {
 
         this.supplyService = supplyService;
         this.demandService = demandService;
         this.countryService = countryService;
         this.routeService = routeService;
         this.deliveryService = deliveryService;
+        this.suggestionService = suggestionService;
         this.eventService = eventService;
+    }
+
+    public Suggestion createSuggestion(Supply supply, Demand demand) {
+        return suggestionService.createSuggestion(supply, demand);
     }
 
     public List<Supply> getAllSupplies() {
@@ -53,9 +60,10 @@ public class SimulationFacade {
         return routeService.findShortestDistanceBetweenDemandAndSupply(demand, supply);
     }
 
-    public Delivery createDelivery(Harbor startHarbor, Harbor destinationHarbor,
-                                   Supply supply, Demand demand, Date createdAt) {
-        return deliveryService.createDelivery(startHarbor, destinationHarbor, supply, demand, createdAt);
+    public void saveInitialSuggestion(Demand d, Supply s) {
+        demandService.saveDemand(d);
+        supplyService.saveSupply(s);
+        suggestionService.createSuggestion(s, d);
     }
 
     public List<Demand> getUnmatchedDemands() {
@@ -63,8 +71,9 @@ public class SimulationFacade {
     }
 
 
-    public RoutePlanDto updateShipRoute(LineString routeHistory, LineString futureRoute) {
-        return routeService.updateShipRoutes(routeHistory, futureRoute);
+    public RoutePlan adaptRoute(LineString routeHistory, LineString futureRoute, Harbor destinationHarbor,
+                                Date estimatedArrivalDate, Date currentDay, Country arriveCountry) {
+        return routeService.adaptRoute(routeHistory, futureRoute, destinationHarbor, estimatedArrivalDate, currentDay, arriveCountry);
     }
 
     public List<Delivery> findActiveDeliveries() {
@@ -78,6 +87,11 @@ public class SimulationFacade {
     public List<Supply> getUnmatchedSupplies() {
         return supplyService.findUnmatchedSupplies();
     }
+
+    public void processEvents() {
+        eventService.processEvents();
+    }
+
 
     public void resetCountryData() {
         countryService.resetCountryData();
@@ -95,8 +109,13 @@ public class SimulationFacade {
         demandService.deleteAll();
     }
 
-    public void processEvents() {
-        eventService.processEvents();
+    public void deleteAllSuggestions(){ suggestionService.deleteAllSuggestions();}
+
+    public void wipeOutSuggestions() {
+        suggestionService.wipeOutSuggestions();
     }
 
+    public void resetEvents() {
+        eventService.resetEvents();
+    }
 }

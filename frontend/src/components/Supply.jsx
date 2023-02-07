@@ -1,12 +1,14 @@
 //Supply button => supply form
-import {useState} from 'react';
+import {useState, createElement} from 'react';
 import {useSnackbar} from 'notistack';
 import {CREATE_SUPPLY} from '../services/endpoints';
 import {useGlobalState} from '../state/index';
+import {IoClose} from 'react-icons/io5';
 
 const defaultValues = {
 	countryId: '',
 	vaccineType: '',
+	expirationDate: '',
 	quantity: '',
 	unitPrice: '',
 };
@@ -57,9 +59,10 @@ function showVaccineType(index) {
 
 export default function Supply() {
 	const [country] = useGlobalState('country');
-	const {enqueueSnackbar} = useSnackbar();
+	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
 	const [formValues, setFormValues] = useState(defaultValues);
+
 	const handleInputChange = (e) => {
 		const {name, value} = e.target;
 		setFormValues({
@@ -68,12 +71,23 @@ export default function Supply() {
 		});
 	};
 
+	const action = (snackbarId) => (
+		<button
+			onClick={() => {
+				closeSnackbar(snackbarId);
+			}}
+		>
+			{createElement(IoClose, {size: '20'})}
+		</button>
+	);
+
 	const handleSubmitSuccess = () => {
 		enqueueSnackbar('Success! Supply Submitted!', {
 			variant: 'success',
 			autoHideDuration: 2500,
 			anchorOrigin: {vertical: 'top', horizontal: 'right'},
 			style: {marginTop: '60px'},
+			action,
 		});
 	};
 
@@ -83,6 +97,7 @@ export default function Supply() {
 			autoHideDuration: 2500,
 			anchorOrigin: {vertical: 'top', horizontal: 'right'},
 			style: {marginTop: '60px'},
+			action,
 		});
 	};
 
@@ -107,6 +122,7 @@ export default function Supply() {
 				document.getElementById('supplyForm').reset();
 				document.getElementById('supplyQuantity').value = '';
 				document.getElementById('unitPrice').value = '';
+				document.getElementById('expirationDate').value = '';
 				document.getElementById('supplySelectVaccineType').value = document.getElementById('disabledOption').value;
 			})
 			.catch((error) => {
@@ -160,7 +176,20 @@ export default function Supply() {
 							{showVaccineType(11)}
 						</select>
 					</div>
-
+					<div className='mb-6'>
+						<label className='text-main-100 text-l font-bold'>Expiration Date*</label>
+						<br />
+						<input
+							className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-2'
+							type='date'
+							id='expirationDate'
+							name='expirationDate'
+							value={formValues.expirationDate}
+							min='2023-01-01'
+							max='2050-12-31'
+							onChange={handleInputChange}
+						/>
+					</div>
 					<div className='mb-6'>
 						<label className='text-main-100 text-l font-bold'>Quantity*</label>
 						<input

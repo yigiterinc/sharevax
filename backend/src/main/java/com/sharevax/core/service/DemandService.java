@@ -6,6 +6,7 @@ import com.sharevax.core.model.Demand.Urgency;
 import com.sharevax.core.model.VaccineType;
 import com.sharevax.core.model.dto.CreateDemandDto;
 import com.sharevax.core.repository.DemandRepository;
+import java.math.BigInteger;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,6 +31,10 @@ public class DemandService {
         demand.setUrgency(Urgency.valueOf(createDemandDto.getUrgency()));
 
         return demandRepository.save(demand);
+    }
+
+    public void saveDemand(Demand demand) {
+        demandRepository.save(demand);
     }
 
     public Demand getDemandById(Integer id) {
@@ -57,5 +62,11 @@ public class DemandService {
 
     public void deleteAll() {
         demandRepository.deleteAll();
+    }
+
+    public void decreaseQuantity(Integer demandId, BigInteger quantity) {
+        Demand demand = getDemandById(demandId);
+        demand.setQuantity(demand.getQuantity().subtract(quantity));
+        demandRepository.save(demand);
     }
 }
