@@ -113,7 +113,7 @@ public class SimulationService {
         HashMap<Demand, Double> demandToVaccinationRates = new HashMap<>();
         for (Demand demand : demands) {
             demandToVaccinationRates.put(demand, demand.getCountry().getVaccinationRate());
-        }
+        } 
 
         HashMap<Demand, Double> demandToDailyVaccineConsumptionToStock = new HashMap<>();
         for (Demand demand : demands) {

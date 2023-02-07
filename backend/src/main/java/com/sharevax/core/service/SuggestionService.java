@@ -84,9 +84,13 @@ public class SuggestionService {
         demandService.decreaseQuantity(suggestion.getDemand().getId(), suggestion.getQuantity());
         supplyService.decreaseQuantity(suggestion.getSupply().getId(), suggestion.getQuantity());
 
-        // delete all related suggestions
-        suggestionRepository.deleteSuggestionByDemand(suggestion.getDemand().getId());
-        suggestionRepository.deleteSuggestionBySupply(suggestion.getSupply().getId());
+        var demandRemainingQty = suggestion.getDemand().getQuantity();
+        var supplyRemainingQty = suggestion.getSupply().getQuantity();
+        if (demandRemainingQty.compareTo(BigInteger.ZERO) <= 0) {
+            suggestionRepository.deleteSuggestionByDemand(suggestion.getDemand().getId());
+        } else if (supplyRemainingQty.compareTo(BigInteger.ZERO) <= 0) {
+            suggestionRepository.deleteSuggestionBySupply(suggestion.getSupply().getId());
+        }
     }
 
     private void createDelivery(Suggestion suggestion, Date currentDate) {
