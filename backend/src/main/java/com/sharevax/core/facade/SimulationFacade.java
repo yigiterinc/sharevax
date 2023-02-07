@@ -60,6 +60,10 @@ public class SimulationFacade {
         return routeService.findShortestDistanceBetweenDemandAndSupply(demand, supply);
     }
 
+    public void saveDemand(Demand demand) {
+        demandService.saveDemand(demand);
+    }
+
     public void saveInitialSuggestion(Demand d, Supply s) {
         demandService.saveDemand(d);
         supplyService.saveSupply(s);

@@ -73,21 +73,30 @@ public class SimulationService {
         //reset events
         simulationFacade.resetEvents();
 
-        var supplyFromIndia = new Supply();
+        var supplyFromUK = new Supply();
         var countries = simulationFacade.getAllCountries();
-        supplyFromIndia.setCountry(countries.stream().filter(c -> c.getName().equals("India")).findFirst().get());
-        supplyFromIndia.setQuantity(BigInteger.valueOf(1000));
-        supplyFromIndia.setVaccineType(VaccineType.BIONTECH);
-        Date fiftyDaysFromNow = Date.from(ZonedDateTime.now().plusDays(50).toInstant());
-        supplyFromIndia.setExpirationDate(fiftyDaysFromNow);
+        supplyFromUK.setCountry(countries.stream().filter(c -> c.getName().equals("United Kingdom")).findFirst().get());
+        supplyFromUK.setQuantity(BigInteger.valueOf(10000));
+        supplyFromUK.setVaccineType(VaccineType.BIONTECH);
+        Date hundredDaysFromNow = Date.from(ZonedDateTime.now().plusDays(100).toInstant());
+        supplyFromUK.setExpirationDate(hundredDaysFromNow);
 
-        var demandFromJapan = new Demand();
-        demandFromJapan.setVaccineType(VaccineType.BIONTECH);
-        demandFromJapan.setCountry(countries.stream().filter(c -> c.getName().equals("Japan")).findFirst().get());
-        demandFromJapan.setQuantity(BigInteger.valueOf(1000));
-        demandFromJapan.setUrgency(Demand.Urgency.URGENT);
+        var demandFromNigeria = new Demand();
+        demandFromNigeria.setVaccineType(VaccineType.BIONTECH);
+        demandFromNigeria.setCountry(countries.stream().filter(c -> c.getName().equals("Nigeria")).findFirst().get());
+        demandFromNigeria.setQuantity(BigInteger.valueOf(10000));
+        demandFromNigeria.setUrgency(Demand.Urgency.URGENT);
 
-        simulationFacade.saveInitialSuggestion(demandFromJapan, supplyFromIndia);
+        var demandFromSouthAfrica = new Demand();
+        demandFromSouthAfrica.setVaccineType(VaccineType.BIONTECH);
+        demandFromSouthAfrica.setCountry(countries.stream().filter(c -> c.getName().equals("South Africa")).findFirst().get());
+        demandFromSouthAfrica.setQuantity(BigInteger.valueOf(4000));
+        demandFromSouthAfrica.setUrgency(Demand.Urgency.URGENT);
+
+        simulationFacade.saveInitialSuggestion(demandFromNigeria, supplyFromUK);
+        simulationFacade.saveInitialSuggestion(demandFromSouthAfrica, supplyFromUK);
+        simulationFacade.saveDemand(demandFromNigeria);
+        simulationFacade.saveDemand(demandFromSouthAfrica);
     }
 
     public void matchSupplyAndDemand() {
