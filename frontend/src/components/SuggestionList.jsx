@@ -161,11 +161,7 @@ export default function Suggestion() {
 			return irole == 'supplier' ? <>{data[i].supply.country.name}</> : <>{data[i].demand.country.name}</>;
 		}
 
-		let buttons1 = suggestionDataLoading ? (
-			<div className='grid grid-rows-1 items-center justify-center'>
-				<LoadingSpinner />
-			</div>
-		) : (
+		let buttons1 = (
 			<div className='grid grid-rows-2 items-center justify-end mr-6'>
 				<div className='grid-rows-1 text-center'>
 					<button
@@ -255,7 +251,11 @@ export default function Suggestion() {
 		);
 	}
 
-	return (
+	return suggestionDataLoading ? (
+		<div className='h-4/5 flex items-center justify-center'>
+			<LoadingSpinner size='w-10 h-10' />
+		</div>
+	) : (
 		<div>
 			<div>{showNotification(suggestionData)}</div>
 			<div>{showSuggestion(suggestionData)}</div>
