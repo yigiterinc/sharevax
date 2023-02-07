@@ -12,16 +12,16 @@ function Home() {
 	const [onNextDay, setOnNextDay] = useState(false);
 	const [mapUpdated, setMapUpdated] = useState(false);
 	const [tableUpdated, setTableUpdated] = useState(false);
-	const [summaryUpdated, setSummaryUpdated] = useState(false);
+	// const [summaryUpdated, setSummaryUpdated] = useState(false);
 
 	useEffect(() => {
-		if (mapUpdated && tableUpdated && summaryUpdated) {
+		if (mapUpdated && tableUpdated) {
 			setOnNextDay(false);
 			setMapUpdated(false);
 			setTableUpdated(false);
-			setSummaryUpdated(false);
+			// setSummaryUpdated(false);
 		}
-	}, [mapUpdated, tableUpdated, summaryUpdated]);
+	}, [mapUpdated, tableUpdated]);
 
 	return (
 		<div className='flex flex-col items-center gap-12 m-6 grow'>
