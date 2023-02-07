@@ -4,7 +4,7 @@
 
 # What's Sharevax?
 Sharevax is a web application that empowers the global health by ensuring the efficient distribution of vaccines with its smart algorithms.
-Pandemic hasn’t gone yet, and we noticed one piece of CDC news about vaccine shortages & delays, because countries are seeking for vaccines just for themselves, they are trading with each other by themselves, and trade between countries is not efficient at global scale. That’s where Sharevax sits. ‘Sharevax is … ‘ We will show you shortly how countries can make use of Sharevax to request or supply vaccines from others, make agreement easily, and get what they want as they request.
+Pandemic hasn’t gone yet, and we noticed one piece of CDC news about vaccine shortages & delays, because countries are seeking for vaccines just for themselves, they are trading with each other by themselves, and trade between countries is not efficient at global scale. That’s where Sharevax sits. We will show you shortly how countries can make use of Sharevax to request or supply vaccines from others, make agreement easily, and get what they want as they request.
 
 # Features
   1. Provide Suggestions to Demander/Supplier through Matching Algorithm
