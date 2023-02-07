@@ -5,23 +5,23 @@ import OverviewTable from '../components/OverviewTable';
 import CountryDropdown from '../components/CountryDropdown';
 import NextDayButton from '../components/NextDayButton';
 import NextDaySnackbar from '../components/NextDaySnackbar';
-import WorldSummary from '../components/WorldSummary';
+// import WorldSummary from '../components/WorldSummary';
 import ResetButton from '../components/ResetButton';
 
 function Home() {
 	const [onNextDay, setOnNextDay] = useState(false);
 	const [mapUpdated, setMapUpdated] = useState(false);
 	const [tableUpdated, setTableUpdated] = useState(false);
-	const [summaryUpdated, setSummaryUpdated] = useState(false);
+	// const [summaryUpdated, setSummaryUpdated] = useState(false);
 
 	useEffect(() => {
-		if (mapUpdated && tableUpdated && summaryUpdated) {
+		if (mapUpdated && tableUpdated) {
 			setOnNextDay(false);
 			setMapUpdated(false);
 			setTableUpdated(false);
-			setSummaryUpdated(false);
+			// setSummaryUpdated(false);
 		}
-	}, [mapUpdated, tableUpdated, summaryUpdated]);
+	}, [mapUpdated, tableUpdated]);
 
 	return (
 		<div className='flex flex-col items-center gap-12 m-6 grow'>
@@ -32,7 +32,7 @@ function Home() {
 			</div>
 			<NextDaySnackbar onNextDay={onNextDay} />
 			<OverviewMap onNextDay={onNextDay} setUpdated={setMapUpdated} />
-			<WorldSummary onNextDay={onNextDay} setUpdated={setSummaryUpdated} />
+			{/* <WorldSummary onNextDay={onNextDay} setUpdated={setSummaryUpdated} /> */}
 			<OverviewTable onNextDay={onNextDay} setUpdated={setTableUpdated} />
 		</div>
 	);
