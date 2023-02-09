@@ -37,5 +37,5 @@ Pandemic hasn’t gone yet, and we noticed one piece of CDC news about vaccine s
 - Frontend: [React](https://reactjs.org/), [Leaflet](https://leafletjs.com/), [Tailwind CSS](https://tailwindcss.com/).
 - Backend: [Spring](https://spring.io/), [PostgreSQL](https://www.postgresql.org/).
 
-# Sponsor
+# Product Owner - Advisor
 ![Capgemini](https://upload.wikimedia.org/wikipedia/commons/9/9d/Capgemini_201x_logo.svg)
